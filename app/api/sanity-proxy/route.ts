@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Forward the request to Sanity API (query in URL for Sanity's GET API)
-    const sanityUrl = `https://11qckjsr.api.sanity.io/v2023-05-03/data/query/production?query=${encodeURIComponent(query)}&returnQuery=false`;
+    const sanityUrl = `https://k05pnb0n.api.sanity.io/v2023-05-03/data/query/production?query=${encodeURIComponent(query)}&returnQuery=false`;
 
     const response = await fetch(sanityUrl, {
       method: "GET",

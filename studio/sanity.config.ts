@@ -8,7 +8,7 @@ export default defineConfig({
   title: 'Wêrê Klub',
 
   // Using the same values as defined in sanity.cli.ts
-  projectId: '11qckjsr',
+  projectId: 'k05pnb0n',
   dataset: 'production',
 
   plugins: [structureTool(), visionTool()],
