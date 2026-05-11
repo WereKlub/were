@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Newspaper } from "lucide-react";
+import { Heart } from "lucide-react";
 import { IG } from "@/components/icons/IG";
 import { WhatsappIcon } from "@/components/icons/WhatsappIcon";
 import { FacebookIcon } from "@/components/icons/FacebookIcon";
 import { Soundcloud } from "@/components/icons/Soundcloud";
 import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
-import AnimatedTextCycle from "@/components/ui/animated-text";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { useFooterStripUrls } from "@/lib/contexts/FooterStripContext";
@@ -27,15 +26,7 @@ export default function Footer() {
     { href: "/", labelKey: "header.nav.home" as const },
   ];
 
-  const animatedWordsKeys = [
-    "footer.animatedWords.freedom",
-    "footer.animatedWords.energy",
-    "footer.animatedWords.respect",
-  ];
-
-  const legal = [
-    { href: "/terms", labelKey: "footer.links.terms" as const, icon: Newspaper },
-  ];
+  const legal = [{ href: "/terms", labelKey: "footer.links.terms" as const }];
 
   const displayStrip =
     stripUrls.length >= 4
@@ -78,17 +69,6 @@ export default function Footer() {
                   sizes="168px"
                 />
               </Link>
-              <p className="text-sm text-white/70 leading-relaxed max-w-xs">
-                {t(currentLanguage, "footer.tagline.intro")}{" "}
-                <AnimatedTextCycle
-                  words={animatedWordsKeys.map((key) =>
-                    t(currentLanguage, key),
-                  )}
-                  interval={5000}
-                  className="font-extrabold text-white/90"
-                />{" "}
-                {t(currentLanguage, "footer.tagline.outro")}
-              </p>
             </div>
 
             <div className="space-y-6">
@@ -109,7 +89,12 @@ export default function Footer() {
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-xs tracking-widest uppercase text-white/50">
+              <h3 className="flex items-center gap-2 text-xs tracking-widest uppercase text-white/50">
+                <Heart
+                  className="h-4 w-4 shrink-0 text-white/55"
+                  strokeWidth={1.5}
+                  aria-hidden
+                />
                 {t(currentLanguage, "footer.socialHeading")}
               </h3>
               <ul className="flex items-center flex-wrap gap-3 list-none p-0 m-0">
@@ -160,32 +145,26 @@ export default function Footer() {
               </ul>
 
               <div className="pt-4 space-y-3">
-                {legal.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="flex items-center gap-2 text-sm text-white/70 hover:text-white/90"
-                    >
-                      <Icon className="h-4 w-4 shrink-0" />
-                      {t(currentLanguage, link.labelKey)}
-                    </Link>
-                  );
-                })}
-                <div>
-                  <LanguageSwitcher className="text-white/70 hover:text-white text-sm" />
-                </div>
+                {legal.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block text-sm text-white/70 hover:text-white/90 uppercase tracking-wide"
+                  >
+                    {t(currentLanguage, link.labelKey)}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-white/50 text-center md:text-left">
+          <div className="mt-16 pt-8 border-t border-white/10 flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <p className="text-xs text-white/50">
               {t(currentLanguage, "footer.copyright", {
                 year: new Date().getFullYear(),
               })}
             </p>
+            <LanguageSwitcher className="!text-white/50 hover:!text-white/90" />
           </div>
         </div>
       </div>

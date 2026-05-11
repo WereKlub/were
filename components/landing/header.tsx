@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import CartModal from "@/components/merch/cart/cart-modal";
+import { ThemeModeSwitch } from "@/components/landing/theme-mode-switch";
 import { useNavigationSettings } from "@/lib/contexts/NavigationSettingsContext";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
@@ -47,9 +48,17 @@ export default function Header() {
             src="/dark.png"
             alt="Wêrê Klub"
             fill
-            className="object-contain object-left"
+            className="object-contain object-left dark:hidden"
             sizes="140px"
             priority
+          />
+          <Image
+            src="/white.png"
+            alt=""
+            aria-hidden
+            fill
+            className="hidden object-contain object-left dark:block"
+            sizes="140px"
           />
         </Link>
 
@@ -67,12 +76,14 @@ export default function Header() {
               {t(currentLanguage, item.nameKey)}
             </Link>
           ))}
-          <div className="pl-2 border-l border-border">
+          <div className="pl-2 border-l border-border flex items-center gap-3">
+            <ThemeModeSwitch />
             <CartModal />
           </div>
         </nav>
 
-        <div className="lg:hidden flex items-center gap-4">
+        <div className="lg:hidden flex items-center gap-2">
+          <ThemeModeSwitch />
           <CartModal />
           <button
             type="button"

@@ -95,12 +95,7 @@ export default async function RootLayout({
     >
       <body className="font-sans antialiased flex flex-col min-h-screen">
         <FacebookPixel />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider>
           <ButtonThemeProvider
             primaryButtonColor={themeSettings.primaryButtonColor}
           >
