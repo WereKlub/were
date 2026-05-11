@@ -21,9 +21,9 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL");
 const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 const resendApiKey = Deno.env.get("RESEND_API_KEY");
 const fromEmail =
-  Deno.env.get("FROM_EMAIL") || "notifications@tickets.djaoulient.com";
+  Deno.env.get("FROM_EMAIL") || "notifications@tickets.wereklub.com";
 const APP_BASE_URL = (
-  Deno.env.get("APP_BASE_URL") || "https://www.djaouli.com"
+  Deno.env.get("APP_BASE_URL") || "https://www.wereklub.com"
 ).replace(/\/$/, "");
 const defaultLogoUrl = `${supabaseUrl}/storage/v1/object/public/assets/logo.png`;
 
@@ -141,7 +141,7 @@ serve(async (req: Request) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Confirmation de votre commande Djaouli</title>
+  <title>Confirmation de votre commande Wêrê Klub</title>
 </head>
 <body style="margin:0;padding:0;font-family:Arial,sans-serif;background-color:#f5f5f5;color:#333;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#f5f5f5;">
@@ -150,7 +150,7 @@ serve(async (req: Request) => {
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background-color:#ffffff;">
           <tr>
             <td style="padding:24px;text-align:center;">
-              <img src="${logoSrc}" alt="Djaouli Logo" width="100" height="100" style="display:block;margin:0 auto;border:0;" />
+              <img src="${logoSrc}" alt="Wêrê Klub Logo" width="100" height="100" style="display:block;margin:0 auto;border:0;" />
             </td>
           </tr>
           <tr>
@@ -175,7 +175,7 @@ serve(async (req: Request) => {
             </td>
           </tr>
           <tr>
-            <td style="padding:16px 24px;border-top:1px solid #eee;font-size:12px;color:#666;text-align:center;">© ${new Date().getFullYear()} Djaouli Entertainment</td>
+            <td style="padding:16px 24px;border-top:1px solid #eee;font-size:12px;color:#666;text-align:center;">© ${new Date().getFullYear()} Wêrê Klub</td>
           </tr>
         </table>
       </td>
@@ -185,9 +185,9 @@ serve(async (req: Request) => {
 </html>`;
 
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: `Djaouli Entertainment <${fromEmail}>`,
+      from: `Wêrê Klub <${fromEmail}>`,
       to: customer_email,
-      reply_to: "djaouli@gmail.com",
+      reply_to: "contact@wereklub.com",
       subject: `Confirmation de votre commande #${purchase_ids[0].substring(0, 8)}`,
       html: emailHtmlBody,
     });

@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import type { NewsPost } from "@/lib/types/news";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
+import { AppPageContainer } from "@/components/layout/app-page-shell";
 
 interface NewsContentProps {
   posts: NewsPost[];
@@ -20,22 +21,11 @@ export default function NewsContent({ posts }: NewsContentProps) {
   const remainingPosts = posts.slice(4);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <div className="container mx-auto px-4 py-0 max-w-7xl">
-        {/* Hero Section */}
-        <div className="relative pt-24 md:pt-32 pb-16">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl tracking-tighter font-regular text-zinc-800 dark:text-white mb-6">
-              {t(currentLanguage, "newsPage.title")}
-            </h1>
-            <div className="text-muted-foreground text-lg mt-4 mb-8 max-w-3xl mx-auto leading-relaxed">
-              {t(currentLanguage, "newsPage.description")}
-            </div>
-          </div>
-        </div>
+    <AppPageContainer className="py-6 pb-16 md:pb-20">
+        <p className="text-center text-muted-foreground max-w-3xl mx-auto leading-relaxed pb-10 text-sm md:text-base">
+          {t(currentLanguage, "newsPage.description")}
+        </p>
 
-        {/* Featured News */}
         {featuredPosts.length > 0 && (
           <section className="pb-20">
             {/* Featured Article */}
@@ -158,7 +148,7 @@ export default function NewsContent({ posts }: NewsContentProps) {
             <div className="text-center mb-20">
               <div className="inline-flex items-center gap-4 mb-6">
                 <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-primary"></div>
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+                <h2 className="text-lg md:text-xl font-display font-bold text-foreground tracking-tight uppercase">
                   {t(currentLanguage, "newsPage.moreNews")}
                 </h2>
                 <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-primary"></div>
@@ -221,7 +211,6 @@ export default function NewsContent({ posts }: NewsContentProps) {
             </div>
           </section>
         )}
-      </div>
-    </div>
+    </AppPageContainer>
   );
 }

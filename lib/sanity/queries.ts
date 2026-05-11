@@ -152,35 +152,6 @@ export async function getBlogPostBySlug(slug: string) {
   return post;
 }
 
-// Story
-export async function getFeaturedStory() {
-  return client.fetch(`
-    *[_type == "story" && featured == true][0] {
-      _id,
-      title,
-      subtitle,
-      "mainImage": {
-        "url": mainImage.asset->url
-      },
-      content
-    }
-  `);
-}
-
-export async function getStory() {
-  return client.fetch(
-    `*[_type == "story"][0]{
-      title,
-      subtitle,
-      content,
-      "image": mainImage.asset->{
-        "url": url,
-        "alt": alt
-      }
-    }`,
-  );
-}
-
 // Helper function to get cache configuration based on environment
 const getCacheConfig = (tags: string[]) => ({
   next: {
@@ -188,6 +159,92 @@ const getCacheConfig = (tags: string[]) => ({
     tags,
   },
 });
+
+export interface AboutPageData {
+  metaTitle?: string;
+  metaDescription?: string;
+  pageHeading?: string;
+  heroUrl: string | null;
+  heroAlt: string;
+  collectifTitle: string;
+  collectifBody: unknown;
+  collectifPanelColor?: string;
+  stats: { value: string; label: string }[];
+  teamHeading?: string;
+  team: {
+    name: string;
+    role: string;
+    imageUrl?: string | null;
+    imageAlt?: string;
+  }[];
+  teamSectionUrl: string | null;
+  teamSectionAlt: string;
+  teamPanelColor?: string;
+}
+
+export async function getAboutPage(): Promise<AboutPageData | null> {
+  const query = `*[_type == "aboutPage"] | order(_updatedAt desc) [0] {
+    metaTitle,
+    metaDescription,
+    pageHeading,
+    "heroUrl": heroImage.asset->url,
+    "heroAlt": coalesce(heroImage.alt, ""),
+    collectifTitle,
+    collectifBody,
+    collectifPanelColor,
+    stats[]{ value, label },
+    teamHeading,
+    team[]{
+      name,
+      role,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt
+    },
+    "teamSectionUrl": teamSectionImage.asset->url,
+    "teamSectionAlt": coalesce(teamSectionImage.alt, ""),
+    teamPanelColor
+  }`;
+  return client.fetch<AboutPageData | null>(query, {}, getCacheConfig(["aboutPage"]));
+}
+
+export interface AgencyPageData {
+  metaTitle?: string;
+  metaDescription?: string;
+  pageHeading?: string;
+  services: { title: string; description: string }[];
+  accomplishmentsHeading?: string;
+  accomplishments: { name: string; client: string }[];
+  realisationsUrl: string | null;
+  realisationsAlt: string;
+  ctaUrl: string | null;
+  ctaAlt: string;
+  ctaTitle: string;
+  ctaIntro: string;
+  contactEmail: string;
+  bookingEmail: string;
+  ctaPanelColor?: string;
+}
+
+export async function getAgencyPage(): Promise<AgencyPageData | null> {
+  const query = `*[_type == "agencyPage"] | order(_updatedAt desc) [0] {
+    metaTitle,
+    metaDescription,
+    pageHeading,
+    services[]{ title, description },
+    accomplishmentsHeading,
+    accomplishments[]{ name, client },
+    "realisationsUrl": realisationsImage.asset->url,
+    "realisationsAlt": coalesce(realisationsImage.alt, ""),
+    "ctaUrl": ctaImage.asset->url,
+    "ctaAlt": coalesce(ctaImage.alt, ""),
+    ctaTitle,
+    ctaIntro,
+    contactEmail,
+    bookingEmail,
+    ctaPanelColor
+  }`;
+  return client.fetch<AgencyPageData | null>(query, {}, getCacheConfig(["agencyPage"]));
+}
 
 // Products (Enhanced Section)
 export async function getAllProducts() {
@@ -552,6 +609,71 @@ export const getHomepageContent = async (): Promise<HomepageData | null> => {
 
   return result;
 };
+
+export interface SanityEventCardSource {
+  _id: string;
+  slug: string | null;
+  title: string;
+  subtitle?: string;
+  date: string;
+  location?: {
+    venueName?: string;
+    address?: string;
+  };
+  flyerUrl?: string | null;
+  lineup?: { name?: string }[];
+  ticketTypes?: { name?: string; price?: number; active?: boolean }[];
+  /** From `count(gallery)` — used for past-event links to on-page gallery */
+  galleryCount?: number;
+}
+
+export async function getAllEventsForWereCards(): Promise<
+  SanityEventCardSource[]
+> {
+  const query = `*[_type == "event"] | order(date desc) {
+    _id,
+    "slug": slug.current,
+    title,
+    subtitle,
+    date,
+    location,
+    "flyerUrl": flyer.asset->url,
+    "lineup": lineup[]->{name},
+    ticketTypes[]{name, price, active},
+    "galleryCount": count(gallery)
+  }`;
+  return client.fetch<SanityEventCardSource[]>(query, {}, getCacheConfig(["events"]));
+}
+
+const FOOTER_STRIP_FALLBACK: string[] = [
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/16-sv2nqRmmrxDUAaqYpbYgnncRZlQUG7.jpg",
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/17-UrbKBC6B3b2KDs0AB0XCNJbFa5OwpL.jpg",
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/DSC03881-nMw58iEtc2t1wmSy5gK3IYl60cLrkh.jpg",
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/DSC03740-FnFcxZrEU6kMPhGaLxhB5z4u848Hcj.jpg",
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/19-BDtBp7L2ah2hgLILoajpURhJYiPvNQ.jpg",
+  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/DSC03642-55QQlqz9fxkYmXgJpzV87D0jaYsMWA.jpg",
+];
+
+export async function getFooterStripImageUrls(): Promise<string[]> {
+  try {
+    const galleryQuery = `*[_type == "gallery"] | order(_createdAt desc) [0]{
+      "urls": images[].asset->url
+    }`;
+    const g = await client.fetch<{ urls?: (string | null)[] } | null>(
+      galleryQuery,
+      {},
+      getCacheConfig(["gallery", "footer"]),
+    );
+    const fromGallery =
+      g?.urls?.filter((u): u is string => Boolean(u)).slice(0, 6) ?? [];
+    if (fromGallery.length > 0) {
+      return fromGallery;
+    }
+  } catch (e) {
+    console.error("getFooterStripImageUrls:", e);
+  }
+  return FOOTER_STRIP_FALLBACK;
+}
 
 // Define interface for the data returned by getEventsForScroller
 interface EventScrollerData {

@@ -5,6 +5,7 @@ import LoadingComponent from "@/components/ui/Bouncer";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { ProductDetailContent } from "@/components/merch/product-detail-content";
+import { AppPageShell } from "@/components/layout/app-page-shell";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -19,13 +20,13 @@ async function ProductContent({ params }: Props) {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <AppPageShell>
       <Header />
-      <main className="flex-grow">
+      <div className="flex flex-col grow min-w-0">
         <ProductDetailContent product={product} />
-      </main>
+      </div>
       <Footer />
-    </div>
+    </AppPageShell>
   );
 }
 

@@ -1,6 +1,6 @@
-# djaoulient.com
+# wereklub.com
 
-A website for Djaouli Entertainment, a Côte d'Ivoire based company specializing in event organization and related services. This website combines e-commerce functionality for selling event tickets with a content-rich blog.
+A website for Wêrê Klub, a Côte d'Ivoire based collective specializing in event organization and related services. This website combines e-commerce functionality for selling event tickets with a content-rich blog.
 
 ## Overview
 
@@ -36,7 +36,7 @@ git clone https://github.com/lomiafrica/events
 ```
 
 ```bash
-cd djaoulient
+cd wereklub
 ```
 
 ```bash

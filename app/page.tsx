@@ -1,46 +1,62 @@
 import type { Metadata } from "next";
 import Header from "@/components/landing/header";
-import { HeroSection } from "@/components/landing/hero-section";
 import Footer from "@/components/landing/footer";
 import {
   getHomepageContent,
   getHomepagePromoEvent,
+  getAllEventsForWereCards,
+  getAllProducts,
 } from "@/lib/sanity/queries";
 import FloatingPromo from "@/components/landing/floating-promo";
-import { EventsCarousel } from "@/components/home/events-carousel";
-import { MerchCarousel } from "@/components/home/merch-carousel";
+import { WereHero } from "@/components/landing/were-hero";
+import { buildWereEventLists } from "@/lib/sanity/were-events-list";
+import { HomeEventsBlock } from "@/components/home/home-events-block";
+import { HomeMerchGrid } from "@/components/home/home-merch-grid";
+import { AppPageShell } from "@/components/layout/app-page-shell";
 
-// Use the general site metadata for the home page
 export const metadata: Metadata = {
-  title: "Djaouli Ent. | An Alternative Music Project from Abidjan",
-  description: "Breaking musical boundaries since 2022.",
+  title: "Wêrê Klub | Music & events from Abidjan",
+  description: "Music events out of Abidjan.",
 };
 
 export default async function Home() {
-  // Fetch homepage content server-side
-  const homepageData = await getHomepageContent();
-  const promoEventData = await getHomepagePromoEvent();
+  const [homepageData, promoEventData, rawEvents, allProducts] =
+    await Promise.all([
+      getHomepageContent(),
+      getHomepagePromoEvent(),
+      getAllEventsForWereCards(),
+      getAllProducts(),
+    ]);
+
+  const { upcomingCards, pastCards } = buildWereEventLists(rawEvents);
+
+  const merchForHome = (allProducts || []).filter((p: { stock?: number }) =>
+    typeof p.stock === "number" ? p.stock > 0 : true,
+  ).slice(0, 4);
+
+  const heroImageItem = homepageData?.heroContent?.find(
+    (h) => h.isActive && h.type === "image" && h.image?.asset?.url,
+  );
+  const heroImageUrl = heroImageItem?.image?.asset?.url ?? "/banner.webp";
+  const heroImageAlt = heroImageItem?.image?.alt ?? "Wêrê Klub";
+
   return (
-    <div className="min-h-screen bg-background text-foreground relative">
+    <AppPageShell className="relative">
       <Header />
-      {/* Use HeroSection with combined videos and featured events */}
-      <HeroSection
-        sanityHeroItems={homepageData?.heroContent}
-        featuredEvents={homepageData?.featuredEvents}
-      />
-      <EventsCarousel />
-      <MerchCarousel />
+      <WereHero imageUrl={heroImageUrl} imageAlt={heroImageAlt} />
+
+      <HomeEventsBlock upcomingCards={upcomingCards} pastCards={pastCards} />
+
+      <HomeMerchGrid products={merchForHome} />
       <Footer />
 
-      {/* Floating Promo - Renders if promoEventData is found and has a flyer and slug */}
       {promoEventData && promoEventData.flyerUrl && promoEventData.slug && (
         <FloatingPromo
           imageUrl={promoEventData.flyerUrl}
           href={`/events/${promoEventData.slug}`}
-          title={promoEventData.title || "View Event"} // Use event title for alt text or a default
-          // onClose can be implemented here if needed, e.g., to set a cookie to not show again
+          title={promoEventData.title || "View Event"}
         />
       )}
-    </div>
+    </AppPageShell>
   );
 }

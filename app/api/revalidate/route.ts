@@ -143,11 +143,14 @@ export async function POST(request: NextRequest) {
         revalidatePath("/merch");
         break;
 
-      case "story":
-        // Revalidate story-related content
-        revalidateTag("story", {});
-        revalidatePath("/story");
-        revalidatePath("/");
+      case "aboutPage":
+        revalidateTag("aboutPage", {});
+        revalidatePath("/a-propos");
+        break;
+
+      case "agencyPage":
+        revalidateTag("agencyPage", {});
+        revalidatePath("/agence");
         break;
 
       case "homepage":

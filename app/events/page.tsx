@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
-import { getEventsForScroller } from "@/lib/sanity/queries";
-import { t } from "@/lib/i18n/translations";
+import { getAllEventsForWereCards } from "@/lib/sanity/queries";
+import { buildWereEventLists } from "@/lib/sanity/were-events-list";
 import EventsPageContent from "./events-page-content";
-
-interface EventImageData {
-  _id: string;
-  title: string;
-  slug: string;
-  featuredImage: string;
-  date?: string;
-  description?: string;
-  ticketsAvailable?: boolean;
-}
+import { t } from "@/lib/i18n/translations";
 
 const getPageLocale = (params?: { locale?: string }): string => {
   return params?.locale || process.env.NEXT_PUBLIC_DEFAULT_LOCALE || "en";
@@ -31,6 +22,9 @@ export async function generateMetadata({
 }
 
 export default async function EventsPage() {
-  const events: EventImageData[] = await getEventsForScroller();
-  return <EventsPageContent events={events} />;
+  const raw = await getAllEventsForWereCards();
+  const { upcomingCards, pastCards } = buildWereEventLists(raw);
+  return (
+    <EventsPageContent upcomingCards={upcomingCards} pastCards={pastCards} />
+  );
 }

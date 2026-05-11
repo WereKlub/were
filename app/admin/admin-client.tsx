@@ -57,6 +57,11 @@ import {
   MailWarning,
 } from "lucide-react";
 import LoadingSpinner from "@/components/ui/Bouncer";
+import {
+  appPageContainerClass,
+  appPageShellClass,
+} from "@/components/layout/app-page-shell";
+import { cn } from "@/lib/actions/utils";
 
 interface Purchase {
   purchase_id: string;
@@ -986,19 +991,24 @@ export default function AdminClient() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md rounded-sm border-slate-700 bg-card/30 backdrop-blur-sm">
+      <div
+        className={cn(
+          appPageShellClass,
+          "items-center justify-center p-4",
+        )}
+      >
+        <Card className="w-full max-w-md rounded-sm border-border bg-card">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl text-gray-100">
+            <CardTitle className="text-2xl font-display text-foreground">
               Admin Access
             </CardTitle>
-            <CardDescription className="text-gray-300">
+            <CardDescription className="text-muted-foreground">
               Enter your PIN to access the admin panel
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="pin" className="text-gray-200">
+              <Label htmlFor="pin" className="text-foreground">
                 PIN
               </Label>
               <Input
@@ -1008,11 +1018,11 @@ export default function AdminClient() {
                 onChange={(e) => setPin(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleAuth()}
                 placeholder="Enter PIN"
-                className="rounded-sm bg-background border-slate-700 text-gray-100 placeholder:text-gray-400"
+                className="rounded-sm"
               />
             </div>
             {authError && (
-              <div className="rounded-sm border border-red-700 bg-red-900/30 p-3 text-red-300">
+              <div className="rounded-sm border border-destructive/40 bg-destructive/10 p-3 text-destructive text-sm">
                 <div className="flex items-center gap-2">
                   <AlertCircle className="h-4 w-4" />
                   <span>{authError}</span>
@@ -1033,25 +1043,25 @@ export default function AdminClient() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-2 sm:p-4">
-      <div className="max-w-7xl mx-auto">
+    <div className={cn(appPageShellClass)}>
+      <div className={cn(appPageContainerClass, "py-6 md:py-12 pb-16")}>
         {/* Header - Mobile Optimized */}
         <div className="pt-4 sm:pt-12 mb-6 sm:mb-12">
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-4 sm:mb-6">
             <div className="flex-1 max-w-4xl">
-              <h1 className="text-3xl sm:text-5xl md:text-7xl tracking-tighter font-regular text-white mb-3 sm:mb-6">
+              <h1 className="text-3xl sm:text-5xl md:text-7xl tracking-tight font-display text-foreground mb-3 sm:mb-6">
                 Admin panel
               </h1>
-              <p className="text-zinc-200 text-sm sm:text-base md:text-xl leading-relaxed tracking-tight max-w-3xl">
+              <p className="text-muted-foreground text-sm sm:text-base md:text-xl leading-relaxed tracking-tight max-w-3xl">
                 Manage purchases, track email dispatch status, and oversee
-                ticket sales for Djaouli events.
+                ticket sales for Wêrê Klub events.
               </p>
             </div>
             <Button
               onClick={handleLogout}
               variant="outline"
               size="sm"
-              className="rounded-sm border-slate-700 text-gray-100 hover:bg-card/70 shrink-0 w-full sm:w-auto"
+              className="rounded-sm border-border shrink-0 w-full sm:w-auto"
             >
               <X className="h-4 w-4 mr-2" />
               Logout
@@ -1063,13 +1073,13 @@ export default function AdminClient() {
         <div className="mb-4 sm:mb-6">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
             <div className="flex-1 max-w-md">
-              <Label className="text-zinc-200 font-medium text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4 block">
+              <Label className="text-foreground font-medium text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4 block">
                 Event Filter
               </Label>
               <select
                 value={selectedEvent || ""}
                 onChange={(e) => setSelectedEvent(e.target.value || null)}
-                className="rounded-sm bg-card/30 backdrop-blur-sm border-slate-700 text-gray-100 h-10 sm:h-12 px-3 pr-8 text-sm sm:text-base w-full appearance-none"
+                className="rounded-sm bg-card border border-border text-foreground h-10 sm:h-12 px-3 pr-8 text-sm sm:text-base w-full appearance-none"
                 style={{
                   backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
                   backgroundPosition: "right 0.5rem center",

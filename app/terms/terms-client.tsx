@@ -2,8 +2,13 @@
 
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
+import { SectionHeaderI18n } from "@/components/landing/section-header-i18n";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
+import {
+  AppPageContainer,
+  AppPageShell,
+} from "@/components/layout/app-page-shell";
 
 const today = new Date();
 const formattedDate = today.toLocaleDateString("en-US", {
@@ -16,38 +21,32 @@ export default function TermsClientPage() {
   const { currentLanguage } = useTranslation();
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <AppPageShell>
       <Header />
-      <main>
-        <div className="container mx-auto px-4 py-0 max-w-4xl">
-          {/* Hero-style header for consistency with merch/gallery */}
-          <div className="relative pt-24 md:pt-32 pb-10">
-            <div className="text-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tighter font-regular text-zinc-900 dark:text-white mb-4">
-                {t(currentLanguage, "termsPage.title")}
-              </h1>
-              <div className="text-muted-foreground text-base md:text-lg mt-2 mb-3 max-w-2xl mx-auto leading-relaxed">
-                {t(currentLanguage, "termsPage.subtitle")}
-              </div>
-              <p className="text-xs md:text-sm text-muted-foreground uppercase tracking-wide">
-                {t(currentLanguage, "termsPage.lastUpdated", {
-                  date: formattedDate,
-                })}
-              </p>
-            </div>
+      <SectionHeaderI18n translationKey="termsPage.sectionBanner" />
+      <div className="flex flex-col grow min-w-0">
+        <AppPageContainer className="max-w-4xl pb-16 -mt-2">
+          <div className="text-center pb-10">
+            <h1 className="font-display text-3xl md:text-4xl font-black uppercase text-foreground mb-4">
+              {t(currentLanguage, "termsPage.title")}
+            </h1>
+            <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+              {t(currentLanguage, "termsPage.subtitle")}
+            </p>
+            <p className="text-xs md:text-sm text-muted-foreground uppercase tracking-[0.2em] mt-4">
+              {t(currentLanguage, "termsPage.lastUpdated", {
+                date: formattedDate,
+              })}
+            </p>
           </div>
 
           {/* Terms content card */}
-          <article className="mb-16 rounded-sm border border-border bg-card/40 backdrop-blur-sm px-6 py-8 md:px-8 md:py-10 shadow-sm">
+          <article className="mb-16 border border-border bg-card px-6 py-8 md:px-8 md:py-10">
             <div
-              className="prose prose-zinc dark:prose-invert lg:prose-lg
-                        prose-headings:text-primary prose-headings:font-semibold
-                        prose-h2:text-2xl md:prose-h2:text-3xl
+              className="prose prose-neutral max-w-none lg:prose-lg dark:prose-invert
+                        prose-headings:font-display prose-headings:uppercase prose-headings:tracking-wide
                         prose-p:leading-relaxed
-                        prose-a:text-primary hover:prose-a:underline
-                        prose-strong:font-semibold
-                        prose-ul:list-disc prose-ul:pl-5 prose-ul:my-4
-                        prose-li:my-1.5"
+                        prose-a:text-accent prose-a:no-underline hover:prose-a:underline"
             >
               {/* 01 – Introduction */}
               <section className="space-y-3 md:space-y-4">
@@ -174,9 +173,9 @@ export default function TermsClientPage() {
               </section>
             </div>
           </article>
-        </div>
-      </main>
+        </AppPageContainer>
+      </div>
       <Footer />
-    </div>
+    </AppPageShell>
   );
 }

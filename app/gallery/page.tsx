@@ -4,7 +4,9 @@
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { Metadata } from "next";
-import GalleryClientComponent from "./gallery-client"; // Import the new client component
+import GalleryClientComponent from "./gallery-client";
+import { SectionHeaderI18n } from "@/components/landing/section-header-i18n";
+import { AppPageShell } from "@/components/layout/app-page-shell";
 
 // Metadata export remains here (this is now a Server Component)
 export const metadata: Metadata = {
@@ -19,12 +21,12 @@ export default function GalleryPage() {
 
   // Render the page structure with the client component inside
   return (
-    <>
+    <AppPageShell>
       <Header />
-      {/* Render the client component which handles fetching and display */}
+      <SectionHeaderI18n translationKey="galleryPage.sectionBanner" />
       <GalleryClientComponent />
       <Footer />
-    </>
+    </AppPageShell>
   );
 }
 

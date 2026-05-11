@@ -5,7 +5,7 @@ import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
   name: 'default',
-  title: 'djaouli.ent',
+  title: 'Wêrê Klub',
 
   // Using the same values as defined in sanity.cli.ts
   projectId: '11qckjsr',

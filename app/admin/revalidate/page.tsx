@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { revalidateAll } from "@/lib/actions/revalidate";
+import { AppPageShell } from "@/components/layout/app-page-shell";
 
 export default function RevalidatePage() {
   const [status, setStatus] = useState<"loading" | "success" | "error">(
@@ -31,12 +32,12 @@ export default function RevalidatePage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+    <AppPageShell className="items-center justify-center">
       <div className="text-center">
         {status === "loading" && (
           <>
             <div className="text-2xl mb-4">🔄</div>
-            <h1 className="text-2xl font-bold mb-2">
+            <h1 className="text-2xl font-display font-bold mb-2">
               Revalidation in progress...
             </h1>
             <p className="text-muted-foreground">
@@ -48,7 +49,7 @@ export default function RevalidatePage() {
         {status === "success" && (
           <>
             <div className="text-2xl mb-4">✅</div>
-            <h1 className="text-2xl font-bold mb-2">Revalidation complete!</h1>
+            <h1 className="text-2xl font-display font-bold mb-2">Revalidation complete!</h1>
             <p className="text-muted-foreground">Redirecting to home page...</p>
           </>
         )}
@@ -56,13 +57,13 @@ export default function RevalidatePage() {
         {status === "error" && (
           <>
             <div className="text-2xl mb-4">❌</div>
-            <h1 className="text-2xl font-bold mb-2">Revalidation failed</h1>
+            <h1 className="text-2xl font-display font-bold mb-2">Revalidation failed</h1>
             <p className="text-muted-foreground">
               Please try again or check the console
             </p>
           </>
         )}
       </div>
-    </div>
+    </AppPageShell>
   );
 }

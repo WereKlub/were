@@ -257,7 +257,7 @@ serve(async (req: Request) => {
       metadata: {
         internal_purchase_ids: purchaseIds.join(","),
         customer_id: customerId,
-        app_source: "djaouli_merch_app",
+        app_source: "wereklub_merch_app",
         is_cart_checkout: true,
         item_count: payload.cartItems.length,
       },

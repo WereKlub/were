@@ -7,6 +7,7 @@ import LoadingSpinner from "@/components/ui/Bouncer";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { ZoomImage } from "./zoom-image";
+import { AppPageContainer } from "@/components/layout/app-page-shell";
 
 function useColumnCount() {
   const [cols, setCols] = useState(2);
@@ -53,7 +54,7 @@ function SectionGallery({
       id={toSectionId(sectionTitle)}
       className="mb-24 first:mt-0 mt-4 scroll-mt-24"
     >
-      <h2 className="text-2xl sm:text-3xl font-medium text-zinc-800 dark:text-white mb-6 tracking-tight">
+      <h2 className="font-display text-lg md:text-xl font-bold text-foreground mb-6 tracking-tight uppercase">
         {sectionTitle}
       </h2>
       <div
@@ -268,12 +269,12 @@ export default function GalleryClientComponent() {
 
   // Return the main gallery content and modal
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto px-4 py-0 max-w-7xl">
+    <div className="flex flex-col grow w-full min-h-0">
+      <AppPageContainer className="py-0 pb-16 md:pb-20">
         {/* Gallery Header Section */}
         <div className="relative pt-24 md:pt-32 pb-16">
           <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl tracking-tighter font-regular text-zinc-800 dark:text-white mb-6">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-foreground mb-6">
               {t(currentLanguage, "galleryPage.title")}
             </h1>
             <div className="text-muted-foreground text-lg mt-4 mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -293,7 +294,7 @@ export default function GalleryClientComponent() {
                   <a
                     key={sectionId}
                     href={`#${sectionId}`}
-                    className="px-4 py-2 rounded-md text-sm font-medium bg-zinc-200/80 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-700 transition-colors"
+                    className="px-4 py-2 rounded-sm text-sm font-medium bg-muted text-foreground border border-border hover:bg-muted/80 transition-colors"
                   >
                     {sectionTitle}
                   </a>
@@ -331,7 +332,7 @@ export default function GalleryClientComponent() {
             ),
           )}
         </div>
-      </div>
+      </AppPageContainer>
 
       {/* Zoomed Image Modal – carousel shows only images from the clicked section */}
       {zoomedState && (

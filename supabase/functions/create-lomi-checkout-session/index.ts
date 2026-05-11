@@ -247,7 +247,7 @@ serve(async (req: Request) => {
         event_id: payload.eventId,
         ticket_type_id: payload.ticketTypeId,
         customer_id: customerId,
-        app_source: "djaouli_events_app",
+        app_source: "wereklub_events_app",
         is_product_based: isPriceBased,
       },
       require_billing_address: false,

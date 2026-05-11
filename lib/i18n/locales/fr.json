@@ -12,7 +12,8 @@
       "energy": "énergie",
       "respect": "respect"
     },
-    "copyright": "© {year} Djaouli Entertainment — Tous droits réservés."
+    "copyright": "© {year} Wêrê Klub — Tous droits réservés.",
+    "socialHeading": "Suivez-nous"
   },
   "header": {
     "nav": {
@@ -21,118 +22,71 @@
       "gallery": "Galerie",
       "shop": "Boutique",
       "blog": "Blog",
-      "soon": "SOON"
+      "soon": "SOON",
+      "about": "À propos",
+      "agency": "Agence"
     },
     "mobileMenu": {
       "toggle": "Ouvrir/Fermer le menu",
       "title": "Menu Mobile",
       "close": "Fermer le menu",
-      "description": "Djaouli Entertainment est un collectif de DJs avant-gardiste basé à Abidjan. Nous créons des espaces où la liberté musicale s'épanouit et les barrières sociales s'effacent."
-    }
-  },
-  "barcode": {
-    "opensource": "Ce site web est open-source."
-  },
-  "djaouliCode": {
-    "prefix": "CODE",
-    "item1": {
-      "title": "PERSONNE NE TE REGARDE",
-      "description": "Relâche-toi, respire, transpire. Ici, tu n'as rien à prouver — juste à kiffer."
-    },
-    "item2": {
-      "title": "LIBERTÉ TOTALE, RESPECT TOTAL",
-      "description": "On est tous là pour briller, mais sans éteindre les autres. On veille les un·es sur les autres."
-    },
-    "item3": {
-      "title": "ICI, LES CORPS DANSENT SANS MODE D'EMPLOI",
-      "description": "Le consentement, c'est pas une option, c'est une vibe. On se respecte, on se check, on s'écoute."
-    },
-    "item4": {
-      "title": "LA SCÈNE EST SACRÉE ET ELLE EST À TOUT LE MONDE",
-      "description": "DJ, public, orga, poto en train de filmer au téléphone — chacun pose son énergie et ça fait la magie."
-    },
-    "item5": {
-      "title": "SI T'ES VENU T'ASSEOIR, T'AS LOUPÉ L'ADRESSE",
-      "description": "Viens pas consommer, viens contribuer. Le dance-floor est notre temple."
-    },
-    "item6": {
-      "title": "LES DJS NE SONT PAS DES JUKE-BOX",
-      "description": "Laisse-les raconter leur histoire. Chaque DJ a sa patte, on se laisse emporter, se laisse surprendre."
-    },
-    "item7": {
-      "title": "TU CONNAIS PAS LE SON ? ENCORE MIEUX",
-      "description": "Sois curieux. Ce que t'entends ici, tu ne l'as peut-être jamais entendu, mais tu vas t'en souvenir longtemps."
-    },
-    "item8": {
-      "title": "OUI, ON PEUT TRANSPIRER SA VIE SUR DE LA MUSIQUE ÉLECTRONIQUE",
-      "description": "MÊME À ABIDJAN."
-    },
-    "item9": {
-      "title": "CHACUN ÉCRIT UN BOUT DE LA LÉGENDE",
-      "description": "Une soirée Djaouli, c'est une affaire collective. Ta vibe compte. Ta sueur compte."
-    },
-    "item10": {
-      "title": "VIENS COMME TU ES. LE SEUL DRESS CODE ICI, C'EST L'ATTITUDE",
-      "description": "Viens avec ton meilleur mood, Pas de tenue exigée. Pas de jugement."
-    },
-    "item11": {
-      "title": "LE \"BÔRÔ\" EST UNE FAMILLE CHOISIE",
-      "description": "Tu viens seul·e ? Tu repars avec des frères, des sœurs, des âmes vibrantes. Dis bonjour, souris, connecte-toi."
+      "description": "Collectif basé à Abidjan qui organise des événements musicaux — ambiance, inclusion et dancefloor au centre."
     }
   },
   "termsPage": {
-    "pageTitle": "Termes et Conditions | Djaouli Entertainment",
-    "pageDescription": "Comprendre les Termes et Conditions d'engagement avec Djaouli Entertainment, le collectif musical et organisateur d'événements pionnier de la scène alternative Hip-Hop & Électronique d'Abidjan.",
+    "sectionBanner": "Conditions",
+    "pageTitle": "Termes et Conditions | Wêrê Klub",
+    "pageDescription": "Termes et Conditions pour l'utilisation de wereklub.com et la participation aux événements Wêrê Klub.",
     "title": "Termes et Conditions",
     "subtitle": "Veuillez lire attentivement ces termes avant d'utiliser nos services ou d'assister à nos événements uniques.",
     "lastUpdated": "Dernière mise à jour : {date}",
     "introduction": {
       "title": "Introduction",
-      "p1": "Bienvenue chez Djaouli Entertainment (\"Djaouli\", \"nous\", \"notre\"). Né à Abidjan en mars 2022, Djaouli Entertainment est un collectif de DJs à l'avant-garde d'une scène musicale alternative mêlant Hip-Hop & Musique Électronique. Ces Termes et Conditions (\"Termes\") régissent votre utilisation de notre site web (par exemple, djaoulient.com, le cas échéant), de nos services (y compris la promotion et l'organisation d'événements), et votre participation à nos célèbres soirées \"BÔRÔ DE DJAOULI\" et autres événements.",
-      "p2": "Le terme \"Djaouli\" lui-même, issu du Nouchi (argot ivoirien), signifie énergie, entêtement et amour de la fête – des qualités que nous canalisons pour créer des expériences uniques et libératrices. En accédant à nos services, en achetant des billets ou en participant à nos événements, vous acceptez d'être lié par ces Termes. Si vous êtes en désaccord avec une partie de ces Termes, vous ne pouvez pas accéder à nos services ni participer à nos événements."
+      "p1": "Bienvenue chez Wêrê Klub (« nous », « notre »). Basés à Abidjan (Côte d'Ivoire), nous organisons des événements musicaux et des services associés. Ces Termes et Conditions (« Termes ») régissent votre utilisation de notre site web (notamment wereklub.com), de nos services (y compris la promotion et l'organisation d'événements), et votre participation à nos événements.",
+      "p2": "Wêrê Klub, c'est l'énergie, l'ouverture et le respect sur le dancefloor — des qualités que nous canalisons pour créer des expériences uniques et libératrices. En accédant à nos services, en achetant des billets ou en participant à nos événements, vous acceptez d'être lié par ces Termes. Si vous êtes en désaccord avec une partie de ces Termes, vous ne pouvez pas accéder à nos services ni participer à nos événements."
     },
     "mission": {
       "title": "Notre Mission & Votre Expérience",
-      "p1": "Djaouli Entertainment est né d'un désir de liberté artistique sur la scène DJ d'Abidjan. Notre objectif principal est d'offrir une plateforme où les DJs peuvent exprimer leur curation et leur personnalité artistique sans les contraintes de la demande mainstream, et où le public peut découvrir une riche diversité musicale. Nous nous efforçons de créer un pont entre les genres et les publics, favorisant la cohésion sociale et l'échange culturel.",
-      "p2": "Nos valeurs sont l'Unité, l'Ouverture, la Liberté et le Respect. Nous vivons selon deux commandements : \"L'égalité de chacun sur le Dancefloor\" et \"L'enjaillement dans le respect\". Nous attendons de tous les participants et participantes qu'ils respectent ces valeurs."
+      "p1": "Nous montons des événements qui laissent place à des sons et des publics différents à Abidjan. Notre ambition : des lieux accueillants où découvrir la musique et profiter ensemble, avec responsabilité.",
+      "p2": "Nos valeurs incluent l'ouverture, le respect et la sécurité sur le dancefloor. Chaque personne présente doit se comporter de façon responsable envers l'équipe, les artistes et les autres participant·es."
     },
     "conduct": {
       "title": "Utilisation de Nos Services & Conduite aux Événements",
-      "p1": "Vous acceptez d'utiliser notre site web et nos services uniquement à des fins légales et d'une manière qui respecte les droits et la jouissance des autres. Lors de votre participation aux événements de Djaouli Entertainment :",
+      "p1": "Vous acceptez d'utiliser notre site web et nos services uniquement à des fins légales et d'une manière qui respecte les droits et la jouissance des autres. Lors de votre participation aux événements de Wêrê Klub :",
       "listItem1": "Vous devez vous comporter de manière respectueuse envers toutes les personnes, sans distinction de race, de culture ou de classe sociale, reflétant la communauté diversifiée que nous cultivons.",
       "listItem2": "Les comportements interdits comprennent le harcèlement, la discrimination, le fait de causer de la détresse ou des désagréments à toute personne, la transmission de contenu obscène ou offensant, ou la perturbation de l'événement.",
-      "listItem3": "Vous devez respecter tous les règlements du lieu, les consignes de santé et de sécurité, et les instructions du personnel de l'événement, d'autant plus que nos événements se déroulent souvent dans des lieux atypiques, underground et uniques (tels que des pizzerias, des parcs d'attractions désaffectés ou des villas privées).",
+      "listItem3": "Vous devez respecter tous les règlements du lieu, les consignes de santé et de sécurité, et les instructions du personnel de l'événement. Les événements peuvent avoir lieu dans des espaces très variés, y compris des lieux non traditionnels ou temporaires.",
       "p2": "Lors de l'inscription pour recevoir des informations, des newsletters ou (le cas échéant) pour des préventes d'événements, vous devez fournir des informations exactes et à jour."
     },
     "tickets": {
       "title": "Billets d'Événement et Admission",
-      "p1": "Toutes les ventes de billets pour les événements de Djaouli Entertainment sont soumises à disponibilité et à toutes conditions spécifiques communiquées au moment de l'achat (par exemple, restrictions d'âge, exigences d'entrée spécifiques pour des lieux uniques).",
+      "p1": "Toutes les ventes de billets pour les événements de Wêrê Klub sont soumises à disponibilité et à toutes conditions spécifiques communiquées au moment de l'achat (par exemple, restrictions d'âge, exigences d'entrée spécifiques pour des lieux uniques).",
       "p2": "Les billets sont généralement non remboursables et non transférables, sauf si requis par la loi applicable ou explicitement indiqué par nous pour un événement particulier. Nous nous réservons le droit d'annuler ou de reporter des événements ; dans ce cas, notre politique de remboursement ou d'échange sera communiquée aux détenteurs de billets.",
       "p3": "Nous nous réservons le droit de refuser l'admission ou d'expulser toute personne dont la conduite est jugée désordonnée, qui ne respecte pas ces Termes, les règles spécifiques de l'événement ou nos valeurs fondamentales, ou qui présente un risque pour la sécurité ou le plaisir des autres. Aucun remboursement ne sera offert dans de telles circonstances."
     },
     "ip": {
       "title": "Propriété Intellectuelle",
-      "p1": "Tout le contenu lié à Djaouli Entertainment, y compris notre nom, nos logos (par exemple, \"Djaouli Entertainment\", \"BÔRÔ DE DJAOULI\"), nos concepts d'événements, nos mixes DJ (par Mask On, Seny.D, Dalight, et les artistes invités lorsqu'enregistrés et partagés par nous), textes, graphiques, images et clips audio sur notre site web ou nos supports promotionnels, est la propriété de Djaouli Entertainment ou de ses fournisseurs/partenaires de contenu et est protégé par les lois internationales sur le droit d'auteur et les marques.",
+      "p1": "Tout le contenu lié à Wêrê Klub, y compris notre nom, nos logos et notre image de marque (par exemple, « Wêrê Klub »), nos concepts d'événements, nos sets DJ et enregistrements (par résidents, invités et artistes lorsqu'ils sont partagés par nous), textes, graphiques, images et clips audio sur notre site web ou nos supports promotionnels, est la propriété de Wêrê Klub ou de ses fournisseurs/partenaires de contenu et est protégé par les lois internationales sur le droit d'auteur et les marques.",
       "p2": "Vous ne pouvez pas reproduire, dupliquer, copier, vendre, revendre ou exploiter toute partie de notre service, contenu d'événement ou image de marque sans notre autorisation écrite expresse."
     },
     "userContent": {
       "title": "Contenu Généré par l'Utilisateur",
-      "p1": "Si vous publiez du contenu ou soumettez du matériel lié à nos événements (par exemple, photos, vidéos, commentaires sur les réseaux sociaux taguant Djaouli Entertainment ou utilisant nos hashtags d'événement), et sauf indication contraire de notre part, vous accordez à Djaouli Entertainment un droit non exclusif, libre de redevances, perpétuel, irrévocable et entièrement sous-licenciable d'utiliser, reproduire, modifier, adapter, publier, traduire, créer des œuvres dérivées, distribuer et afficher ce contenu dans le monde entier et sur tout support. Ceci a pour but principal de promouvoir l'expérience Djaouli Entertainment, de mettre en valeur notre communauté dynamique et de souligner l'atmosphère unique de nos événements.",
-      "p2": "Vous déclarez et garantissez que vous possédez ou contrôlez tous les droits sur le contenu que vous publiez, qu'il est exact, que son utilisation ne viole pas ces Termes et ne causera aucun préjudice à toute personne ou entité. Vous acceptez d'indemniser Djaouli Entertainment pour toutes les réclamations résultant du contenu que vous fournissez."
+      "p1": "Si vous publiez du contenu ou soumettez du matériel lié à nos événements (par exemple, photos, vidéos, commentaires sur les réseaux sociaux taguant Wêrê Klub ou utilisant nos hashtags d'événement), et sauf indication contraire de notre part, vous accordez à Wêrê Klub un droit non exclusif, libre de redevances, perpétuel, irrévocable et entièrement sous-licenciable d'utiliser, reproduire, modifier, adapter, publier, traduire, créer des œuvres dérivées, distribuer et afficher ce contenu dans le monde entier et sur tout support. Ceci a pour but principal de promouvoir l'expérience Wêrê Klub, de mettre en valeur notre communauté dynamique et de souligner l'atmosphère unique de nos événements.",
+      "p2": "Vous déclarez et garantissez que vous possédez ou contrôlez tous les droits sur le contenu que vous publiez, qu'il est exact, que son utilisation ne viole pas ces Termes et ne causera aucun préjudice à toute personne ou entité. Vous acceptez d'indemniser Wêrê Klub pour toutes les réclamations résultant du contenu que vous fournissez."
     },
     "liability": {
       "title": "Limitation de Responsabilité",
-      "p1": "Djaouli Entertainment, y compris ses fondateurs (Mask On, Seny.D, Dalight) et ses affiliés, ne sera pas responsable des dommages de toute nature résultant de l'utilisation de nos services ou de la participation à nos événements, y compris, mais sans s'y limiter, les dommages directs, indirects, accessoires, punitifs et consécutifs, sauf indication contraire écrite.",
-      "p2": "Votre participation à nos événements, en particulier ceux qui se déroulent dans des lieux non conventionnels, \"underground\" ou réaménagés (par exemple, La Grande Maison by Venus Room), est à vos propres risques. Bien que nous nous efforçons d'assurer la sécurité, vous reconnaissez que de tels lieux peuvent présenter des caractéristiques intrinsèques différentes des clubs traditionnels.",
-      "p3": "Nous ne garantissons pas que notre site web, ses serveurs ou les e-mails envoyés par Djaouli Entertainment sont exempts de virus ou d'autres composants nuisibles. Nous nous efforçons de fournir un environnement en ligne sécurisé mais ne pouvons garantir une sécurité absolue."
+      "p1": "Wêrê Klub, ses organisateurs et ses affiliés ne pourront être tenus responsables des dommages de toute nature résultant de l'utilisation de nos services ou de la participation à nos événements, y compris, mais sans s'y limiter, les dommages directs, indirects, accessoires, punitifs et consécutifs, sauf indication contraire écrite.",
+      "p2": "Votre participation à nos événements, y compris dans des lieux non conventionnels ou réaménagés, est à vos propres risques. Bien que nous nous efforcions d'assurer la sécurité, vous reconnaissez que de tels lieux peuvent différer des clubs traditionnels.",
+      "p3": "Nous ne garantissons pas que notre site web, ses serveurs ou les e-mails envoyés par Wêrê Klub sont exempts de virus ou d'autres composants nuisibles. Nous nous efforçons de fournir un environnement en ligne sécurisé mais ne pouvons garantir une sécurité absolue."
     },
     "indemnification": {
       "title": "Indemnisation",
-      "p1": "Vous acceptez d'indemniser, de défendre et de dégager de toute responsabilité Djaouli Entertainment, ses fondateurs, employés, agents et partenaires contre toutes pertes, dépenses, dommages et coûts, y compris les honoraires d'avocat raisonnables, résultant de toute violation de ces Termes ou de toute activité liée à votre engagement avec nos services ou événements (y compris une conduite négligente ou fautive)."
+      "p1": "Vous acceptez d'indemniser, de défendre et de dégager de toute responsabilité Wêrê Klub, ses organisateurs, employés, agents et partenaires contre toutes pertes, dépenses, dommages et coûts, y compris les honoraires d'avocat raisonnables, résultant de toute violation de ces Termes ou de toute activité liée à votre engagement avec nos services ou événements (y compris une conduite négligente ou fautive)."
     },
     "governingLaw": {
       "title": "Droit Applicable",
-      "p1": "Ces Termes et tout litige ou réclamation découlant de ou en relation avec eux (y compris les litiges ou réclamations non contractuels) seront régis et interprétés conformément aux lois de la Côte d'Ivoire, pays d'origine de Djaouli Entertainment."
+      "p1": "Ces Termes et tout litige ou réclamation découlant de ou en relation avec eux (y compris les litiges ou réclamations non contractuels) seront régis et interprétés conformément aux lois de la Côte d'Ivoire, pays d'origine de Wêrê Klub."
     },
     "changes": {
       "title": "Modifications de Ces Termes",
@@ -141,25 +95,28 @@
     },
     "contact": {
       "title": "Contactez-Nous",
-      "p1": "Si vous avez des questions concernant ces Termes, ou si vous souhaitez en savoir plus sur Djaouli Entertainment et notre mission pour dynamiser la scène musicale d'Abidjan, veuillez nous contacter à : djaoulient@gmail.com.",
-      "p2": "Nous construisons plus que de simples soirées ; nous cultivons un mouvement. Merci de faire partie de l'énergie Djaouli !"
+      "p1": "Si vous avez des questions concernant ces Termes, ou si vous souhaitez en savoir plus sur Wêrê Klub et notre mission pour dynamiser la scène musicale d'Abidjan, veuillez nous contacter à : contact@wereklub.com.",
+      "p2": "Merci d'être là — et à très vite sur le dancefloor."
     }
   },
   "eventsPage": {
     "metadata": {
       "title": "Événements",
-      "description": "Découvrez les prochains événements de Djaouli Entertainment"
+      "description": "Découvrez les prochains événements de Wêrê Klub"
     },
     "title": "Événements",
-    "noEvents": "Aucun événement à venir trouvé."
+    "noEvents": "Aucun événement publié pour le moment.",
+    "upcomingSection": "À venir",
+    "pastSection": "Passés"
   },
   "newsPage": {
+    "sectionBanner": "Blog",
     "metadata": {
-      "title": "Blog | Djaouli Entertainment",
-      "description": "Dernières actualités, comptes-rendus d'événements et insights de la Djaouli Family."
+      "title": "Blog | Wêrê Klub",
+      "description": "Dernières actualités, comptes-rendus d'événements et insights de la communauté Wêrê Klub."
     },
     "title": "Blog",
-    "description": "Restez informé avec les dernières actu, comptes-rendus d'événements et insights de la Djaouli Family.",
+    "description": "Restez informé avec les dernières actu, comptes-rendus d'événements et insights de la communauté Wêrê Klub.",
     "moreNews": "PLUS D'ACTUALITÉS",
     "readMore": "Lire plus →"
   },
@@ -170,11 +127,13 @@
     "moreShots": "Plus de photos",
     "gallery": "Galerie",
     "noImages": "Aucune image trouvée.",
-    "untitledSection": "Galerie"
+    "untitledSection": "Galerie",
+    "sectionBanner": "Galerie"
   },
   "merchPage": {
+    "sectionBanner": "Boutique",
     "title": "La boutique",
-    "subtitle": "Montrez votre soutien à Djaouli avec des marchandises et objets de collection officiels.",
+    "subtitle": "Montrez votre soutien à Wêrê Klub avec des marchandises et objets de collection officiels.",
     "breadcrumb": "Boutique",
     "loading": "Chargement...",
     "searchPlaceholder": "Rechercher...",
@@ -185,7 +144,7 @@
     "noProductsFoundDescription": "Essayez d'ajuster vos filtres ou termes de recherche.",
     "comingSoon": {
       "title": "Bientôt disponible",
-      "description": "Nouveaux produits bientôt disponibles. Restez à l'écoute pour des équipements et objets de collection Djaouli exclusifs."
+      "description": "Nouveaux produits bientôt disponibles. Restez à l'écoute pour des équipements et objets de collection Wêrê Klub exclusifs."
     },
     "productDetail": {
       "backToMerch": "Merch",
@@ -227,6 +186,7 @@
     "tickets": {
       "salesClosedGlobal": "La billetterie pour cet événement est actuellement fermée.",
       "noItemsListed": "Aucun billet ou pack n'est actuellement listé pour cet événement.",
+      "eventPassed": "Cet événement a déjà eu lieu — la billetterie est fermée.",
       "title": "Billets",
       "buyNow": "Acheter",
       "getETicket": "Obtenir ticket",
@@ -240,6 +200,10 @@
     },
     "lineupSection": {
       "title": "Line-up"
+    },
+    "gallerySection": {
+      "title": "Photos",
+      "description": "Les images de cette soirée sont ajoutées ici au fil du temps — repassez après l'événement."
     },
     "venueSection": {
       "title": "Lieu",

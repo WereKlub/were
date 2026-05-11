@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusCircleIcon, ShoppingCart } from "lucide-react";
+import { PlusCircleIcon, ShoppingBag } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useCart } from "./cart-context";
@@ -407,32 +407,26 @@ export default function CartModal() {
     );
   };
 
-  // Only show cart button if there are items in the cart
-  if (!cart || cart.totalQuantity === 0) {
+  if (!cart) {
     return null;
   }
 
   return (
     <>
       <Button
+        variant="ghost"
         aria-label="Open cart"
         onClick={openCart}
-        className={`uppercase relative ${button.secondaryBorder}`}
-        size={"sm"}
+        className="flex items-center gap-2 h-auto px-2 py-1.5 text-foreground hover:bg-transparent hover:text-foreground/80"
+        size="sm"
         onClickCapture={(e) => {
           // Prevent event bubbling that might interfere with modal
           e.stopPropagation();
           openCart();
         }}
       >
-        <ShoppingCart className="h-4 w-4" />
-        {cart.totalQuantity > 0 && (
-          <span
-            className={`absolute -top-1 -right-1 ${button.cartBadge} text-xs rounded-sm h-5 w-5 flex items-center justify-center font-medium`}
-          >
-            {cart.totalQuantity}
-          </span>
-        )}
+        <ShoppingBag className="h-5 w-5 shrink-0" />
+        <span className="text-sm tabular-nums">{cart.totalQuantity}</span>
       </Button>
 
       {/* Render modal at document body level using portal */}

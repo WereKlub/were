@@ -6,6 +6,7 @@ import { getNewsPostBySlug } from "@/lib/queries/news";
 import type { NewsPost } from "@/lib/types/news";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
+import { AppPageShell, AppPageContainer } from "@/components/layout/app-page-shell";
 
 // Category type is now handled by NewsPost type
 
@@ -24,7 +25,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${post.title} | Djaouli Entertainment Blog`,
+    title: `${post.title} | Wêrê Klub Blog`,
     description: post.excerpt,
   };
 }
@@ -42,14 +43,14 @@ export default async function NewsPostPage({
   }
 
   return (
-    <>
+    <AppPageShell>
       <Header />
-      <article className="min-h-screen bg-gradient-to-b from-background to-muted/10">
-        <div className="container mx-auto px-4 py-12 max-w-4xl">
+      <article className="grow flex flex-col min-w-0">
+        <AppPageContainer className="py-12 pb-16 md:pb-20">
           {/* Article Header */}
           <header className="mb-12 space-y-8">
             <div className="text-left space-y-6">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-tight mt-8">
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-foreground leading-tight mt-4">
                 {post.title}
               </h1>
 
@@ -109,9 +110,9 @@ export default async function NewsPostPage({
               </p>
             </div>
           </footer>
-        </div>
+        </AppPageContainer>
       </article>
       <Footer />
-    </>
+    </AppPageShell>
   );
 }

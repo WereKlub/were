@@ -1,49 +1,74 @@
 "use client";
 
 import { useTranslation } from "@/lib/contexts/TranslationContext";
-import ParallaxGallery from "@/components/event/parallax";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { t } from "@/lib/i18n/translations";
-
-interface EventImageData {
-  _id: string;
-  title: string;
-  slug: string;
-  featuredImage: string;
-  date?: string;
-  description?: string;
-  ticketsAvailable?: boolean;
-}
+import { SectionHeader } from "@/components/landing/section-header";
+import { EventIndexGrid } from "@/components/event/event-index-grid";
+import type { WereEventCard as WereEventCardModel } from "@/components/event/were-event-card";
+import {
+  AppPageContainer,
+  AppPageShell,
+} from "@/components/layout/app-page-shell";
 
 interface EventsPageContentProps {
-  events: EventImageData[];
+  upcomingCards: WereEventCardModel[];
+  pastCards: WereEventCardModel[];
 }
 
-export default function EventsPageContent({ events }: EventsPageContentProps) {
+export default function EventsPageContent({
+  upcomingCards,
+  pastCards,
+}: EventsPageContentProps) {
   const { currentLanguage } = useTranslation();
 
-  if (!events || events.length === 0) {
+  if (upcomingCards.length === 0 && pastCards.length === 0) {
     return (
-      <div className="flex flex-col min-h-screen">
+      <AppPageShell>
         <Header />
-        <main className="container mx-auto py-20 px-4 grow">
-          <h1 className="text-4xl font-bold mb-8">
-            {t(currentLanguage, "eventsPage.title")}
-          </h1>
-          <p>{t(currentLanguage, "eventsPage.noEvents")}</p>
-        </main>
+        <div className="flex flex-col grow">
+          <AppPageContainer className="max-w-4xl py-20">
+            <h1 className="font-display text-4xl md:text-5xl font-black uppercase mb-8 tracking-tight">
+              {t(currentLanguage, "eventsPage.title")}
+            </h1>
+            <p className="text-muted-foreground leading-relaxed">
+              {t(currentLanguage, "eventsPage.noEvents")}
+            </p>
+          </AppPageContainer>
+        </div>
         <Footer />
-      </div>
+      </AppPageShell>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <AppPageShell>
       <Header />
-      <main className="grow">
-        <ParallaxGallery events={events} />
-      </main>
-    </div>
+      <div className="flex flex-col grow min-w-0" id="events">
+        <AppPageContainer className="pt-12 md:pt-16 pb-4">
+          <h1 className="font-display text-4xl md:text-5xl font-black uppercase tracking-tight text-balance">
+            {t(currentLanguage, "eventsPage.title")}
+          </h1>
+        </AppPageContainer>
+        {upcomingCards.length > 0 ? (
+          <>
+            <SectionHeader
+              title={t(currentLanguage, "eventsPage.upcomingSection")}
+            />
+            <EventIndexGrid events={upcomingCards} />
+          </>
+        ) : null}
+        {pastCards.length > 0 ? (
+          <>
+            <SectionHeader
+              title={t(currentLanguage, "eventsPage.pastSection")}
+            />
+            <EventIndexGrid events={pastCards} />
+          </>
+        ) : null}
+      </div>
+      <Footer />
+    </AppPageShell>
   );
 }

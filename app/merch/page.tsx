@@ -5,9 +5,9 @@ import LoadingComponent from "@/components/ui/Bouncer";
 import MerchContentClient from "./merch-content-client";
 
 export const metadata: Metadata = {
-  title: "Merch | Djaouli",
+  title: "Merch | Wêrê Klub",
   description:
-    "Shop exclusive Djaouli merchandise, apparel, and collectibles. Support the movement with our unique designs and products.",
+    "Shop exclusive Wêrê Klub merchandise, apparel, and collectibles.",
 };
 
 async function MerchContent() {

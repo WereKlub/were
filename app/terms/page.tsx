@@ -4,7 +4,7 @@ import TermsClientPage from "./terms-client";
 export const metadata: Metadata = {
   title: "Terms",
   description:
-    "Understand the Terms and Conditions for engaging with Djaouli Entertainment, Abidjan's pioneering alternative Hip-Hop & Electronic music collective and event organizer.",
+    "Terms and Conditions for using wereklub.com and attending Wêrê Klub events.",
 };
 
 export default function Page() {

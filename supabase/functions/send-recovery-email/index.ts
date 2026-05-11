@@ -6,11 +6,11 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const resendApiKey = Deno.env.get("RESEND_API_KEY")!;
 const fromEmail =
-  Deno.env.get("FROM_EMAIL") || "notifications@tickets.djaoulient.com";
+  Deno.env.get("FROM_EMAIL") || "notifications@tickets.wereklub.com";
 const APP_BASE_URL = (
   Deno.env.get("APP_BASE_URL") || "http://localhost:3000"
 ).replace(/\/$/, "");
-const defaultLogoUrl = "https://www.djaoulient.com/icon.png";
+const defaultLogoUrl = "https://www.wereklub.com/icon.png";
 
 function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
@@ -227,7 +227,7 @@ Deno.serve(async (req: Request) => {
         <table role="presentation" width="560" cellspacing="0" cellpadding="0" border="0" style="width:560px;max-width:100%;background-color:#ffffff;">
           <tr>
             <td style="padding:24px 24px 16px;text-align:center;">
-              <img src="${logoSrc}" alt="Djaouli Entertainment" width="80" height="80" style="display:block;margin:0 auto;border:0;" />
+              <img src="${logoSrc}" alt="Wêrê Klub" width="80" height="80" style="display:block;margin:0 auto;border:0;" />
             </td>
           </tr>
           <tr>
@@ -246,7 +246,7 @@ Deno.serve(async (req: Request) => {
             </td>
           </tr>
           <tr>
-            <td style="padding:16px 24px;border-top:1px solid #eee;font-size:12px;color:#888;text-align:center;">© ${new Date().getFullYear()} Djaouli Entertainment</td>
+            <td style="padding:16px 24px;border-top:1px solid #eee;font-size:12px;color:#888;text-align:center;">© ${new Date().getFullYear()} Wêrê Klub</td>
           </tr>
         </table>
       </td>
@@ -256,9 +256,9 @@ Deno.serve(async (req: Request) => {
 </html>`;
 
     const { data: emailData, error: emailError } = await resend.emails.send({
-      from: `Djaouli Entertainment <${fromEmail}>`,
+      from: `Wêrê Klub <${fromEmail}>`,
       to: purchaseData.customer_email,
-      reply_to: "djaoulient@gmail.com",
+      reply_to: "contact@wereklub.com",
       subject: `Finalisez votre réservation — ${eventName}`,
       html: emailHtmlBody,
     });

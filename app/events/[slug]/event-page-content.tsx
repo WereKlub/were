@@ -14,6 +14,10 @@ import ArtistCard from "@/components/event/ArtistCard";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { trackViewContent } from "@/components/ui/FacebookPixel";
 import { useEffect } from "react";
+import {
+  AppPageContainer,
+  AppPageShell,
+} from "@/components/layout/app-page-shell";
 
 interface TicketTypeData {
   _key: string;
@@ -85,6 +89,13 @@ const formatPrice = (price: number): string => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "\u00A0");
 };
 
+function isEventPast(isoDate: string | undefined): boolean {
+  if (!isoDate) return false;
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  return new Date(isoDate).getTime() < start.getTime();
+}
+
 const renderFormattedText = (text: string) => {
   return text.split("\n").map((line, index, array) => {
     const trimmedLine = line.trim();
@@ -134,7 +145,7 @@ const renderFormattedText = (text: string) => {
       return (
         <h4
           key={index}
-          className="text-gray-100 font-semibold text-base mt-4 mb-2 tracking-wide"
+          className="text-foreground font-semibold text-base mt-4 mb-2 tracking-wide"
         >
           {trimmedLine.replace(/[:]*$/, "")}
         </h4>
@@ -160,14 +171,14 @@ const renderFormattedText = (text: string) => {
 
     if (hasEmphasis) {
       return (
-        <p key={index} className="mb-1 font-medium text-gray-200">
+        <p key={index} className="mb-1 font-medium text-foreground">
           {trimmedLine}
         </p>
       );
     }
 
     return (
-      <p key={index} className="mb-1 text-gray-300">
+      <p key={index} className="mb-1 text-muted-foreground">
         {trimmedLine}
       </p>
     );
@@ -225,16 +236,17 @@ export default function EventPageContent({ event }: EventPageContentProps) {
   const hasDefinedTickets = (event.ticketTypes?.length ?? 0) > 0;
   const hasDefinedBundles = (event.bundles?.length ?? 0) > 0;
   const hasAnyDefinedItems = hasDefinedTickets || hasDefinedBundles;
+  const isPastEvent = isEventPast(event.date);
 
   return (
-    <>
+    <AppPageShell>
       <Header />
-      <div className="container mx-auto py-22 px-4">
+      <AppPageContainer className="py-12 pb-16 md:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 lg:gap-12 items-start">
           {/* Event Flyer - Assign 2 columns */}
           <div className="lg:col-span-2 relative aspect-2/3 rounded-sm overflow-hidden shadow-lg bg-muted">
             <Image
-              src={event.flyer?.url || "/placeholder.webp"}
+              src={event.flyer?.url || "/banner.webp"}
               alt={event.title}
               priority
               fill
@@ -245,11 +257,11 @@ export default function EventPageContent({ event }: EventPageContentProps) {
           {/* Event Details - Assign 3 columns */}
           <div className="lg:col-span-4">
             {/* Title and Subtitle */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
+            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight mb-3">
               {event.title}
             </h1>
             {event.subtitle && (
-              <p className="text-xl md:text-2xl text-slate-300 mt-1 mb-6">
+              <p className="text-xl md:text-2xl text-muted-foreground mt-1 mb-6">
                 {event.subtitle}
               </p>
             )}
@@ -258,11 +270,11 @@ export default function EventPageContent({ event }: EventPageContentProps) {
             <div className="flex flex-col gap-4 mb-8">
               <div className="flex items-center gap-3">
                 <CalendarDays className="h-6 w-6 text-primary shrink-0" />
-                <span className="text-lg text-gray-200">{formattedDate}</span>
+                <span className="text-lg text-foreground">{formattedDate}</span>
               </div>
               <div className="flex items-center gap-3">
                 <Clock className="h-6 w-6 text-primary shrink-0" />
-                <span className="text-lg text-gray-200">{formattedTime}</span>
+                <span className="text-lg text-foreground">{formattedTime}</span>
               </div>
               {event.location?.venueName && (
                 <div className="flex items-center gap-3">
@@ -276,11 +288,11 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                           rel="noopener noreferrer"
                           className="hover:underline"
                         >
-                          <span className="font-semibold text-gray-100">
+                          <span className="font-semibold text-foreground">
                             {event.location.venueName}
                           </span>
                           {event.location.address && (
-                            <span className="text-sm text-slate-400 block">
+                            <span className="text-sm text-muted-foreground block">
                               {" "}
                               ({event.location.address})
                             </span>
@@ -288,11 +300,11 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                         </a>
                       ) : (
                         <span>
-                          <span className="font-semibold text-gray-100">
+                          <span className="font-semibold text-foreground">
                             {event.location.venueName}
                           </span>
                           {event.location.address && (
-                            <span className="text-sm text-slate-400 block">
+                            <span className="text-sm text-muted-foreground block">
                               {" "}
                               ({event.location.address})
                             </span>
@@ -309,7 +321,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
               {event.hostedBy && (
                 <div className="flex items-center gap-3">
                   <Users className="h-6 w-6 text-primary shrink-0" />
-                  <span className="text-lg text-gray-200">
+                  <span className="text-lg text-foreground">
                     {t(currentLanguage, "eventSlugPage.hostedBy", {
                       name: event.hostedBy,
                     })}
@@ -322,7 +334,16 @@ export default function EventPageContent({ event }: EventPageContentProps) {
 
             {/* Tickets/Bundles Section - Always Link Checkout Mode Logic */}
             <div className="py-4">
-              {!globallyTicketsOnSale ? (
+              {isPastEvent ? (
+                <div className="bg-muted/50 border border-border text-foreground p-4 rounded-sm mb-6">
+                  <p className="font-medium leading-relaxed">
+                    {t(
+                      currentLanguage,
+                      "eventSlugPage.tickets.eventPassed",
+                    )}
+                  </p>
+                </div>
+              ) : !globallyTicketsOnSale ? (
                 <div className="bg-secondary text-secondary-foreground p-4 rounded-sm mb-6">
                   <p className="font-medium">
                     {t(
@@ -339,7 +360,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                 </div>
               ) : (
                 <>
-                  <h2 className="text-2xl font-bold text-gray-100 mb-4 tracking-tight">
+                  <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
                     {t(currentLanguage, "eventSlugPage.tickets.title")}
                   </h2>
                   <div className="space-y-6 mt-6">
@@ -349,21 +370,20 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                         {event.ticketTypes?.map((ticket) => (
                           <Card
                             key={ticket._key}
-                            className="border-slate-700 bg-background shadow-lg rounded-sm overflow-hidden flex flex-col"
+                            className="border-border bg-background shadow-lg rounded-sm overflow-hidden flex flex-col"
                           >
-                            {/* Mimicking djaouli-code.tsx structure - outer div with pattern (simplified here) & inner with gradient (simplified here) */}
                             <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
                               <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-sm pt-1 pb-1 px-3 flex flex-col grow">
                                 <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
                                   <div className="grow">
                                     <div className="flex flex-wrap items-baseline mb-3">
-                                      <h4 className="text-gray-100 font-bold text-lg uppercase leading-tight">
+                                      <h4 className="text-foreground font-bold text-lg uppercase leading-tight">
                                         {ticket.name.replace(
                                           /\s*\(\d+(\s*\w+)?\)$/,
                                           "",
                                         )}
                                       </h4>
-                                      <span className="mx-2 text-gray-400 text-lg">
+                                      <span className="mx-2 text-muted-foreground text-lg">
                                         |
                                       </span>
                                       <p className="text-primary font-semibold text-xl whitespace-nowrap">
@@ -396,7 +416,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                             return (
                                               <p
                                                 key={index}
-                                                className="text-gray-400 leading-relaxed"
+                                                className="text-muted-foreground leading-relaxed"
                                               >
                                                 {trimmedLine}
                                               </p>
@@ -405,7 +425,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                       </div>
                                     )}
                                     {ticket.details && (
-                                      <div className="text-xs text-gray-400/80 my-2 space-y-1">
+                                      <div className="text-xs text-muted-foreground/80 my-2 space-y-1">
                                         {ticket.details
                                           .split("\n")
                                           .map((line, idx) => {
@@ -489,20 +509,20 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                         {event.bundles?.map((bundle) => (
                           <Card
                             key={bundle.bundleId.current}
-                            className="border-slate-700 bg-background shadow-lg rounded-sm overflow-hidden flex flex-col"
+                            className="border-border bg-background shadow-lg rounded-sm overflow-hidden flex flex-col"
                           >
                             <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
                               <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-sm pt-1 pb-1 px-3 flex flex-col grow">
                                 <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
                                   <div className="grow">
                                     <div className="flex flex-wrap items-baseline mb-3">
-                                      <h4 className="text-gray-100 font-bold text-lg uppercase leading-tight">
+                                      <h4 className="text-foreground font-bold text-lg uppercase leading-tight">
                                         {bundle.name.replace(
                                           /\s*\(\d+(\s*\w+)?\)$/,
                                           "",
                                         )}
                                       </h4>
-                                      <span className="mx-2 text-gray-400 text-lg">
+                                      <span className="mx-2 text-muted-foreground text-lg">
                                         |
                                       </span>
                                       <p className="text-primary font-semibold text-xl whitespace-nowrap">
@@ -535,7 +555,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                             return (
                                               <p
                                                 key={index}
-                                                className="text-gray-400 leading-relaxed"
+                                                className="text-muted-foreground leading-relaxed"
                                               >
                                                 {trimmedLine}
                                               </p>
@@ -544,7 +564,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                       </div>
                                     )}
                                     {bundle.details && (
-                                      <div className="text-xs text-gray-400/80 my-2 space-y-1">
+                                      <div className="text-xs text-muted-foreground/80 my-2 space-y-1">
                                         {bundle.details
                                           .split("\n")
                                           .map((line, idx) => {
@@ -629,10 +649,10 @@ export default function EventPageContent({ event }: EventPageContentProps) {
             {/* Event Details, Venue, Lineup, Gallery - No longer in Tabs, shown sequentially or based on data presence */}
             {event.description && (
               <div className="mb-10 pt-6">
-                <h2 className="text-2xl font-bold text-gray-100 mb-4 tracking-tight">
+                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
                   {t(currentLanguage, "eventSlugPage.detailsSection.title")}
                 </h2>
-                <div className="prose prose-sm sm:prose dark:prose-invert max-w-none text-gray-300 leading-relaxed mt-1">
+                <div className="prose prose-sm sm:prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed mt-1">
                   {renderFormattedText(event.description)}
                 </div>
               </div>
@@ -640,7 +660,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
 
             {event.lineup && event.lineup.length > 0 && (
               <div className="mb-10 pt-6">
-                <h2 className="text-2xl font-bold text-gray-100 mb-4 tracking-tight">
+                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
                   {t(currentLanguage, "eventSlugPage.lineupSection.title")}
                 </h2>
                 <div className="relative">
@@ -659,26 +679,64 @@ export default function EventPageContent({ event }: EventPageContentProps) {
               </div>
             )}
 
+            {event.gallery && event.gallery.length > 0 && (
+              <div
+                id="event-gallery"
+                className="mb-10 pt-6 scroll-mt-28"
+              >
+                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
+                  {t(currentLanguage, "eventSlugPage.gallerySection.title")}
+                </h2>
+                <p className="text-sm text-muted-foreground mb-6 max-w-2xl">
+                  {t(
+                    currentLanguage,
+                    "eventSlugPage.gallerySection.description",
+                  )}
+                </p>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
+                  {event.gallery.map((img) => (
+                    <figure
+                      key={img._key}
+                      className="relative aspect-square overflow-hidden rounded-sm bg-muted"
+                    >
+                      <Image
+                        src={img.url}
+                        alt={img.caption || `${event.title} — photo`}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                      />
+                      {img.caption ? (
+                        <figcaption className="sr-only">
+                          {img.caption}
+                        </figcaption>
+                      ) : null}
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {(event.location?.venueName ||
               event.location?.address ||
               event.venueDetails) && (
               <div className="mb-10 pt-6">
-                <h2 className="text-2xl font-bold text-gray-100 mb-4 tracking-tight">
+                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
                   {t(currentLanguage, "eventSlugPage.venueSection.title")}
                 </h2>
                 {event.location?.venueName && (
-                  <p className="font-semibold text-gray-100 text-lg mt-2 mb-1">
+                  <p className="font-semibold text-foreground text-lg mt-2 mb-1">
                     {event.location.venueName}
                   </p>
                 )}
                 {event.location?.address && (
-                  <p className="text-slate-400 mb-4">
+                  <p className="text-muted-foreground mb-4">
                     {event.location.address}
                   </p>
                 )}
                 {/* Embedded Map ADDED HERE */}
                 {mapEmbedSrc && (
-                  <div className="my-6 relative w-full h-[300px] bg-muted rounded-sm shadow-lg border border-slate-700 overflow-hidden">
+                  <div className="my-6 relative w-full h-[300px] bg-muted rounded-sm shadow-lg border border-border overflow-hidden">
                     <iframe
                       src={mapEmbedSrc}
                       width="100%"
@@ -706,7 +764,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                   </div>
                 )}
                 {event.venueDetails && (
-                  <div className="prose prose-sm sm:prose dark:prose-invert max-w-none text-gray-300 leading-relaxed mt-1">
+                  <div className="prose prose-sm sm:prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed mt-1">
                     {renderFormattedText(event.venueDetails)}
                   </div>
                 )}
@@ -716,6 +774,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
             {/* Share Button - Separator above it if content sections were present */}
             {(event.description ||
               (event.lineup && event.lineup.length > 0) ||
+              (event.gallery && event.gallery.length > 0) ||
               event.location?.venueName ||
               event.location?.address ||
               event.venueDetails) && <Separator className="my-10" />}
@@ -727,8 +786,8 @@ export default function EventPageContent({ event }: EventPageContentProps) {
             </div>
           </div>
         </div>
-      </div>
+      </AppPageContainer>
       <Footer />
-    </>
+    </AppPageShell>
   );
 }

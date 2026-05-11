@@ -1,12 +1,13 @@
 "use client";
 
+import { Suspense, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { ProductListContent } from "@/components/merch/product-list-content";
 import { ProductGrid } from "@/components/merch/product-grid";
 import { ProductCardSkeleton } from "@/components/merch/product-card-skeleton";
-import { Suspense, useState, useMemo } from "react";
+import { SectionHeaderI18n } from "@/components/landing/section-header-i18n";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,10 @@ import {
 } from "@/components/ui/select";
 import { Search } from "lucide-react";
 import { SanityProduct } from "@/components/merch/types";
+import {
+  AppPageContainer,
+  AppPageShell,
+} from "@/components/layout/app-page-shell";
 
 interface MerchContentClientProps {
   products: SanityProduct[];
@@ -89,21 +94,20 @@ export default function MerchContentClient({
   }, [products]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <AppPageShell>
       <Header />
 
-      <main>
-        <div className="container mx-auto px-4 py-0 max-w-7xl">
-          {/* Hero Section */}
-          <div className="relative pt-24 md:pt-32 mb-12">
-            <div className="text-center">
-              <h1 className="text-4xl sm:text-5xl md:text-7xl tracking-tighter font-regular text-zinc-800 dark:text-white mb-6">
-                {t(currentLanguage, "merchPage.title")}
-              </h1>
-              <div className="text-muted-foreground text-lg mt-4 mb-8 max-w-3xl mx-auto leading-relaxed">
-                {t(currentLanguage, "merchPage.subtitle")}
-              </div>
-            </div>
+      <SectionHeaderI18n translationKey="merchPage.sectionBanner" />
+
+      <div className="flex flex-col grow min-w-0">
+        <AppPageContainer className="py-0 pb-16 md:pb-20">
+          <div className="text-center py-8 md:py-10 max-w-3xl mx-auto">
+            <h1 className="font-display text-2xl md:text-4xl font-black uppercase text-foreground mb-4">
+              {t(currentLanguage, "merchPage.title")}
+            </h1>
+            <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
+              {t(currentLanguage, "merchPage.subtitle")}
+            </p>
           </div>
 
           {/* Filters and Search */}
@@ -186,14 +190,14 @@ export default function MerchContentClient({
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="text-2xl font-semibold mb-4 text-zinc-900 dark:text-white">
+              <h2 className="text-xl font-display font-bold text-foreground mb-4 tracking-tight">
                 {searchQuery ||
                 selectedCategory !== "all" ||
                 selectedTag !== "all"
                   ? "No products found"
                   : t(currentLanguage, "merchPage.comingSoon.title")}
               </h2>
-              <p className="text-zinc-600 dark:text-zinc-400 mb-6">
+              <p className="text-muted-foreground mb-6">
                 {searchQuery ||
                 selectedCategory !== "all" ||
                 selectedTag !== "all"
@@ -202,10 +206,10 @@ export default function MerchContentClient({
               </p>
             </motion.div>
           )}
-        </div>
-      </main>
+        </AppPageContainer>
+      </div>
 
       <Footer />
-    </div>
+    </AppPageShell>
   );
 }

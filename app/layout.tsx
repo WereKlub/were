@@ -1,6 +1,6 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
@@ -11,18 +11,28 @@ import { FacebookPixel } from "@/components/ui/FacebookPixel";
 import {
   getNavigationSettings,
   getHomepageThemeSettings,
+  getFooterStripImageUrls,
 } from "@/lib/sanity/queries";
 import { ButtonThemeProvider } from "@/lib/contexts/ThemeContext";
+import { FooterStripProvider } from "@/lib/contexts/FooterStripContext";
 
-const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 // Ensure root layout always fetches fresh nav settings (no static cache)
 export const dynamic = "force-dynamic";
 
 const siteConfig = {
-  name: "Djaouli Ent.",
-  description: "Breaking musical boundaries since 2022.",
-  url: "https://djaoulient.com",
+  name: "Wêrê Klub",
+  description: "Music events out of Abidjan.",
+  url: "https://wereklub.com",
   ogImage: "/banner.webp",
 };
 
@@ -72,13 +82,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [navSettings, themeSettings] = await Promise.all([
+  const [navSettings, themeSettings, footerStripUrls] = await Promise.all([
     getNavigationSettings(),
     getHomepageThemeSettings(),
+    getFooterStripImageUrls(),
   ]);
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} flex flex-col min-h-screen`}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${spaceGrotesk.variable} ${inter.variable} bg-background`}
+    >
+      <body className="font-sans antialiased flex flex-col min-h-screen">
         <FacebookPixel />
         <ThemeProvider
           attribute="class"
@@ -95,7 +110,9 @@ export default async function RootLayout({
             >
               <TranslationProvider>
                 <CartProvider>
-                  <main className="grow">{children}</main>
+                  <FooterStripProvider urls={footerStripUrls}>
+                    <main className="grow">{children}</main>
+                  </FooterStripProvider>
                 </CartProvider>
               </TranslationProvider>
             </NavigationSettingsProvider>

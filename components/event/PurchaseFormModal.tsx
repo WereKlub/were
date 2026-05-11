@@ -11,7 +11,6 @@ import { t } from "@/lib/i18n/translations";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { SupabaseClient } from "@supabase/supabase-js";
 import PhoneNumberInput from "@/components/ui/phone-number-input";
-import DjaouliCodeDialog from "@/components/landing/djaouli-code";
 import { useIsMobile } from "@/lib/utils/use-is-mobile";
 
 const PURCHASE_MODAL_PORTAL_ID = "purchase-modal-portal";
@@ -85,7 +84,6 @@ export default function PurchaseFormModal({
   const [userPhone, setUserPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showDjaouliCode, setShowDjaouliCode] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [portalNode, setPortalNode] = useState<HTMLElement | null>(null);
   const [mobileVisibleHeight, setMobileVisibleHeight] = useState<number | null>(
@@ -176,20 +174,8 @@ export default function PurchaseFormModal({
       setQuantity(1);
       setQuantityDisplay("1");
       setError(null);
-
-      const hasSeenDjaouliCode =
-        localStorage.getItem("djaouli-code-shown") === "true";
-      if (!hasSeenDjaouliCode) {
-        setShowDjaouliCode(true);
-      }
     }
   }, [item]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      setShowDjaouliCode(false);
-    }
-  }, [isOpen]);
 
   if (!item) return null;
 
@@ -687,11 +673,6 @@ export default function PurchaseFormModal({
           </>
         )}
       </AnimatePresence>
-
-      <DjaouliCodeDialog
-        isOpen={showDjaouliCode}
-        onClose={() => setShowDjaouliCode(false)}
-      />
     </>,
     portalNode,
   );
