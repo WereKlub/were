@@ -28,7 +28,7 @@ export function ThemeModeSwitch({ className = "" }: { className?: string }) {
     <div
       role="group"
       aria-label="Theme"
-      className={`inline-flex shrink-0 items-center gap-0.5 rounded-sm border border-border p-0.5 ${className}`}
+      className={`flex shrink-0 items-center gap-0.5 rounded-sm border border-border p-0.5 ${className}`}
     >
       <button
         type="button"

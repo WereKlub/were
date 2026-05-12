@@ -1,7 +1,7 @@
 "use client";
 
 import { PlusCircleIcon, ShoppingBag } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { useCart } from "./cart-context";
 import { motion, AnimatePresence } from "framer-motion";
@@ -185,8 +185,11 @@ const isCartDrawerVisible = (): boolean => {
 export default function CartModal() {
   const { cart } = useCart();
   const { currentLanguage } = useTranslation();
-  const { button } = useTheme();
   const isMobile = useIsMobile();
+  const [instanceId] = useState(
+    () => `cart-${Math.random().toString(36).substring(7)}`,
+  );
+  const [portalNode, setPortalNode] = useState<HTMLElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [showPurchaseForm, setShowPurchaseForm] = useState(false);
@@ -195,17 +198,13 @@ export default function CartModal() {
     null,
   );
   const serializedCart = useRef(cart ? serializeCart(cart) : undefined);
-  const instanceIdRef = useRef<string>(
-    `cart-${Math.random().toString(36).substring(7)}`,
-  );
-  const portalContainerRef = useRef<HTMLElement | null>(null);
 
-  const openCart = () => {
-    cartOpenLock = instanceIdRef.current;
-    activePortalInstance = instanceIdRef.current;
+  const openCart = useCallback(() => {
+    cartOpenLock = instanceId;
+    activePortalInstance = instanceId;
     setShouldRenderPortal(true);
     setIsOpen(true);
-  };
+  }, [instanceId]);
 
   // Ensure component is mounted before rendering portal
   useEffect(() => {
@@ -218,18 +217,15 @@ export default function CartModal() {
         portalContainer.id = CART_PORTAL_ID;
         document.body.appendChild(portalContainer);
       }
-      portalContainerRef.current = portalContainer;
+      setPortalNode(portalContainer);
     }
-    const instanceId = instanceIdRef.current;
-    // Register this CartModal instance so external callers (e.g. Buy Now) can open it
-    const openInstance = () => openCart();
     registerCartModalInstance({
       id: instanceId,
-      open: openInstance,
+      open: openCart,
     });
     return () => {
       setIsMounted(false);
-      unregisterCartModalInstance(instanceId, openInstance);
+      unregisterCartModalInstance(instanceId, openCart);
       if (cartOpenLock === instanceId) {
         cartOpenLock = null;
       }
@@ -237,7 +233,7 @@ export default function CartModal() {
         activePortalInstance = null;
       }
     };
-  }, []);
+  }, [instanceId, openCart]);
 
   useEffect(() => {
     if (!cart) return;
@@ -269,18 +265,18 @@ export default function CartModal() {
       const drawerAlreadyVisible = isCartDrawerVisible();
       const canOpen =
         timeSinceLastOpen > CART_OPEN_DEBOUNCE_MS &&
-        (cartOpenLock === null || cartOpenLock === instanceIdRef.current) &&
+        (cartOpenLock === null || cartOpenLock === instanceId) &&
         !isOpen &&
         !drawerAlreadyVisible;
 
       if (canOpen) {
-        cartOpenLock = instanceIdRef.current;
-        activePortalInstance = instanceIdRef.current;
+        cartOpenLock = instanceId;
+        activePortalInstance = instanceId;
         lastCartOpenTime = now;
         setShouldRenderPortal(true);
         setIsOpen(true);
         setTimeout(() => {
-          if (cartOpenLock === instanceIdRef.current) {
+          if (cartOpenLock === instanceId) {
             cartOpenLock = null;
           }
         }, CART_OPEN_DEBOUNCE_MS);
@@ -288,23 +284,23 @@ export default function CartModal() {
     } else {
       serializedCart.current = newSerializedCart;
     }
-  }, [cart, isOpen]);
+  }, [cart, isOpen, instanceId]);
 
   // Sync lock with isOpen state - release lock when closed
   useEffect(() => {
     if (!isOpen) {
-      if (cartOpenLock === instanceIdRef.current) {
+      if (cartOpenLock === instanceId) {
         cartOpenLock = null;
       }
     } else {
       if (
         activePortalInstance === null ||
-        activePortalInstance === instanceIdRef.current
+        activePortalInstance === instanceId
       ) {
-        activePortalInstance = instanceIdRef.current;
+        activePortalInstance = instanceId;
       }
     }
-  }, [isOpen]);
+  }, [isOpen, instanceId]);
 
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
@@ -358,12 +354,12 @@ export default function CartModal() {
   const closeCart = () => {
     setIsOpen(false);
     setShowPurchaseForm(false);
-    if (cartOpenLock === instanceIdRef.current) {
+    if (cartOpenLock === instanceId) {
       cartOpenLock = null;
     }
     // Delay releasing portal ownership to allow exit animation to complete (300ms)
     setTimeout(() => {
-      if (activePortalInstance === instanceIdRef.current) {
+      if (activePortalInstance === instanceId) {
         activePortalInstance = null;
         setShouldRenderPortal(false);
       }
@@ -432,8 +428,8 @@ export default function CartModal() {
       {/* Render modal at document body level using portal */}
       {isMounted &&
         shouldRenderPortal &&
-        activePortalInstance === instanceIdRef.current &&
-        portalContainerRef.current &&
+        activePortalInstance === instanceId &&
+        portalNode &&
         createPortal(
           <AnimatePresence>
             {isOpen && (
@@ -518,7 +514,7 @@ export default function CartModal() {
               </>
             )}
           </AnimatePresence>,
-          portalContainerRef.current,
+          portalNode,
         )}
     </>
   );

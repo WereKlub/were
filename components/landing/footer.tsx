@@ -87,14 +87,14 @@ export default function Footer() {
             <div className="space-y-6">
               <Link
                 href="/"
-                className="relative block h-16 w-[220px] sm:h-20 sm:w-[280px] md:h-24 md:w-[320px]"
+                className="relative block h-36 w-full max-w-[340px] sm:h-44 sm:max-w-[440px] md:h-52 md:max-w-[560px]"
               >
                 <Image
                   src="/dark.png"
                   alt="Wêrê Klub"
                   fill
                   className="object-contain object-left dark:hidden"
-                  sizes="(max-width: 640px) 220px, (max-width: 768px) 280px, 320px"
+                  sizes="(max-width: 640px) 340px, (max-width: 768px) 440px, 560px"
                 />
                 <Image
                   src="/white.png"
@@ -102,7 +102,7 @@ export default function Footer() {
                   aria-hidden
                   fill
                   className="hidden object-contain object-left dark:block"
-                  sizes="(max-width: 640px) 220px, (max-width: 768px) 280px, 320px"
+                  sizes="(max-width: 640px) 340px, (max-width: 768px) 440px, 560px"
                 />
               </Link>
             </div>
@@ -168,13 +168,13 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-border dark:border-white/10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+          <div className="mt-8 pt-4 border-t border-border dark:border-white/10 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
             <p className="text-xs text-muted-foreground dark:text-white/50 leading-normal">
               {t(currentLanguage, "footer.copyright", {
                 year: new Date().getFullYear(),
               })}
             </p>
-            <div className="flex items-center gap-3 shrink-0 leading-none">
+            <div className="flex flex-row items-center gap-3 shrink-0 *:leading-none">
               <LanguageSwitcher className="text-muted-foreground! hover:text-foreground! dark:text-white/50! dark:hover:text-white/90!" />
               <ThemeModeSwitch className="dark:border-white/15" />
             </div>
