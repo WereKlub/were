@@ -1,12 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import CartModal from "@/components/merch/cart/cart-modal";
-import { ThemeModeSwitch } from "@/components/landing/theme-mode-switch";
 import { useNavigationSettings } from "@/lib/contexts/NavigationSettingsContext";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
@@ -39,29 +37,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
-      <div className="flex items-center justify-between px-6 py-4 md:px-12">
-        <Link
-          href="/"
-          className="relative block h-8 w-[120px] md:h-9 md:w-[140px] shrink-0"
-        >
-          <Image
-            src="/dark.png"
-            alt="Wêrê Klub"
-            fill
-            className="object-contain object-left dark:hidden"
-            sizes="140px"
-            priority
-          />
-          <Image
-            src="/white.png"
-            alt=""
-            aria-hidden
-            fill
-            className="hidden object-contain object-left dark:block"
-            sizes="140px"
-          />
-        </Link>
-
+      <div className="flex w-full items-center justify-end px-6 py-4 md:px-12">
         <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navItems.map((item) => (
             <Link
@@ -77,13 +53,11 @@ export default function Header() {
             </Link>
           ))}
           <div className="pl-2 border-l border-border flex items-center gap-3">
-            <ThemeModeSwitch />
             <CartModal />
           </div>
         </nav>
 
         <div className="lg:hidden flex items-center gap-2">
-          <ThemeModeSwitch />
           <CartModal />
           <button
             type="button"

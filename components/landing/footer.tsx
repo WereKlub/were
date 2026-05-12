@@ -7,6 +7,7 @@ import { WhatsappIcon } from "@/components/icons/WhatsappIcon";
 import { FacebookIcon } from "@/components/icons/FacebookIcon";
 import { Soundcloud } from "@/components/icons/Soundcloud";
 import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
+import { ThemeModeSwitch } from "@/components/landing/theme-mode-switch";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { useFooterStripUrls } from "@/lib/contexts/FooterStripContext";
@@ -49,10 +50,11 @@ export default function Footer() {
     { href: "/blog", labelKey: "header.nav.blog" as const },
     { href: "/a-propos", labelKey: "header.nav.about" as const },
     { href: "/agence", labelKey: "header.nav.agency" as const },
-    { href: "/", labelKey: "header.nav.home" as const },
+    { href: "/terms", labelKey: "footer.links.terms" as const },
   ];
 
-  const legal = [{ href: "/terms", labelKey: "footer.links.terms" as const }];
+  const footerNavCol1 = footerNav.slice(0, 4);
+  const footerNavCol2 = footerNav.slice(4);
 
   const displayStrip =
     stripUrls.length >= 4
@@ -85,14 +87,14 @@ export default function Footer() {
             <div className="space-y-6">
               <Link
                 href="/"
-                className="relative block h-10 w-[140px] md:h-12 md:w-[168px]"
+                className="relative block h-16 w-[220px] sm:h-20 sm:w-[280px] md:h-24 md:w-[320px]"
               >
                 <Image
                   src="/dark.png"
                   alt="Wêrê Klub"
                   fill
                   className="object-contain object-left dark:hidden"
-                  sizes="168px"
+                  sizes="(max-width: 640px) 220px, (max-width: 768px) 280px, 320px"
                 />
                 <Image
                   src="/white.png"
@@ -100,7 +102,7 @@ export default function Footer() {
                   aria-hidden
                   fill
                   className="hidden object-contain object-left dark:block"
-                  sizes="168px"
+                  sizes="(max-width: 640px) 220px, (max-width: 768px) 280px, 320px"
                 />
               </Link>
             </div>
@@ -109,17 +111,30 @@ export default function Footer() {
               <h3 className="text-xs tracking-widest uppercase text-muted-foreground dark:text-white/50">
                 Navigation
               </h3>
-              <nav className="flex flex-col gap-3">
-                {footerNav.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
-                  >
-                    {t(currentLanguage, link.labelKey)}
-                  </Link>
-                ))}
-              </nav>
+              <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+                <nav className="flex flex-col gap-3">
+                  {footerNavCol1.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
+                    >
+                      {t(currentLanguage, link.labelKey)}
+                    </Link>
+                  ))}
+                </nav>
+                <nav className="flex flex-col gap-3">
+                  {footerNavCol2.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
+                    >
+                      {t(currentLanguage, link.labelKey)}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
             </div>
 
             <div className="space-y-6">
@@ -150,28 +165,19 @@ export default function Footer() {
                   );
                 })}
               </ul>
-
-              <div className="pt-4 space-y-3">
-                {legal.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block text-sm text-muted-foreground hover:text-foreground uppercase tracking-wide dark:text-white/70 dark:hover:text-white/90"
-                  >
-                    {t(currentLanguage, link.labelKey)}
-                  </Link>
-                ))}
-              </div>
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-border dark:border-white/10 flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-2">
-            <p className="text-xs text-muted-foreground dark:text-white/50">
+          <div className="mt-16 pt-8 border-t border-border dark:border-white/10 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+            <p className="text-xs text-muted-foreground dark:text-white/50 leading-normal">
               {t(currentLanguage, "footer.copyright", {
                 year: new Date().getFullYear(),
               })}
             </p>
-            <LanguageSwitcher className="text-muted-foreground! hover:text-foreground! dark:text-white/50! dark:hover:text-white/90!" />
+            <div className="flex items-center gap-3 shrink-0 leading-none">
+              <LanguageSwitcher className="text-muted-foreground! hover:text-foreground! dark:text-white/50! dark:hover:text-white/90!" />
+              <ThemeModeSwitch className="dark:border-white/15" />
+            </div>
           </div>
         </div>
       </div>
