@@ -7,7 +7,7 @@ import LoadingSpinner from "@/components/ui/Bouncer";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { ZoomImage } from "./zoom-image";
-import { AppPageContainer } from "@/components/layout/app-page-shell";
+import { PageIntro } from "@/components/layout/page-intro";
 
 function useColumnCount() {
   const [cols, setCols] = useState(2);
@@ -269,23 +269,17 @@ export default function GalleryClientComponent() {
 
   // Return the main gallery content and modal
   return (
-    <div className="flex flex-col grow w-full min-h-0">
-      <AppPageContainer className="py-0 pb-16 md:pb-20">
-        {/* Gallery Header Section */}
-        <div className="relative pt-24 md:pt-32 pb-16">
-          <div className="text-center">
-            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-foreground mb-6">
-              {t(currentLanguage, "galleryPage.title")}
-            </h1>
-            <div className="text-muted-foreground text-lg mt-4 mb-8 max-w-3xl mx-auto leading-relaxed">
-              {t(currentLanguage, "galleryPage.description")}
-            </div>
-          </div>
+    <div className="flex flex-col grow w-full min-h-0 min-w-0">
+      <PageIntro
+        title={t(currentLanguage, "galleryPage.title")}
+        subtitle={t(currentLanguage, "galleryPage.description")}
+      />
 
-          {/* Section navigation by title */}
+      <div className="w-full px-6 pb-16 md:px-12 md:pb-20">
+        <div className="mx-auto max-w-7xl">
           {imagesByTitle.length > 1 && (
             <nav
-              className="flex flex-wrap justify-center gap-2 mt-6"
+              className="flex flex-wrap justify-start gap-2 pb-10"
               aria-label="Gallery sections"
             >
               {imagesByTitle.map(({ title: sectionTitle }) => {
@@ -302,10 +296,8 @@ export default function GalleryClientComponent() {
               })}
             </nav>
           )}
-        </div>
 
-        {/* Gallery Images Section */}
-        <div className="pb-24">
+          <div className="pb-24">
           {/* Display error inline if needed, without blocking gallery */}
           {error && (
             <p className="text-center text-red-500 mb-4">
@@ -331,8 +323,9 @@ export default function GalleryClientComponent() {
               />
             ),
           )}
+          </div>
         </div>
-      </AppPageContainer>
+      </div>
 
       {/* Zoomed Image Modal – carousel shows only images from the clicked section */}
       {zoomedState && (

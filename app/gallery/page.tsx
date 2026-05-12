@@ -5,7 +5,6 @@ import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { Metadata } from "next";
 import GalleryClientComponent from "./gallery-client";
-import { SectionHeaderI18n } from "@/components/landing/section-header-i18n";
 import { AppPageShell } from "@/components/layout/app-page-shell";
 
 // Metadata export remains here (this is now a Server Component)
@@ -23,7 +22,6 @@ export default function GalleryPage() {
   return (
     <AppPageShell>
       <Header />
-      <SectionHeaderI18n translationKey="galleryPage.sectionBanner" />
       <GalleryClientComponent />
       <Footer />
     </AppPageShell>

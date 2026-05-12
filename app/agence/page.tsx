@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
-import { SectionHeader } from "@/components/landing/section-header";
+import { PageIntro } from "@/components/layout/page-intro";
 import { getAgencyPage } from "@/lib/sanity/queries";
 import { AppPageShell } from "@/components/layout/app-page-shell";
 
@@ -35,7 +35,10 @@ export default async function AgencePage() {
     <AppPageShell>
       <Header />
 
-      <SectionHeader title={data.pageHeading?.trim() || "Agence"} />
+      <PageIntro
+        title={data.pageHeading?.trim() || "Agence"}
+        subtitle={data.metaDescription?.trim() || undefined}
+      />
 
       <section className="grid grid-cols-1 md:grid-cols-2 border-t border-border">
         {data.services.map((service, index) => (

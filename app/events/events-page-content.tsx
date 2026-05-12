@@ -7,6 +7,7 @@ import { t } from "@/lib/i18n/translations";
 import { SectionHeader } from "@/components/landing/section-header";
 import { EventIndexGrid } from "@/components/event/event-index-grid";
 import type { WereEventCard as WereEventCardModel } from "@/components/event/were-event-card";
+import { PageIntro } from "@/components/layout/page-intro";
 import {
   AppPageContainer,
   AppPageShell,
@@ -28,14 +29,10 @@ export default function EventsPageContent({
       <AppPageShell>
         <Header />
         <div className="flex flex-col grow">
-          <AppPageContainer className="max-w-4xl py-20">
-            <h1 className="font-display text-4xl md:text-5xl font-black uppercase mb-8 tracking-tight">
-              {t(currentLanguage, "eventsPage.title")}
-            </h1>
-            <p className="text-muted-foreground leading-relaxed">
-              {t(currentLanguage, "eventsPage.noEvents")}
-            </p>
-          </AppPageContainer>
+          <PageIntro
+            title={t(currentLanguage, "eventsPage.title")}
+            subtitle={t(currentLanguage, "eventsPage.noEvents")}
+          />
         </div>
         <Footer />
       </AppPageShell>

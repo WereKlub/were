@@ -7,7 +7,6 @@ import Footer from "@/components/landing/footer";
 import { ProductListContent } from "@/components/merch/product-list-content";
 import { ProductGrid } from "@/components/merch/product-grid";
 import { ProductCardSkeleton } from "@/components/merch/product-card-skeleton";
-import { SectionHeaderI18n } from "@/components/landing/section-header-i18n";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { Input } from "@/components/ui/input";
@@ -24,6 +23,7 @@ import {
   AppPageContainer,
   AppPageShell,
 } from "@/components/layout/app-page-shell";
+import { PageIntro } from "@/components/layout/page-intro";
 
 interface MerchContentClientProps {
   products: SanityProduct[];
@@ -97,20 +97,13 @@ export default function MerchContentClient({
     <AppPageShell>
       <Header />
 
-      <SectionHeaderI18n translationKey="merchPage.sectionBanner" />
+      <PageIntro
+        title={t(currentLanguage, "merchPage.title")}
+        subtitle={t(currentLanguage, "merchPage.subtitle")}
+      />
 
       <div className="flex flex-col grow min-w-0">
         <AppPageContainer className="py-0 pb-16 md:pb-20">
-          <div className="text-center py-8 md:py-10 max-w-3xl mx-auto">
-            <h1 className="font-display text-2xl md:text-4xl font-black uppercase text-foreground mb-4">
-              {t(currentLanguage, "merchPage.title")}
-            </h1>
-            <p className="text-muted-foreground text-base md:text-lg leading-relaxed">
-              {t(currentLanguage, "merchPage.subtitle")}
-            </p>
-          </div>
-
-          {/* Filters and Search */}
           <motion.div
             className="mb-8"
             initial={{ opacity: 0, y: 20 }}

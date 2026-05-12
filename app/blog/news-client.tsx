@@ -7,6 +7,7 @@ import { format } from "date-fns";
 import type { NewsPost } from "@/lib/types/news";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
+import { PageIntro } from "@/components/layout/page-intro";
 import { AppPageContainer } from "@/components/layout/app-page-shell";
 
 interface NewsContentProps {
@@ -21,11 +22,12 @@ export default function NewsContent({ posts }: NewsContentProps) {
   const remainingPosts = posts.slice(4);
 
   return (
-    <AppPageContainer className="py-6 pb-16 md:pb-20">
-        <p className="text-center text-muted-foreground max-w-3xl mx-auto leading-relaxed pb-10 text-sm md:text-base">
-          {t(currentLanguage, "newsPage.description")}
-        </p>
-
+    <>
+      <PageIntro
+        title={t(currentLanguage, "newsPage.title")}
+        subtitle={t(currentLanguage, "newsPage.description")}
+      />
+      <AppPageContainer className="pb-16 pt-0 md:pb-20">
         {featuredPosts.length > 0 && (
           <section className="pb-20">
             {/* Featured Article */}
@@ -211,6 +213,7 @@ export default function NewsContent({ posts }: NewsContentProps) {
             </div>
           </section>
         )}
-    </AppPageContainer>
+      </AppPageContainer>
+    </>
   );
 }

@@ -1,12 +1,5 @@
 import { client, clientNoCdn } from "./client";
 
-/** Base URL for server-side fetch (relative URLs fail in Node). */
-function getBaseUrl(): string {
-  if (typeof window !== "undefined") return "";
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-}
-
 // Events
 export async function getLatestEvents(limit = 3) {
   return client.fetch(
@@ -249,63 +242,6 @@ export async function getAgencyPage(): Promise<AgencyPageData | null> {
 // Products (Enhanced Section)
 export async function getAllProducts() {
   try {
-    // In development, use the proxy API to avoid CORS issues
-    if (process.env.NODE_ENV === "development") {
-      const query = `*[_type == "product"] | order(name asc) {
-        _id,
-        name,
-        "slug": slug.current,
-        "mainImage": images[0].asset->url,
-        "price": basePrice,
-        "stock": baseStock,
-        description,
-        "categories": categories[]->{
-          _id,
-          title,
-          "slug": slug.current
-        },
-        tags,
-        "colors": coalesce(
-          colors[]{
-            name,
-            "image": image.asset->url,
-            available
-          },
-          [
-            { "name": "Noir", "image": null, "available": true },
-            { "name": "Blanc", "image": null, "available": true }
-          ]
-        ),
-        "sizes": coalesce(
-          sizes[]{name, available},
-          [
-            { "name": "S", "available": true },
-            { "name": "M", "available": true },
-            { "name": "L", "available": true },
-            { "name": "XL", "available": true }
-          ]
-        ),
-        images[]{
-          asset->{url},
-          alt,
-          caption
-        }
-      }`;
-
-      const url = `${getBaseUrl()}/api/sanity-proxy`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-      });
-      if (!response.ok) {
-        throw new Error(`Proxy API error: ${response.status}`);
-      }
-      const data = await response.json();
-      return data.result || [];
-    }
-
-    // In production, use the normal Sanity client
     const result = await client.fetch(
       `
       *[_type == "product"] | order(name asc) {
@@ -419,25 +355,6 @@ export const getShippingSettings = async (): Promise<ShippingSettings> => {
       defaultShippingCost
     }`;
 
-    // In development, use the proxy API to avoid CORS issues
-    if (process.env.NODE_ENV === "development") {
-      const url = `${getBaseUrl()}/api/sanity-proxy`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
-      });
-      if (!response.ok) {
-        throw new Error(`Proxy API error: ${response.status}`);
-      }
-      const data = await response.json();
-      const result = data.result;
-      return {
-        defaultShippingCost: result?.defaultShippingCost ?? 0,
-      };
-    }
-
-    // In production, use the normal Sanity client
     const result = await client.fetch<{ defaultShippingCost?: number }>(
       query,
       {},

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
-import { SectionHeader } from "@/components/landing/section-header";
+import { PageIntro } from "@/components/layout/page-intro";
 import { getAboutPage } from "@/lib/sanity/queries";
 import { AppPageShell } from "@/components/layout/app-page-shell";
 
@@ -38,7 +38,10 @@ export default async function AProposPage() {
     <AppPageShell>
       <Header />
 
-      <SectionHeader title={data.pageHeading?.trim() || "À propos"} />
+      <PageIntro
+        title={data.pageHeading?.trim() || "À propos"}
+        subtitle={data.metaDescription?.trim() || undefined}
+      />
 
       <section className="grid grid-cols-1 md:grid-cols-2">
         <div className="relative aspect-square md:aspect-auto md:min-h-[500px]">
