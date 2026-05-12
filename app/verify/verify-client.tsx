@@ -854,7 +854,7 @@ export function VerifyClient({
                               disabled={isLoading}
                               aria-invalid={error ? true : undefined}
                               className={cn(
-                                "h-11 w-10 shrink-0 rounded-md border border-input bg-background text-center text-lg font-semibold tabular-nums shadow-xs outline-none transition-[color,box-shadow]",
+                                "h-11 w-10 shrink-0 rounded-md border border-input bg-muted/50 text-center text-lg font-semibold tabular-nums text-foreground shadow-xs outline-none transition-[color,box-shadow]",
                                 "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
                                 "disabled:pointer-events-none disabled:opacity-50",
                                 "dark:bg-input/30",

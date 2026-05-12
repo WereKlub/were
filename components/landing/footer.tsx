@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Heart } from "lucide-react";
 import { IG } from "@/components/icons/IG";
 import { WhatsappIcon } from "@/components/icons/WhatsappIcon";
 import { FacebookIcon } from "@/components/icons/FacebookIcon";
@@ -11,6 +10,33 @@ import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { useFooterStripUrls } from "@/lib/contexts/FooterStripContext";
+
+const SOCIAL_LINKS = [
+  {
+    href: "https://chat.whatsapp.com/BxTiBjirPMzFbCTAZ4eJqC?fbclid=PAZXh0bgNhZW0CMTEAAadv_FFXVz71jmu9zE5cSsaFB9b5cvqGivmL3cFD8hKPD_OtuwKXffahUqI3sw_aem_KaHbiZrZBfI2Yzzn-ozjKw",
+    labelKey: "footer.social.whatsapp" as const,
+    Icon: WhatsappIcon,
+    hoverClass: "hover:text-[#25D366] dark:hover:text-[#25D366]",
+  },
+  {
+    href: "https://soundcloud.com/wereklub",
+    labelKey: "footer.social.soundcloud" as const,
+    Icon: Soundcloud,
+    hoverClass: "hover:text-[#ff5500] dark:hover:text-[#ff5500]",
+  },
+  {
+    href: "https://www.facebook.com/wereklub",
+    labelKey: "footer.social.facebook" as const,
+    Icon: FacebookIcon,
+    hoverClass: "hover:text-[#1877F2] dark:hover:text-[#1877F2]",
+  },
+  {
+    href: "https://www.instagram.com/wereklub/",
+    labelKey: "footer.social.instagram" as const,
+    Icon: IG,
+    hoverClass: "hover:text-[#E4405F] dark:hover:text-[#E4405F]",
+  },
+] as const;
 
 export default function Footer() {
   const { currentLanguage } = useTranslation();
@@ -36,7 +62,7 @@ export default function Footer() {
         : [];
 
   return (
-    <footer className="bg-[#1a1a1a] text-white">
+    <footer className="bg-muted/80 text-foreground border-t border-border dark:bg-[#1a1a1a] dark:text-white">
       {displayStrip.length > 0 ? (
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6">
           {displayStrip.slice(0, 6).map((src, i) => (
@@ -62,17 +88,25 @@ export default function Footer() {
                 className="relative block h-10 w-[140px] md:h-12 md:w-[168px]"
               >
                 <Image
-                  src="/white.png"
+                  src="/dark.png"
                   alt="Wêrê Klub"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left dark:hidden"
+                  sizes="168px"
+                />
+                <Image
+                  src="/white.png"
+                  alt=""
+                  aria-hidden
+                  fill
+                  className="hidden object-contain object-left dark:block"
                   sizes="168px"
                 />
               </Link>
             </div>
 
             <div className="space-y-6">
-              <h3 className="text-xs tracking-widest uppercase text-white/50">
+              <h3 className="text-xs tracking-widest uppercase text-muted-foreground dark:text-white/50">
                 Navigation
               </h3>
               <nav className="flex flex-col gap-3">
@@ -80,7 +114,7 @@ export default function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="text-sm hover:text-white/70 transition-colors uppercase tracking-wide"
+                    className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
                   >
                     {t(currentLanguage, link.labelKey)}
                   </Link>
@@ -89,59 +123,32 @@ export default function Footer() {
             </div>
 
             <div className="space-y-6">
-              <h3 className="flex items-center gap-2 text-xs tracking-widest uppercase text-white/50">
-                <Heart
-                  className="h-4 w-4 shrink-0 text-white/55"
-                  strokeWidth={1.5}
-                  aria-hidden
-                />
+              <h3 className="text-xs tracking-widest uppercase text-muted-foreground dark:text-white/50">
                 {t(currentLanguage, "footer.socialHeading")}
               </h3>
-              <ul className="flex items-center flex-wrap gap-3 list-none p-0 m-0">
-                <li>
-                  <Link
-                    href="https://chat.whatsapp.com/BxTiBjirPMzFbCTAZ4eJqC?fbclid=PAZXh0bgNhZW0CMTEAAadv_FFXVz71jmu9zE5cSsaFB9b5cvqGivmL3cFD8hKPD_OtuwKXffahUqI3sw_aem_KaHbiZrZBfI2Yzzn-ozjKw"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="WhatsApp"
-                    className="inline-flex items-center justify-center h-9 w-9 text-white transition-colors hover:text-[#25D366]"
-                  >
-                    <WhatsappIcon className="h-[22px] w-[22px]" />
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="https://soundcloud.com/wereklub"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Soundcloud"
-                    className="inline-flex items-center justify-center h-9 w-9 text-white transition-colors hover:text-[#ff5500]"
-                  >
-                    <Soundcloud className="h-[20px] w-[20px]" />
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="https://www.facebook.com/wereklub"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Facebook"
-                    className="inline-flex items-center justify-center h-9 w-9 text-white transition-colors hover:text-[#1877F2]"
-                  >
-                    <FacebookIcon className="h-[19.5px] w-[19.5px]" />
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="https://www.instagram.com/wereklub/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    className="inline-flex items-center justify-center h-9 w-9 text-white transition-colors hover:text-[#E4405F]"
-                  >
-                    <IG className="h-[23px] w-[23px]" />
-                  </Link>
-                </li>
+              <ul className="flex flex-col gap-2 list-none p-0 m-0">
+                {SOCIAL_LINKS.map(({ href, labelKey, Icon, hoverClass }) => {
+                  const label = t(currentLanguage, labelKey);
+                  return (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        className={`inline-flex w-fit max-w-full items-center gap-2.5 text-sm uppercase tracking-wide text-foreground transition-colors dark:text-white/90 ${hoverClass}`}
+                      >
+                        <span
+                          className="flex h-5 w-5 shrink-0 items-center justify-center"
+                          aria-hidden
+                        >
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        <span>{label}</span>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
 
               <div className="pt-4 space-y-3">
@@ -149,7 +156,7 @@ export default function Footer() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block text-sm text-white/70 hover:text-white/90 uppercase tracking-wide"
+                    className="block text-sm text-muted-foreground hover:text-foreground uppercase tracking-wide dark:text-white/70 dark:hover:text-white/90"
                   >
                     {t(currentLanguage, link.labelKey)}
                   </Link>
@@ -158,13 +165,13 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-16 pt-8 border-t border-white/10 flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-2">
-            <p className="text-xs text-white/50">
+          <div className="mt-16 pt-8 border-t border-border dark:border-white/10 flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-2">
+            <p className="text-xs text-muted-foreground dark:text-white/50">
               {t(currentLanguage, "footer.copyright", {
                 year: new Date().getFullYear(),
               })}
             </p>
-            <LanguageSwitcher className="!text-white/50 hover:!text-white/90" />
+            <LanguageSwitcher className="text-muted-foreground! hover:text-foreground! dark:text-white/50! dark:hover:text-white/90!" />
           </div>
         </div>
       </div>

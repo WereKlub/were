@@ -50,7 +50,7 @@ function ProductImageCarousel({
                   className="object-cover"
                   quality={100}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
               </div>
             </CarouselItem>
           ))}
@@ -150,7 +150,7 @@ const descriptionComponents: PortableTextComponents = {
       if (!url) return null;
       return (
         <figure className="my-6">
-          <div className="relative w-full overflow-hidden rounded-sm border border-border/30 bg-muted aspect-[4/3]">
+          <div className="relative w-full overflow-hidden rounded-sm border border-border/30 bg-muted aspect-4/3">
             <Image
               src={url}
               alt={image.alt || image.caption || "Product detail"}
@@ -289,7 +289,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                   className="object-cover"
                   quality={100}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
               </div>
             ) : (
               <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-sm bg-muted flex items-center justify-center shadow-2xl">
@@ -308,7 +308,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
           >
             <div className="space-y-4">
               <motion.h1
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent leading-tight"
+                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 bg-linear-to-r from-foreground to-foreground/80 bg-clip-text text-transparent leading-tight"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 }}
@@ -360,8 +360,8 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                           selectedColor === color.name
                             ? "border-primary ring-2 ring-primary/50 ring-offset-2 ring-offset-background"
                             : isWhite
-                              ? "border-border dark:border-gray-500"
-                              : "border-border dark:border-gray-600",
+                              ? "border-neutral-300 dark:border-neutral-500"
+                              : "border-border dark:border-neutral-600",
                           !color.available &&
                             "opacity-40 cursor-not-allowed hover:ring-0 focus-visible:ring-0",
                           isMix && "bg-white",
@@ -387,7 +387,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                         )}
                         {!color.available && (
                           <span className="absolute inset-0 flex items-center justify-center z-10">
-                            <span className="h-px w-8 rotate-45 bg-gray-500" />
+                            <span className="h-px w-8 rotate-45 bg-muted-foreground/70" />
                           </span>
                         )}
                       </button>
@@ -434,7 +434,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                       {size.name}
                       {!size.available && (
                         <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <span className="h-px w-full rotate-45 bg-gray-500" />
+                          <span className="h-px w-full rotate-45 bg-muted-foreground/70" />
                         </span>
                       )}
                     </button>

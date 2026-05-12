@@ -24,13 +24,13 @@ export default function ArtistCard({
   currentLanguage,
 }: ArtistCardProps) {
   const cardBaseClasses =
-    "flex flex-col w-88 max-w-xs bg-grey-900 border border-slate-700 rounded-sm shadow-xl overflow-hidden";
+    "flex flex-col w-88 max-w-xs bg-card border border-border rounded-sm shadow-xl overflow-hidden text-card-foreground";
   const artistDisplayName = artist.name || "Artist";
 
   return (
     <div className={cardBaseClasses}>
       {artist.image && (
-        <div className="relative w-full aspect-[1/1]">
+        <div className="relative w-full aspect-square">
           <Image
             src={artist.image}
             alt={t(currentLanguage, "artistCard.imageAlt", {
@@ -40,14 +40,14 @@ export default function ArtistCard({
             objectFit="cover"
             priority
           />
-          <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-black/60 to-transparent">
+          <div className="absolute bottom-0 left-0 right-0 p-3 bg-linear-to-t from-black/80 via-black/60 to-transparent">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2 min-w-0">
                 <h4 className="font-semibold text-base text-white truncate">
                   {artist.name}
                 </h4>
                 {artist.isResident && (
-                  <div className="inline-flex items-center px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-sm flex-shrink-0">
+                  <div className="inline-flex items-center px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-sm shrink-0">
                     <span className="relative flex h-2 w-2 mr-1.5">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-sm bg-green-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-sm h-2 w-2 bg-green-500"></span>
@@ -64,7 +64,7 @@ export default function ArtistCard({
                   aria-label={t(currentLanguage, "artistCard.socialAriaLabel", {
                     artistName: artistDisplayName,
                   })}
-                  className="text-white hover:text-[#E4405F] transition-colors flex-shrink-0 ml-2"
+                  className="text-white hover:text-[#E4405F] transition-colors shrink-0 ml-2"
                 >
                   <IG className="h-5 w-5" />
                 </Link>
@@ -73,15 +73,15 @@ export default function ArtistCard({
           </div>
         </div>
       )}
-      <div className="p-4 flex-grow flex flex-col">
+      <div className="p-4 grow flex flex-col">
         {!artist.image && (
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2 min-w-0">
-              <h4 className="font-semibold text-lg text-gray-100 truncate">
+              <h4 className="font-semibold text-lg text-foreground truncate">
                 {artist.name}
               </h4>
               {artist.isResident && (
-                <div className="inline-flex items-center px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-sm flex-shrink-0">
+                <div className="inline-flex items-center px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-sm shrink-0">
                   <span className="relative flex h-2 w-2 mr-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-sm bg-green-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-sm h-2 w-2 bg-green-500"></span>
@@ -98,7 +98,7 @@ export default function ArtistCard({
                 aria-label={t(currentLanguage, "artistCard.socialAriaLabel", {
                   artistName: artistDisplayName,
                 })}
-                className="text-gray-300 hover:text-[#E4405F] transition-colors flex-shrink-0 ml-2"
+                className="text-muted-foreground hover:text-[#E4405F] transition-colors shrink-0 ml-2"
               >
                 <IG className="h-6 w-6" />
               </Link>
@@ -107,7 +107,7 @@ export default function ArtistCard({
         )}
         {artist.bio && (
           <div
-            className={`text-gray-300 text-sm leading-relaxed space-y-1 flex-grow ${artist.image ? "pt-0" : "my-2"} h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-500 scrollbar-track-slate-800`}
+            className={`text-muted-foreground text-sm leading-relaxed space-y-1 grow ${artist.image ? "pt-0" : "my-2"} h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/35 scrollbar-track-muted/50`}
           >
             {artist.bio.split("\n").map((line, index) => {
               const trimmedLine = line.trim();
@@ -119,17 +119,17 @@ export default function ArtistCard({
           </div>
         )}
         {artist.image && !artist.bio && (
-          <p className="text-gray-400 text-xs italic pt-1 pb-2 flex-grow flex items-end">
+          <p className="text-muted-foreground text-xs italic pt-1 pb-2 grow flex items-end">
             {t(currentLanguage, "artistCard.noBio")}
           </p>
         )}
         {!artist.image && !artist.bio && !artist.socialLink && (
-          <p className="text-gray-400 text-xs italic flex-grow flex items-center justify-center">
+          <p className="text-muted-foreground text-xs italic grow flex items-center justify-center">
             {t(currentLanguage, "artistCard.noDetails")}
           </p>
         )}
         {!artist.image && !artist.bio && artist.socialLink && (
-          <p className="text-gray-400 text-xs italic mt-2 flex-grow flex items-end">
+          <p className="text-muted-foreground text-xs italic mt-2 grow flex items-end">
             {t(currentLanguage, "artistCard.noBio")}
           </p>
         )}

@@ -159,7 +159,7 @@ const CountrySelect = ({
         aria-label="Select country"
         data-lpignore="true"
       >
-        <option value="" className="text-gray-400">
+        <option value="" className="text-muted-foreground">
           Select country
         </option>
         {options

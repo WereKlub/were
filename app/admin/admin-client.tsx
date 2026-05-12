@@ -61,6 +61,7 @@ import {
   appPageContainerClass,
   appPageShellClass,
 } from "@/components/layout/app-page-shell";
+import { ThemeModeSwitch } from "@/components/landing/theme-mode-switch";
 import { cn } from "@/lib/actions/utils";
 
 interface Purchase {
@@ -771,13 +772,13 @@ export default function AdminClient() {
         );
       case "NOT_INITIATED":
         return (
-          <Badge className="bg-gray-900/30 text-gray-300 border-gray-700 rounded-sm min-w-[80px] justify-center text-xs">
+          <Badge className="bg-muted text-muted-foreground border-border rounded-sm min-w-[80px] justify-center text-xs">
             Not Initiated
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-gray-900/30 text-gray-300 border-gray-700 rounded-sm min-w-[80px] justify-center text-xs">
+          <Badge className="bg-muted text-muted-foreground border-border rounded-sm min-w-[80px] justify-center text-xs">
             Unknown
           </Badge>
         );
@@ -806,7 +807,7 @@ export default function AdminClient() {
         );
       default:
         return (
-          <Badge className="bg-zinc-900/90 dark:bg-black/50 text-zinc-100 dark:text-sage-100 border-zinc-800 rounded-sm text-xs">
+          <Badge className="bg-muted text-foreground border-border rounded-sm text-xs">
             {status}
           </Badge>
         );
@@ -1057,15 +1058,18 @@ export default function AdminClient() {
                 ticket sales for Wêrê Klub events.
               </p>
             </div>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              size="sm"
-              className="rounded-sm border-border shrink-0 w-full sm:w-auto"
-            >
-              <X className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
+            <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 shrink-0 w-full sm:w-auto">
+              <ThemeModeSwitch className="justify-center sm:justify-end" />
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                size="sm"
+                className="rounded-sm border-border shrink-0 w-full sm:w-auto"
+              >
+                <X className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -1116,34 +1120,42 @@ export default function AdminClient() {
         {currentEventStats && (
           <div className="mb-6 sm:mb-8">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-              <Card className="rounded-sm border-slate-700 bg-purple-900/20">
+              <Card className="rounded-sm border-border bg-purple-100/90 dark:bg-purple-900/20">
                 <CardContent className="p-2 sm:p-3">
-                  <div className="text-xs text-purple-300">Purchases</div>
-                  <div className="text-xl sm:text-2xl font-bold text-purple-100">
+                  <div className="text-xs text-purple-800 dark:text-purple-300">
+                    Purchases
+                  </div>
+                  <div className="text-xl sm:text-2xl font-bold text-purple-950 dark:text-purple-100">
                     {currentEventStats.total_purchases}
                   </div>
                 </CardContent>
               </Card>
-              <Card className="rounded-sm border-slate-700 bg-blue-900/20">
+              <Card className="rounded-sm border-border bg-blue-100/90 dark:bg-blue-900/20">
                 <CardContent className="p-2 sm:p-3">
-                  <div className="text-xs text-blue-300">Total Tickets</div>
-                  <div className="text-xl sm:text-2xl font-bold text-blue-100">
+                  <div className="text-xs text-blue-800 dark:text-blue-300">
+                    Total Tickets
+                  </div>
+                  <div className="text-xl sm:text-2xl font-bold text-blue-950 dark:text-blue-100">
                     {currentEventStats.total_tickets}
                   </div>
                 </CardContent>
               </Card>
-              <Card className="rounded-sm border-slate-700 bg-green-900/20">
+              <Card className="rounded-sm border-border bg-green-100/90 dark:bg-green-900/20">
                 <CardContent className="p-2 sm:p-3">
-                  <div className="text-xs text-green-300">Scanned</div>
-                  <div className="text-xl sm:text-2xl font-bold text-green-100">
+                  <div className="text-xs text-green-800 dark:text-green-300">
+                    Scanned
+                  </div>
+                  <div className="text-xl sm:text-2xl font-bold text-green-950 dark:text-green-100">
                     {currentEventStats.scanned_tickets}
                   </div>
                 </CardContent>
               </Card>
-              <Card className="rounded-sm border-slate-700 bg-orange-900/20">
+              <Card className="rounded-sm border-border bg-orange-100/90 dark:bg-orange-900/20">
                 <CardContent className="p-2 sm:p-3">
-                  <div className="text-xs text-orange-300">Remaining</div>
-                  <div className="text-xl sm:text-2xl font-bold text-orange-100">
+                  <div className="text-xs text-orange-800 dark:text-orange-300">
+                    Remaining
+                  </div>
+                  <div className="text-xl sm:text-2xl font-bold text-orange-950 dark:text-orange-100">
                     {(currentEventStats.total_tickets || 0) -
                       (currentEventStats.scanned_tickets || 0)}
                   </div>
@@ -1161,8 +1173,8 @@ export default function AdminClient() {
               onClick={() => setActiveTab("purchases")}
               className={`rounded-sm text-xs sm:text-sm ${
                 activeTab === "purchases"
-                  ? "bg-slate-700 text-white hover:bg-slate-600"
-                  : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               Purchases
@@ -1173,8 +1185,8 @@ export default function AdminClient() {
               onClick={() => setActiveTab("scans")}
               className={`rounded-sm text-xs sm:text-sm ${
                 activeTab === "scans"
-                  ? "bg-slate-700 text-white hover:bg-slate-600"
-                  : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
               }`}
             >
               Logs
@@ -1188,14 +1200,14 @@ export default function AdminClient() {
                 <div className="flex flex-col gap-4">
                   {/* Mobile Filter Toggle */}
                   <div className="flex items-center justify-between">
-                    <Label className="text-zinc-200 font-medium text-xs sm:text-sm uppercase tracking-wider">
+                    <Label className="text-foreground font-medium text-xs sm:text-sm uppercase tracking-wider">
                       Purchases ({filteredPurchases.length})
                     </Label>
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={() => setShowFilters(!showFilters)}
-                      className="rounded-sm border-slate-700 text-gray-100 hover:bg-card/70 sm:hidden"
+                      className="rounded-sm border-border text-foreground hover:bg-card/70 sm:hidden"
                     >
                       <Filter className="h-4 w-4 mr-2" />
                       Filters
@@ -1214,8 +1226,8 @@ export default function AdminClient() {
                         onClick={() => setStatusFilter("paid")}
                         className={`rounded-sm text-xs sm:text-sm ${
                           statusFilter === "paid"
-                            ? "bg-slate-700 text-white hover:bg-slate-600"
-                            : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -1227,8 +1239,8 @@ export default function AdminClient() {
                         onClick={() => setStatusFilter("all")}
                         className={`rounded-sm text-xs sm:text-sm ${
                           statusFilter === "all"
-                            ? "bg-slate-700 text-white hover:bg-slate-600"
-                            : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         All Status
@@ -1239,8 +1251,8 @@ export default function AdminClient() {
                         onClick={() => setStatusFilter("pending")}
                         className={`rounded-sm text-xs sm:text-sm ${
                           statusFilter === "pending"
-                            ? "bg-slate-700 text-white hover:bg-slate-600"
-                            : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -1252,8 +1264,8 @@ export default function AdminClient() {
                         onClick={() => setStatusFilter("failed")}
                         className={`rounded-sm text-xs sm:text-sm ${
                           statusFilter === "failed"
-                            ? "bg-slate-700 text-white hover:bg-slate-600"
-                            : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         <X className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -1269,8 +1281,8 @@ export default function AdminClient() {
                         onClick={() => setAdmissionFilter("all")}
                         className={`rounded-sm text-xs sm:text-sm ${
                           admissionFilter === "all"
-                            ? "bg-slate-700 text-white hover:bg-slate-600"
-                            : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         All Admission
@@ -1281,8 +1293,8 @@ export default function AdminClient() {
                         onClick={() => setAdmissionFilter("scanned")}
                         className={`rounded-sm text-xs sm:text-sm ${
                           admissionFilter === "scanned"
-                            ? "bg-slate-700 text-white hover:bg-slate-600"
-                            : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         <QrCode className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -1294,8 +1306,8 @@ export default function AdminClient() {
                         onClick={() => setAdmissionFilter("unscanned")}
                         className={`rounded-sm text-xs sm:text-sm ${
                           admissionFilter === "unscanned"
-                            ? "bg-slate-700 text-white hover:bg-slate-600"
-                            : "bg-slate-800/50 text-slate-300 hover:bg-slate-700/50 hover:text-white"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
                         <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
@@ -1312,13 +1324,13 @@ export default function AdminClient() {
                             placeholder="Search..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="h-8 flex-1 rounded-sm border-slate-700 bg-card/30 text-sm text-gray-100 placeholder:text-gray-400 backdrop-blur-sm sm:h-10 sm:text-base"
+                            className="h-8 flex-1 rounded-sm border-border bg-background text-sm text-foreground placeholder:text-muted-foreground backdrop-blur-sm sm:h-10 sm:text-base"
                           />
                           <Button
                             onClick={searchPurchases}
                             variant="outline"
                             size="sm"
-                            className="h-8 w-8 shrink-0 touch-manipulation rounded-sm border-slate-700 p-0 text-gray-100 hover:bg-card/70 sm:h-10 sm:w-10"
+                            className="h-8 w-8 shrink-0 touch-manipulation rounded-sm border-border p-0 text-foreground hover:bg-card/70 sm:h-10 sm:w-10"
                             disabled={loading}
                             aria-label="Search purchases"
                           >
@@ -1335,12 +1347,12 @@ export default function AdminClient() {
                           >
                             <SelectTrigger
                               id="offering-filter"
-                              className="h-8 w-full max-w-full touch-manipulation rounded-sm border-slate-700 bg-card/30 text-gray-100 backdrop-blur-sm focus:ring-slate-600 sm:h-10 [&>svg]:text-slate-400"
+                              className="h-8 w-full max-w-full touch-manipulation rounded-sm border-border bg-background text-foreground backdrop-blur-sm focus-visible:ring-ring sm:h-10 [&>svg]:text-muted-foreground"
                               aria-label="Filter by item"
                             >
                               <SelectValue placeholder="Item" />
                             </SelectTrigger>
-                            <SelectContent className="max-h-[min(24rem,70vh)] border-slate-700 bg-slate-950 text-gray-100">
+                            <SelectContent className="max-h-[min(24rem,70vh)] border-border bg-popover text-popover-foreground">
                               <SelectItem value="all">All items</SelectItem>
                               {offeringOptions.map(({ value, label }) => (
                                 <SelectItem key={value} value={value}>
@@ -1358,7 +1370,7 @@ export default function AdminClient() {
                           onClick={loadPurchases}
                           variant="outline"
                           size="sm"
-                          className="h-8 w-8 touch-manipulation rounded-sm border-slate-700 p-0 text-gray-100 hover:bg-card/70 sm:h-10 sm:w-10"
+                          className="h-8 w-8 touch-manipulation rounded-sm border-border p-0 text-foreground hover:bg-card/70 sm:h-10 sm:w-10"
                           disabled={loading}
                           aria-label="Refresh purchases"
                         >
@@ -1371,7 +1383,7 @@ export default function AdminClient() {
                           onClick={downloadPaidGuestsPdf}
                           variant="outline"
                           size="sm"
-                          className="h-8 w-8 touch-manipulation rounded-sm border-slate-700 p-0 text-gray-100 hover:bg-card/70 sm:h-10 sm:w-10"
+                          className="h-8 w-8 touch-manipulation rounded-sm border-border p-0 text-foreground hover:bg-card/70 sm:h-10 sm:w-10"
                           disabled={
                             loading ||
                             !selectedEvent ||
@@ -1394,7 +1406,7 @@ export default function AdminClient() {
               </div>
 
               {/* Purchases Table - Mobile-Friendly */}
-              <Card className="rounded-sm border-slate-700 bg-card/30 backdrop-blur-sm">
+              <Card className="rounded-sm border-border bg-card backdrop-blur-sm">
                 <CardContent className="p-0">
                   {loading ? (
                     <LoadingSpinner />
@@ -1405,10 +1417,10 @@ export default function AdminClient() {
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5 }}
                     >
-                      <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-white">
+                      <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-foreground">
                         No purchases found
                       </h2>
-                      <p className="text-zinc-400 mb-6 text-sm sm:text-base">
+                      <p className="text-muted-foreground mb-6 text-sm sm:text-base">
                         Try adjusting your filters or search query
                       </p>
                     </motion.div>
@@ -1459,23 +1471,23 @@ export default function AdminClient() {
                               {/* Customer Info */}
                               <TableCell className="w-[18%]">
                                 <div className="min-w-0">
-                                  <div className="font-medium text-gray-100 truncate max-w-[120px] sm:max-w-none">
+                                  <div className="font-medium text-foreground truncate max-w-[120px] sm:max-w-none">
                                     {purchase.customer_name}
                                   </div>
-                                  <div className="text-xs text-gray-400 truncate max-w-[120px] sm:max-w-none">
+                                  <div className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-none">
                                     {purchase.customer_email}
                                   </div>
-                                  <div className="mt-1.5 space-y-0.5 sm:hidden text-xs text-gray-500">
+                                  <div className="mt-1.5 space-y-0.5 sm:hidden text-xs text-muted-foreground">
                                     <div
                                       className="truncate"
                                       title={purchase.event_title ?? undefined}
                                     >
                                       {purchase.event_title || "—"}
                                     </div>
-                                    <div className="truncate text-gray-400">
+                                    <div className="truncate text-muted-foreground">
                                       {purchase.is_bundle ? (
                                         <>
-                                          <span className="text-gray-300">
+                                          <span className="text-muted-foreground">
                                             {purchase.ticket_name || "—"}
                                           </span>
                                           <span>
@@ -1499,7 +1511,7 @@ export default function AdminClient() {
                               {!selectedEvent && (
                                 <TableCell className="hidden sm:table-cell w-[11%]">
                                   <div
-                                    className="text-sm text-gray-100 truncate max-w-[140px]"
+                                    className="text-sm text-foreground truncate max-w-[140px]"
                                     title={purchase.event_title ?? undefined}
                                   >
                                     {purchase.event_title || "—"}
@@ -1513,7 +1525,7 @@ export default function AdminClient() {
                                 }`}
                               >
                                 <div
-                                  className={`text-xs text-gray-400 truncate ${
+                                  className={`text-xs text-muted-foreground truncate ${
                                     selectedEvent
                                       ? "max-w-[240px]"
                                       : "max-w-[140px]"
@@ -1522,7 +1534,7 @@ export default function AdminClient() {
                                   {purchase.is_bundle ? (
                                     <>
                                       <div
-                                        className="text-sm text-gray-100 truncate"
+                                        className="text-sm text-foreground truncate"
                                         title={purchase.ticket_name}
                                       >
                                         {purchase.ticket_name || "—"}
@@ -1535,7 +1547,7 @@ export default function AdminClient() {
                                   ) : (
                                     <>
                                       <span
-                                        className="text-sm text-gray-100"
+                                        className="text-sm text-foreground"
                                         title={purchase.ticket_name}
                                       >
                                         {purchase.ticket_name || "—"}
@@ -1548,14 +1560,14 @@ export default function AdminClient() {
 
                               {/* Tickets & Amount */}
                               <TableCell className="text-center w-[10%]">
-                                <div className="text-sm font-medium text-gray-100">
-                                  <span className="text-green-400">
+                                <div className="text-sm font-medium text-foreground">
+                                  <span className="text-green-600 dark:text-green-400">
                                     {getScannedCount(purchase)}
                                   </span>
-                                  <span className="text-gray-500 mx-1">/</span>
+                                  <span className="text-muted-foreground mx-1">/</span>
                                   {getAdmissionTotal(purchase)}
                                 </div>
-                                <div className="text-xs text-gray-400">
+                                <div className="text-xs text-muted-foreground">
                                   {purchase.total_amount}{" "}
                                   {purchase.currency_code}
                                 </div>
@@ -1574,7 +1586,7 @@ export default function AdminClient() {
                                     Partially scanned
                                   </Badge>
                                 ) : (
-                                  <Badge className="bg-slate-800/50 text-slate-300 border-slate-700 rounded-sm text-xs">
+                                  <Badge className="bg-muted text-muted-foreground border-border rounded-sm text-xs">
                                     Not Scanned
                                   </Badge>
                                 )}
@@ -1601,12 +1613,12 @@ export default function AdminClient() {
                                       purchase.email_dispatch_status,
                                     )
                                   ) : (
-                                    <span className="text-xs text-gray-500">
+                                    <span className="text-xs text-muted-foreground">
                                       —
                                     </span>
                                   )}
                                   {purchase.pdf_ticket_sent_at && (
-                                    <span className="text-xs text-gray-500">
+                                    <span className="text-xs text-muted-foreground">
                                       {formatRelativeTime(
                                         purchase.pdf_ticket_sent_at,
                                       )}
@@ -1636,7 +1648,7 @@ export default function AdminClient() {
                                     </span>
                                   </Button>
                                 ) : (
-                                  <span className="text-xs text-gray-500">
+                                  <span className="text-xs text-muted-foreground">
                                     —
                                   </span>
                                 )}
@@ -1655,20 +1667,20 @@ export default function AdminClient() {
           {activeTab === "scans" && (
             <div className="space-y-6">
               {/* Scan Logs */}
-              <Card className="rounded-sm border-slate-700 bg-card/30 backdrop-blur-sm">
+              <Card className="rounded-sm border-border bg-card backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-xl text-gray-100">
+                  <CardTitle className="text-xl text-foreground">
                     Scan history
                   </CardTitle>
-                  <CardDescription className="text-gray-400">
+                  <CardDescription className="text-muted-foreground">
                     Recent verification attempts help identify issues with
                     scanning.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-md border border-slate-800 overflow-hidden">
+                  <div className="rounded-md border border-border overflow-hidden">
                     <table className="w-full text-sm text-left">
-                      <thead className="text-xs text-slate-400 uppercase bg-slate-900/50">
+                      <thead className="text-xs text-muted-foreground uppercase bg-muted/70 dark:bg-muted/40">
                         <tr>
                           <th className="px-4 py-3">Time</th>
                           <th className="px-4 py-3">Status</th>
@@ -1678,12 +1690,12 @@ export default function AdminClient() {
                           <th className="px-4 py-3">Details</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-800">
+                      <tbody className="divide-y divide-border">
                         {scanLogs.length === 0 ? (
                           <tr>
                             <td
                               colSpan={6}
-                              className="px-4 py-8 text-center text-slate-500"
+                              className="px-4 py-8 text-center text-muted-foreground"
                             >
                               No scan logs found
                             </td>
@@ -1692,11 +1704,11 @@ export default function AdminClient() {
                           scanLogs.map((log) => (
                             <tr
                               key={log.id}
-                              className="bg-slate-900/20 hover:bg-slate-900/40"
+                              className="bg-muted/30 hover:bg-muted/50 dark:bg-muted/20 dark:hover:bg-muted/35"
                             >
-                              <td className="px-4 py-3 text-slate-300 whitespace-nowrap">
+                              <td className="px-4 py-3 text-foreground whitespace-nowrap">
                                 {formatRelativeTime(log.attempt_timestamp)}
-                                <div className="text-xs text-slate-500">
+                                <div className="text-xs text-muted-foreground">
                                   {new Date(
                                     log.attempt_timestamp,
                                   ).toLocaleTimeString()}
@@ -1704,27 +1716,27 @@ export default function AdminClient() {
                               </td>
                               <td className="px-4 py-3">
                                 {log.success ? (
-                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-400">
+                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
                                     SUCCESS
                                   </span>
                                 ) : (
-                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-900/30 text-red-400">
+                                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
                                     FAILED
                                   </span>
                                 )}
                               </td>
-                              <td className="px-4 py-3 text-slate-300">
+                              <td className="px-4 py-3 text-foreground">
                                 <div
                                   className="truncate max-w-[150px]"
                                   title={log.customer_name}
                                 >
                                   {log.customer_name || "Unknown"}
                                 </div>
-                                <div className="text-xs text-slate-500 truncate">
+                                <div className="text-xs text-muted-foreground truncate">
                                   {log.customer_email}
                                 </div>
                               </td>
-                              <td className="px-4 py-3 text-slate-300">
+                              <td className="px-4 py-3 text-foreground">
                                 <div
                                   className="truncate max-w-[150px]"
                                   title={log.event_title}
@@ -1732,23 +1744,23 @@ export default function AdminClient() {
                                   {log.event_title || "Unknown Event"}
                                 </div>
                               </td>
-                              <td className="px-4 py-3 text-slate-300">
-                                <div className="text-xs text-slate-400 truncate max-w-[120px]">
+                              <td className="px-4 py-3 text-foreground">
+                                <div className="text-xs text-muted-foreground truncate max-w-[120px]">
                                   {log.scanner_email || "System"}
                                 </div>
                               </td>
-                              <td className="px-4 py-3 text-slate-300">
+                              <td className="px-4 py-3 text-foreground">
                                 {log.success ? (
-                                  <div className="text-green-400 text-xs">
+                                  <div className="text-green-700 dark:text-green-400 text-xs">
                                     {log.error_message ||
                                       "Verified successfully"}
                                   </div>
                                 ) : log.error_message ? (
-                                  <div className="text-red-400 text-xs">
+                                  <div className="text-red-700 dark:text-red-400 text-xs">
                                     {log.error_message}
                                   </div>
                                 ) : (
-                                  <div className="text-slate-500 text-xs">
+                                  <div className="text-muted-foreground text-xs">
                                     Verification failed
                                   </div>
                                 )}
@@ -1767,9 +1779,9 @@ export default function AdminClient() {
 
         {/* Email Dialog */}
         <Dialog open={isEmailDialogOpen} onOpenChange={setIsEmailDialogOpen}>
-          <DialogContent className="rounded-sm border-slate-700 bg-card/90 backdrop-blur-sm shadow-2xl max-w-[95vw] sm:max-w-lg">
+          <DialogContent className="rounded-sm border-border bg-card/90 backdrop-blur-sm shadow-2xl max-w-[95vw] sm:max-w-lg">
             <DialogHeader>
-              <DialogTitle className="text-gray-100 text-base sm:text-lg">
+              <DialogTitle className="text-foreground text-base sm:text-lg">
                 {selectedPurchase &&
                   (() => {
                     const recovery =
@@ -1784,7 +1796,7 @@ export default function AdminClient() {
                     return first ? "Send Ticket Email" : "Resend Ticket Email";
                   })()}
               </DialogTitle>
-              <DialogDescription className="text-gray-300 text-xs sm:text-sm">
+              <DialogDescription className="text-muted-foreground text-xs sm:text-sm">
                 {selectedPurchase && isRecoveryEmailActionable(selectedPurchase)
                   ? "Update contact details if needed, then send the abandoned checkout recovery message."
                   : "Update customer information and send the ticket email"}
@@ -1796,7 +1808,7 @@ export default function AdminClient() {
                   <div>
                     <Label
                       htmlFor="newName"
-                      className="text-gray-200 text-xs sm:text-sm"
+                      className="text-foreground text-xs sm:text-sm"
                     >
                       Customer Name
                     </Label>
@@ -1805,13 +1817,13 @@ export default function AdminClient() {
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                       placeholder="Enter correct name"
-                      className="rounded-sm bg-background border-slate-700 text-gray-100 placeholder:text-gray-400 text-sm"
+                      className="rounded-sm bg-background border-border text-foreground placeholder:text-muted-foreground text-sm"
                     />
                   </div>
                   <div>
                     <Label
                       htmlFor="newPhone"
-                      className="text-gray-200 text-xs sm:text-sm"
+                      className="text-foreground text-xs sm:text-sm"
                     >
                       Phone Number
                     </Label>
@@ -1820,14 +1832,14 @@ export default function AdminClient() {
                       value={newPhone}
                       onChange={(e) => setNewPhone(e.target.value)}
                       placeholder="Enter correct phone"
-                      className="rounded-sm bg-background border-slate-700 text-gray-100 placeholder:text-gray-400 text-sm"
+                      className="rounded-sm bg-background border-border text-foreground placeholder:text-muted-foreground text-sm"
                     />
                   </div>
                 </div>
                 <div>
                   <Label
                     htmlFor="newEmail"
-                    className="text-gray-200 text-xs sm:text-sm"
+                    className="text-foreground text-xs sm:text-sm"
                   >
                     Email Address
                   </Label>
@@ -1837,14 +1849,14 @@ export default function AdminClient() {
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
                     placeholder="Enter correct email"
-                    className="rounded-sm bg-background border-slate-700 text-gray-100 placeholder:text-gray-400 text-sm"
+                    className="rounded-sm bg-background border-border text-foreground placeholder:text-muted-foreground text-sm"
                   />
                 </div>
-                <div className="bg-card/50 backdrop-blur-sm p-3 rounded-sm border border-slate-700">
-                  <h4 className="font-medium mb-2 text-gray-100 text-sm">
+                <div className="bg-card/50 backdrop-blur-sm p-3 rounded-sm border border-border">
+                  <h4 className="font-medium mb-2 text-foreground text-sm">
                     Purchase Details
                   </h4>
-                  <div className="text-xs sm:text-sm space-y-1 text-gray-300">
+                  <div className="text-xs sm:text-sm space-y-1 text-muted-foreground">
                     <div className="truncate">
                       Event: {selectedPurchase.event_title}
                     </div>
@@ -1870,7 +1882,7 @@ export default function AdminClient() {
                   <Button
                     variant="outline"
                     onClick={() => setIsEmailDialogOpen(false)}
-                    className="rounded-sm border-slate-700 text-gray-100 hover:bg-card/70 w-full sm:w-auto"
+                    className="rounded-sm border-border text-foreground hover:bg-card/70 w-full sm:w-auto"
                   >
                     Cancel
                   </Button>
@@ -1915,12 +1927,12 @@ export default function AdminClient() {
 
         {/* Invite Guest Dialog */}
         <Dialog open={isInviteDialogOpen} onOpenChange={setIsInviteDialogOpen}>
-          <DialogContent className="rounded-sm border-slate-700 bg-card/90 backdrop-blur-sm shadow-2xl max-w-[95vw] sm:max-w-lg">
+          <DialogContent className="rounded-sm border-border bg-card/90 backdrop-blur-sm shadow-2xl max-w-[95vw] sm:max-w-lg">
             <DialogHeader>
-              <DialogTitle className="text-gray-100 text-base sm:text-lg">
+              <DialogTitle className="text-foreground text-base sm:text-lg">
                 Invite Guest
               </DialogTitle>
-              <DialogDescription className="text-gray-300 text-xs sm:text-sm">
+              <DialogDescription className="text-muted-foreground text-xs sm:text-sm">
                 Create a ticket for a guest and send them an email with their QR
                 code.
               </DialogDescription>
@@ -1930,7 +1942,7 @@ export default function AdminClient() {
                 <div>
                   <Label
                     htmlFor="inviteGuestName"
-                    className="text-gray-200 text-xs sm:text-sm"
+                    className="text-foreground text-xs sm:text-sm"
                   >
                     Guest Name *
                   </Label>
@@ -1939,13 +1951,13 @@ export default function AdminClient() {
                     value={inviteGuestName}
                     onChange={(e) => setInviteGuestName(e.target.value)}
                     placeholder="Enter guest name"
-                    className="rounded-sm bg-background border-slate-700 text-gray-100 placeholder:text-gray-400 text-sm"
+                    className="rounded-sm bg-background border-border text-foreground placeholder:text-muted-foreground text-sm"
                   />
                 </div>
                 <div>
                   <Label
                     htmlFor="inviteGuestPhone"
-                    className="text-gray-200 text-xs sm:text-sm"
+                    className="text-foreground text-xs sm:text-sm"
                   >
                     Phone Number
                   </Label>
@@ -1954,14 +1966,14 @@ export default function AdminClient() {
                     value={inviteGuestPhone}
                     onChange={(e) => setInviteGuestPhone(e.target.value)}
                     placeholder="Optional"
-                    className="rounded-sm bg-background border-slate-700 text-gray-100 placeholder:text-gray-400 text-sm"
+                    className="rounded-sm bg-background border-border text-foreground placeholder:text-muted-foreground text-sm"
                   />
                 </div>
               </div>
               <div>
                 <Label
                   htmlFor="inviteGuestEmail"
-                  className="text-gray-200 text-xs sm:text-sm"
+                  className="text-foreground text-xs sm:text-sm"
                 >
                   Email Address *
                 </Label>
@@ -1971,13 +1983,13 @@ export default function AdminClient() {
                   value={inviteGuestEmail}
                   onChange={(e) => setInviteGuestEmail(e.target.value)}
                   placeholder="guest@example.com"
-                  className="rounded-sm bg-background border-slate-700 text-gray-100 placeholder:text-gray-400 text-sm"
+                  className="rounded-sm bg-background border-border text-foreground placeholder:text-muted-foreground text-sm"
                 />
               </div>
               <div>
                 <Label
                   htmlFor="inviteTicketCount"
-                  className="text-gray-200 text-xs sm:text-sm"
+                  className="text-foreground text-xs sm:text-sm"
                 >
                   Number of Tickets
                 </Label>
@@ -1992,15 +2004,15 @@ export default function AdminClient() {
                       Math.max(1, Math.min(10, parseInt(e.target.value) || 1)),
                     )
                   }
-                  className="rounded-sm bg-background border-slate-700 text-gray-100 text-sm w-24"
+                  className="rounded-sm bg-background border-border text-foreground text-sm w-24"
                 />
               </div>
               {selectedEvent && (
-                <div className="bg-purple-900/30 p-3 rounded-sm border border-purple-700">
-                  <h4 className="font-medium mb-2 text-purple-100 text-sm">
+                <div className="bg-purple-100/90 dark:bg-purple-900/30 p-3 rounded-sm border border-purple-200 dark:border-purple-700">
+                  <h4 className="font-medium mb-2 text-purple-950 dark:text-purple-100 text-sm">
                     Event
                   </h4>
-                  <div className="text-xs sm:text-sm text-purple-200">
+                  <div className="text-xs sm:text-sm text-purple-900 dark:text-purple-200">
                     {events.find((e) => e.event_id === selectedEvent)
                       ?.event_title || "Selected Event"}
                   </div>
@@ -2016,7 +2028,7 @@ export default function AdminClient() {
                     setInviteGuestPhone("");
                     setInviteTicketCount(1);
                   }}
-                  className="rounded-sm border-slate-700 text-gray-100 hover:bg-card/70 w-full sm:w-auto"
+                  className="rounded-sm border-border text-foreground hover:bg-card/70 w-full sm:w-auto"
                 >
                   Cancel
                 </Button>
@@ -2027,7 +2039,7 @@ export default function AdminClient() {
                     !inviteGuestEmail.trim() ||
                     !inviteGuestName.trim()
                   }
-                  className="rounded-sm bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
+                  className="rounded-sm bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
                 >
                   {inviteLoading ? (
                     <>

@@ -56,7 +56,7 @@ export default async function AgencePage() {
       </section>
 
       <section className="grid grid-cols-1 md:grid-cols-2">
-        <div className="bg-[#1a1a1a] text-white p-8 md:p-12 lg:p-16 flex flex-col justify-center order-2 md:order-1">
+        <div className="bg-muted/70 text-foreground p-8 md:p-12 lg:p-16 flex flex-col justify-center order-2 md:order-1 dark:bg-[#1a1a1a] dark:text-white">
           <h2 className="font-display text-3xl md:text-4xl font-black uppercase mb-8">
             {data.accomplishmentsHeading?.trim() || "Réalisations"}
           </h2>
@@ -64,10 +64,12 @@ export default async function AgencePage() {
             {data.accomplishments.map((item, index) => (
               <div
                 key={`${item.name}-${index}`}
-                className="flex justify-between items-center gap-4 border-b border-white/20 pb-4"
+                className="flex justify-between items-center gap-4 border-b border-border pb-4 dark:border-white/20"
               >
                 <span className="font-display font-bold">{item.name}</span>
-                <span className="text-sm text-white/60">{item.client}</span>
+                <span className="text-sm text-muted-foreground dark:text-white/60">
+                  {item.client}
+                </span>
               </div>
             ))}
           </div>

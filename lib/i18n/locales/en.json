@@ -4,7 +4,13 @@
       "terms": "Terms"
     },
     "copyright": "© {year} Wêrê Klub — All rights reserved.",
-    "socialHeading": "Follow us"
+    "socialHeading": "Follow us",
+    "social": {
+      "whatsapp": "WhatsApp",
+      "soundcloud": "SoundCloud",
+      "facebook": "Facebook",
+      "instagram": "Instagram"
+    }
   },
   "header": {
     "nav": {

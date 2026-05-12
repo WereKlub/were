@@ -75,28 +75,28 @@ export function EventShareButton({
       name: platformTranslations.twitter,
       icon: <TwitterIcon className="h-5 w-5" />,
       url: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-      className: `${baseButtonClasses} bg-black hover:bg-zinc-800 dark:bg-black dark:text-white dark:hover:bg-black`,
+      className: `${baseButtonClasses} bg-neutral-950 text-white hover:bg-neutral-800`,
     },
     {
       id: "facebook",
       name: platformTranslations.facebook,
       icon: <Facebook className="h-5 w-5" />,
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      className: `${baseButtonClasses} bg-[#1877F2] hover:bg-[#166FE5] dark:bg-[#1877F2] dark:hover:bg-[#3B82F6]`,
+      className: `${baseButtonClasses} bg-[#1877F2] hover:bg-[#166FE5] text-white`,
     },
     {
       id: "whatsapp",
       name: platformTranslations.whatsapp,
       icon: <WhatsappIcon className="h-5 w-5" />,
       url: `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`,
-      className: `${baseButtonClasses} bg-[#128C7E] hover:bg-[#075E54] dark:bg-[#128C7E] dark:hover:bg-[#075E54]`,
+      className: `${baseButtonClasses} bg-[#128C7E] hover:bg-[#075E54] text-white`,
     },
     {
       id: "instagram",
       name: platformTranslations.instagram,
       icon: <IG className="h-5 w-5" />,
       onClick: handleCopy,
-      className: `${baseButtonClasses} bg-[#E1306C] hover:bg-[#C13584] dark:bg-[#E1306C] dark:hover:bg-[#C13584]`,
+      className: `${baseButtonClasses} bg-[#E1306C] hover:bg-[#C13584] text-white`,
     },
   ];
 
@@ -186,7 +186,7 @@ export function EventShareButton({
                 disabled={!shareUrl}
               >
                 {copied ? (
-                  <Check className="h-4 w-4 text-green-500" />
+                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
                 ) : (
                   <Copy className="h-4 w-4" />
                 )}

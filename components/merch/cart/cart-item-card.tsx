@@ -39,7 +39,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
   };
 
   return (
-    <div className="flex gap-8 p-3 bg-[#1a1a1a]/50 hover:bg-[#1a1a1a]/70 rounded-sm transition-colors items-stretch">
+    <div className="flex gap-8 p-3 bg-muted/40 hover:bg-muted/60 dark:bg-[#1a1a1a]/50 dark:hover:bg-[#1a1a1a]/70 rounded-sm transition-colors items-stretch">
       {/* Product Image */}
       <div className="shrink-0 w-16">
         {image ? (
@@ -53,7 +53,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
           </div>
         ) : (
           <div className="h-full aspect-square bg-muted rounded-sm flex items-center justify-center">
-            <span className="text-xs text-white/70">
+            <span className="text-xs text-muted-foreground dark:text-white/70">
               {t(currentLanguage, "cartItemCard.noImage")}
             </span>
           </div>
@@ -64,10 +64,10 @@ export function CartItemCard({ item }: CartItemCardProps) {
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start mb-3">
           <div className="flex-1 min-w-0">
-            <h3 className="font-medium text-sm truncate text-white">
+            <h3 className="font-medium text-sm truncate text-foreground dark:text-white">
               {product.name}
             </h3>
-            <p className="text-xs text-white/70 mt-1">
+            <p className="text-xs text-muted-foreground mt-1 dark:text-white/70">
               {product.price.toLocaleString("fr-FR")} F CFA
             </p>
           </div>
@@ -94,7 +94,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
             >
               <MinusIcon className="h-3 w-3" />
             </Button>
-            <span className="text-sm font-medium min-w-8 text-center text-white">
+            <span className="text-sm font-medium min-w-8 text-center text-foreground dark:text-white">
               {quantity}
             </span>
             <Button
@@ -108,7 +108,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
             </Button>
           </div>
 
-          <div className="text-sm font-medium text-white">
+          <div className="text-sm font-medium text-foreground dark:text-white">
             {(product.price * quantity).toLocaleString("fr-FR")} F CFA
           </div>
         </div>

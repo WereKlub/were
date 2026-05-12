@@ -645,15 +645,6 @@ export async function getAllEventsForWereCards(): Promise<
   return client.fetch<SanityEventCardSource[]>(query, {}, getCacheConfig(["events"]));
 }
 
-const FOOTER_STRIP_FALLBACK: string[] = [
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/16-sv2nqRmmrxDUAaqYpbYgnncRZlQUG7.jpg",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/17-UrbKBC6B3b2KDs0AB0XCNJbFa5OwpL.jpg",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/DSC03881-nMw58iEtc2t1wmSy5gK3IYl60cLrkh.jpg",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/DSC03740-FnFcxZrEU6kMPhGaLxhB5z4u848Hcj.jpg",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/19-BDtBp7L2ah2hgLILoajpURhJYiPvNQ.jpg",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/DSC03642-55QQlqz9fxkYmXgJpzV87D0jaYsMWA.jpg",
-];
-
 export async function getFooterStripImageUrls(): Promise<string[]> {
   try {
     const galleryQuery = `*[_type == "gallery"] | order(_createdAt desc) [0]{
@@ -672,7 +663,7 @@ export async function getFooterStripImageUrls(): Promise<string[]> {
   } catch (e) {
     console.error("getFooterStripImageUrls:", e);
   }
-  return FOOTER_STRIP_FALLBACK;
+  return [];
 }
 
 // Define interface for the data returned by getEventsForScroller

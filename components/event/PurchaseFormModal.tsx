@@ -390,7 +390,7 @@ export default function PurchaseFormModal({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="fixed inset-0 z-[60] bg-foreground/30 will-change-auto cursor-pointer"
+              className="fixed inset-0 z-60 bg-foreground/30 will-change-auto cursor-pointer"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -426,9 +426,9 @@ export default function PurchaseFormModal({
               role="dialog"
               aria-modal="true"
               aria-labelledby="purchase-modal-title"
-              className={`fixed z-[70] will-change-transform pointer-events-auto overscroll-contain flex flex-col ${
+              className={`fixed z-70 will-change-transform pointer-events-auto overscroll-contain flex flex-col ${
                 isMobile
-                  ? "inset-x-0 bottom-0 w-full max-h-[100dvh]"
+                  ? "inset-x-0 bottom-0 w-full max-h-dvh"
                   : "top-0 bottom-0 right-0 w-full md:w-[500px] md:p-4"
               }`}
               style={
@@ -439,14 +439,14 @@ export default function PurchaseFormModal({
               onClick={(e) => e.stopPropagation()}
             >
               <div
-                className="flex flex-col w-full min-h-0 bg-[#1a1a1a] backdrop-blur-xl rounded-t-xl md:rounded-sm shadow-2xl p-4 md:h-full md:min-h-0 h-[min(96dvh,100%)]"
+                className="flex flex-col w-full min-h-0 bg-card text-card-foreground backdrop-blur-xl rounded-t-xl md:rounded-sm shadow-2xl border border-border p-4 md:h-full md:min-h-0 h-[min(96dvh,100%)] dark:bg-[#1a1a1a]"
                 style={
                   isMobile && mobileVisibleHeight != null
                     ? { maxHeight: mobileVisibleHeight }
                     : undefined
                 }
               >
-                <div className="flex items-start py-3 md:py-6 flex-shrink-0">
+                <div className="flex items-start py-3 md:py-6 shrink-0">
                   <div>
                     <h2
                       id="purchase-modal-title"
@@ -648,7 +648,7 @@ export default function PurchaseFormModal({
                   </form>
                 </div>
 
-                <div className="px-3 md:px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:pb-4 border-t border-border flex-shrink-0">
+                <div className="px-3 md:px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] md:pb-4 border-t border-border shrink-0">
                   <Button
                     type="submit"
                     form="purchase-checkout-form"
