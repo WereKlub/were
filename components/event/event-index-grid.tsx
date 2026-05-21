@@ -25,7 +25,7 @@ function EventIndexCard({ event }: { event: WereEventCard }) {
       href={eventHref(event)}
       className="group flex flex-col border border-border bg-card text-card-foreground hover:border-foreground/25 transition-colors rounded-md overflow-hidden shadow-sm"
     >
-      <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
+      <div className="relative aspect-4/5 w-full overflow-hidden bg-muted">
         <Image
           src={event.image}
           alt={event.title}

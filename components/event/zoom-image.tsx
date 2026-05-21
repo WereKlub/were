@@ -53,11 +53,11 @@ export function ZoomImage({
       role="dialog"
       aria-modal="true"
       aria-label={sectionTitle ? `Gallery: ${sectionTitle}` : "Gallery zoom"}
-      className="fixed inset-0 z-[80] bg-black/90 pt-4 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col overflow-x-hidden overscroll-contain"
+      className="fixed inset-0 z-80 bg-black/90 pt-4 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col overflow-x-hidden overscroll-contain"
       onClick={handleClose}
     >
       {sectionTitle && (
-        <div className="flex-shrink-0 text-center py-2 text-white/80 text-sm font-medium">
+        <div className="shrink-0 text-center py-2 text-white/80 text-sm font-medium">
           {sectionTitle}
         </div>
       )}

@@ -27,7 +27,7 @@ export function SplitShowcaseLayout({
     >
       <VerticalImageCarousel
         images={images}
-        className="lg:sticky lg:top-[3.75rem] lg:h-[calc(100dvh-3.75rem)]"
+        className="lg:sticky lg:top-15 lg:h-[calc(100dvh-3.75rem)]"
       />
 
       <div

@@ -43,7 +43,7 @@ export default function NewsContent({ posts }: NewsContentProps) {
                   href={`/blog/${post.slug.current}`}
                   className="group flex flex-col border border-border bg-card text-card-foreground hover:border-foreground/25 transition-colors rounded-md overflow-hidden shadow-sm h-full"
                 >
-                  <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted shrink-0">
+                  <div className="relative aspect-4/5 w-full overflow-hidden bg-muted shrink-0">
                     <Image
                       src={post.mainImage?.asset?.url || "/placeholder.webp"}
                       alt={post.mainImage?.alt || post.title}

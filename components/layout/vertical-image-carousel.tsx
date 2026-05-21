@@ -53,7 +53,7 @@ export function VerticalImageCarousel({
         {loopImages.map((image, index) => (
           <div
             key={`${image.url}-${index}`}
-            className="relative aspect-[3/4] w-full shrink-0 sm:aspect-[4/5]"
+            className="relative aspect-3/4 w-full shrink-0 sm:aspect-4/5"
           >
             <Image
               src={image.url}
