@@ -121,7 +121,8 @@
     "readMore": "Lire plus →",
     "noPosts": "Aucun article publié pour le moment.",
     "backToBlog": "Retour au blog",
-    "publishedOn": "Publié le {date}"
+    "publishedOn": "Publié le {date}",
+    "articlesSection": "Articles"
   },
   "merchPage": {
     "sectionBanner": "Boutique",

@@ -51,7 +51,7 @@ const newsCacheTags = (slug?: string) =>
 
 export async function getAllNewsPosts(): Promise<NewsPost[]> {
   try {
-    const query = `*[_type == "news"] | order(publishedAt desc) { ${newsFields} }`;
+    const query = `*[_type == "news" && defined(publishedAt) && publishedAt <= now()] | order(publishedAt desc) { ${newsFields} }`;
     const result = await client.fetch(
       query,
       {},
@@ -68,7 +68,7 @@ export async function getNewsPostBySlug(
   slug: string,
 ): Promise<NewsPost | null> {
   try {
-    const query = `*[_type == "news" && slug.current == $slug][0] { ${newsFields} }`;
+    const query = `*[_type == "news" && slug.current == $slug && defined(publishedAt) && publishedAt <= now()][0] { ${newsFields} }`;
     const result = await client.fetch(
       query,
       { slug },

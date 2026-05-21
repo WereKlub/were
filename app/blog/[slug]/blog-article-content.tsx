@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
-import { PortableText } from "@portabletext/react";
 import { ArrowLeft, Tag, User } from "lucide-react";
 
 import type { NewsPost } from "@/lib/types/news";
@@ -13,6 +12,7 @@ import { t } from "@/lib/i18n/translations";
 import { PageIntro } from "@/components/layout/page-intro";
 import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
 import { AppPageContainer } from "@/components/layout/app-page-shell";
+import { BlogPortableText } from "@/components/blog/blog-portable-text";
 
 interface BlogArticleContentProps {
   post: NewsPost;
@@ -78,8 +78,8 @@ export function BlogArticleContent({ post }: BlogArticleContentProps) {
           ) : null}
 
           <div className="rounded-md border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm md:p-12">
-            <div className="prose prose-lg md:prose-xl max-w-none prose-headings:font-display prose-headings:font-bold prose-headings:uppercase prose-headings:tracking-tight prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-blockquote:border-primary prose-code:text-primary">
-              <PortableText value={post.body} />
+            <div className="max-w-none">
+              <BlogPortableText value={post.body} />
             </div>
           </div>
 
