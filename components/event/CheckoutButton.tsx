@@ -161,7 +161,7 @@ export default function CheckoutButton({
       return (
         <Button
           asChild
-          className="bg-green-600 hover:bg-green-700 text-white border-green-600 rounded-md font-medium h-10 px-6 uppercase w-full justify-center"
+          className="bg-green-600 hover:bg-green-700 text-white border-green-600 rounded-md font-medium h-11 px-6 uppercase w-full justify-center"
         >
           <Link
             href={item.paymentLink}
@@ -194,8 +194,8 @@ export default function CheckoutButton({
         ? t(currentLanguage, "eventSlugPage.tickets.buyNow")
         : t(currentLanguage, "eventSlugPage.tickets.getETicket");
       const buttonClassName = isBundle
-        ? "bg-green-600 hover:bg-green-700 text-white rounded-md font-medium h-10 px-6 uppercase w-full justify-center"
-        : "bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium h-10 px-6 uppercase w-full justify-center";
+        ? "bg-green-600 hover:bg-green-700 text-white rounded-md font-medium h-11 px-6 uppercase w-full justify-center"
+        : "bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium h-11 px-6 uppercase w-full justify-center";
       return (
         <>
           <Button
@@ -240,7 +240,7 @@ export default function CheckoutButton({
       return (
         <Badge
           variant="outline"
-          className="text-sm justify-center py-2 px-4 rounded-md h-10 inline-flex items-center font-medium w-full uppercase"
+          className="text-sm justify-center py-2 px-4 rounded-md h-11 inline-flex items-center font-medium w-full uppercase"
         >
           {t(currentLanguage, "eventSlugPage.availability.misconfigured")}
         </Badge>
@@ -253,7 +253,7 @@ export default function CheckoutButton({
     const isSoldOut = typeof item.stock === "number" && item.stock <= 0;
 
     let badgeStyles =
-      "text-sm justify-center py-2 px-4 rounded-md h-10 inline-flex items-center font-medium w-full uppercase";
+      "text-sm justify-center py-2 px-4 rounded-md h-11 inline-flex items-center font-medium w-full uppercase";
 
     if (isComingSoon) {
       badgeStyles +=

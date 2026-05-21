@@ -1,4 +1,5 @@
 import type React from "react";
+import type { Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import { rootMetadata } from "@/lib/site-metadata";
 import "./globals.css";
@@ -30,6 +31,12 @@ const inter = Inter({
 export const dynamic = "force-dynamic";
 
 export const metadata = rootMetadata;
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export default async function RootLayout({
   children,

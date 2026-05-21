@@ -58,7 +58,7 @@ export function AboutShowcasePanel({
               <p className="font-display text-3xl font-black text-foreground md:text-4xl">
                 {stat.value}
               </p>
-              <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-foreground/60">
+              <p className="mt-1 text-xs uppercase tracking-[0.2em] text-foreground/60">
                 {stat.label}
               </p>
             </div>

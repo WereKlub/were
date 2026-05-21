@@ -113,7 +113,7 @@ export function AgencyShowcasePanel({
             </div>
 
             {logoBoxLabel ? (
-              <p className="mt-8 text-center text-[10px] font-medium uppercase tracking-[0.35em] text-foreground/60">
+              <p className="mt-8 text-center text-xs font-medium uppercase tracking-[0.35em] text-foreground/60">
                 {logoBoxLabel}
               </p>
             ) : null}

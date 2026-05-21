@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import CartModal from "@/components/merch/cart/cart-modal";
+import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
 import { useNavigationSettings } from "@/lib/contexts/NavigationSettingsContext";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
@@ -41,7 +43,31 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-background border-b border-border">
-      <div className="flex w-full items-center justify-end px-6 py-4 md:px-12">
+      <div className="flex w-full items-center justify-between gap-4 px-4 py-3 md:px-8 md:py-4 lg:px-12">
+        <Link
+          href="/"
+          className="relative block h-9 w-[7.5rem] shrink-0"
+          aria-label="Wêrê Klub"
+        >
+          <Image
+            src="/dark.png"
+            alt=""
+            fill
+            className="object-contain object-left dark:hidden"
+            sizes="120px"
+            priority
+          />
+          <Image
+            src="/white.png"
+            alt=""
+            aria-hidden
+            fill
+            className="hidden object-contain object-left dark:block"
+            sizes="120px"
+            priority
+          />
+        </Link>
+
         <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navItems.map((item) => (
             <Link
@@ -61,12 +87,12 @@ export default function Header() {
           </div>
         </nav>
 
-        <div className="lg:hidden flex items-center gap-2">
+        <div className="lg:hidden flex items-center gap-1">
           <CartModal />
           <button
             type="button"
             onClick={() => setMobileMenuOpen((v) => !v)}
-            className="text-foreground p-1"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-foreground"
             aria-expanded={mobileMenuOpen}
             aria-label={
               mobileMenuOpen
@@ -85,13 +111,13 @@ export default function Header() {
 
       {mobileMenuOpen ? (
         <div className="lg:hidden bg-background border-t border-border">
-          <nav className="flex flex-col p-6 gap-1">
+          <nav className="flex flex-col px-4 py-4 gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 href={item.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`text-sm tracking-widest py-3 uppercase border-b border-border/50 ${
+                className={`text-sm tracking-widest py-3.5 uppercase border-b border-border/50 min-h-11 flex items-center ${
                   pathname === item.path ? "font-bold" : ""
                 }`}
               >
@@ -99,6 +125,9 @@ export default function Header() {
               </Link>
             ))}
           </nav>
+          <div className="flex items-center justify-end border-t border-border px-4 py-3">
+            <LanguageSwitcher className="min-h-11 text-foreground! hover:text-foreground/80!" />
+          </div>
         </div>
       ) : null}
     </header>

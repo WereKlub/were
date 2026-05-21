@@ -14,7 +14,7 @@ export function PageIntro({
   bodyClassName?: string;
 }) {
   return (
-    <div className={cn("w-full px-6 py-16 md:px-12 md:py-20", className)}>
+    <div className={cn("w-full px-4 py-16 md:px-8 md:py-20 lg:px-12", className)}>
       <div className="mx-auto max-w-7xl">
         <div className={cn("max-w-lg md:max-w-xl", bodyClassName)}>
           <h1 className="font-display text-4xl font-black uppercase tracking-tight mb-8 text-balance md:text-5xl">

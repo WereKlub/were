@@ -1,8 +1,7 @@
 "use client";
 
-import { CheckCircle, Ticket } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
@@ -14,6 +13,9 @@ import {
   AppPageContainer,
   AppPageShell,
 } from "@/components/layout/app-page-shell";
+import { PageIntro } from "@/components/layout/page-intro";
+import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
+import { DetailSectionHeader } from "@/components/layout/detail-section-header";
 
 interface PaymentSuccessClientProps {
   purchaseId?: string;
@@ -24,90 +26,75 @@ export function PaymentSuccessClient({
 }: PaymentSuccessClientProps) {
   const { currentLanguage } = useTranslation();
 
-  // Track purchase completion
   useEffect(() => {
-    // Track successful purchase - you can enhance this with actual purchase value
-    trackPurchase(0, "XOF"); // Replace 0 with actual purchase amount when available
+    trackPurchase(0, "XOF");
   }, []);
 
   return (
     <AppPageShell>
       <Header />
-      <div className="flex flex-col grow justify-center py-12">
-        <AppPageContainer className="flex justify-center">
-          <div className="max-w-md w-full">
-            <Card className="border-border">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto w-16 h-16 bg-muted rounded-md flex items-center justify-center mb-4">
-                  <CheckCircle className="w-8 h-8 text-accent" />
+
+      <PageIntro
+        title={t(currentLanguage, "paymentSuccess.title")}
+        subtitle={t(currentLanguage, "paymentSuccess.description")}
+        bodyClassName="max-w-2xl md:max-w-3xl"
+      />
+
+      <PageContentBelowIntro>
+        <AppPageContainer className="flex justify-center pb-16 pt-10 md:pb-20 md:pt-12">
+          <div className="w-full max-w-lg">
+            <div className="rounded-md border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm md:p-10">
+              <div className="mb-8 flex flex-col items-center text-center">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-md border border-border bg-muted">
+                  <CheckCircle className="h-8 w-8 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display text-foreground">
-                  {t(currentLanguage, "paymentSuccess.title")}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="text-center text-muted-foreground">
-                  <p>{t(currentLanguage, "paymentSuccess.description")}</p>
-                  {purchaseId && (
-                    <p className="text-sm mt-2 font-mono bg-muted p-2 rounded-md text-foreground">
-                      {t(currentLanguage, "paymentSuccess.orderId", {
-                        orderId: purchaseId,
-                      })}
-                    </p>
+                {purchaseId ? (
+                  <p className="rounded-md bg-muted p-3 font-mono text-sm text-foreground">
+                    {t(currentLanguage, "paymentSuccess.orderId", {
+                      orderId: purchaseId,
+                    })}
+                  </p>
+                ) : null}
+              </div>
+
+              <DetailSectionHeader
+                title={t(currentLanguage, "paymentSuccess.whatsNext.title")}
+                className="mb-4"
+              />
+              <ul className="mb-8 space-y-2 text-sm text-muted-foreground">
+                <li>
+                  •{" "}
+                  {t(currentLanguage, "paymentSuccess.whatsNext.checkEmail")}
+                </li>
+                <li>
+                  •{" "}
+                  {t(
+                    currentLanguage,
+                    "paymentSuccess.whatsNext.presentTicket",
                   )}
-                </div>
+                </li>
+                <li>
+                  •{" "}
+                  {t(currentLanguage, "paymentSuccess.whatsNext.arriveEarly")}
+                </li>
+              </ul>
 
-                <div className="rounded-md border border-border bg-muted/40 p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Ticket className="w-5 h-5 text-accent shrink-0" />
-                    <h3 className="font-semibold text-foreground">
-                      {t(currentLanguage, "paymentSuccess.whatsNext.title")}
-                    </h3>
-                  </div>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>
-                      •{" "}
-                      {t(
-                        currentLanguage,
-                        "paymentSuccess.whatsNext.checkEmail",
-                      )}
-                    </li>
-                    <li>
-                      •{" "}
-                      {t(
-                        currentLanguage,
-                        "paymentSuccess.whatsNext.presentTicket",
-                      )}
-                    </li>
-                    <li>
-                      •{" "}
-                      {t(
-                        currentLanguage,
-                        "paymentSuccess.whatsNext.arriveEarly",
-                      )}
-                    </li>
-                  </ul>
-                </div>
+              <div className="mb-6 flex flex-col gap-3">
+                <Button variant="outline" asChild className="w-full rounded-md">
+                  <Link href="/events">
+                    {t(currentLanguage, "paymentSuccess.buttons.backToEvents")}
+                  </Link>
+                </Button>
+              </div>
 
-                <div className="flex flex-col gap-3">
-                  <Button variant="outline" asChild className="w-full">
-                    <Link href="/events">
-                      {t(
-                        currentLanguage,
-                        "paymentSuccess.buttons.backToEvents",
-                      )}
-                    </Link>
-                  </Button>
-                </div>
-
-                <div className="text-center text-xs text-muted-foreground">
-                  {t(currentLanguage, "paymentSuccess.support")}
-                </div>
-              </CardContent>
-            </Card>
+              <p className="text-center text-xs text-muted-foreground">
+                {t(currentLanguage, "paymentSuccess.support")}
+              </p>
+            </div>
           </div>
         </AppPageContainer>
-      </div>
+      </PageContentBelowIntro>
+
       <Footer />
     </AppPageShell>
   );

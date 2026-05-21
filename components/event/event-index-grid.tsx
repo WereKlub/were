@@ -35,13 +35,13 @@ function EventIndexCard({ event }: { event: WereEventCard }) {
         />
       </div>
       <div className="p-3 md:p-4 border-t border-border flex flex-col gap-2 grow">
-        <p className="text-[10px] md:text-xs tracking-[0.22em] uppercase text-muted-foreground line-clamp-2">
+        <p className="text-xs tracking-[0.22em] uppercase text-muted-foreground line-clamp-2">
           {event.timeAndDate}
         </p>
         <h3 className="font-display text-base md:text-lg font-bold uppercase tracking-tight text-balance leading-snug group-hover:text-foreground/90">
           {event.title}
         </h3>
-        <p className="text-[11px] md:text-xs tracking-wide uppercase text-muted-foreground line-clamp-2 mt-auto">
+        <p className="text-xs tracking-wide uppercase text-muted-foreground line-clamp-2 mt-auto">
           {event.venue}
         </p>
       </div>

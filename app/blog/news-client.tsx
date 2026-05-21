@@ -62,7 +62,7 @@ export default function NewsContent({ posts }: NewsContentProps) {
                       />
                     </div>
                     <div className="flex min-h-0 grow flex-col gap-2 border-t border-border p-3 md:p-4">
-                      <p className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground md:text-xs">
+                      <p className="text-xs tracking-[0.22em] uppercase text-muted-foreground">
                         {format(new Date(post.publishedAt), "MMM d, yyyy", {
                           locale: dateLocale,
                         })}
@@ -71,7 +71,7 @@ export default function NewsContent({ posts }: NewsContentProps) {
                         {post.title}
                       </h3>
                       {post.excerpt ? (
-                        <p className="mt-auto line-clamp-3 text-[11px] text-muted-foreground md:text-xs">
+                        <p className="mt-auto line-clamp-3 text-xs text-muted-foreground">
                           {post.excerpt}
                         </p>
                       ) : null}

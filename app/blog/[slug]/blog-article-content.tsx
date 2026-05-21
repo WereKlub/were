@@ -44,7 +44,7 @@ export function BlogArticleContent({ post }: BlogArticleContentProps) {
           </Link>
 
           <div className="mb-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-            <p className="text-[10px] tracking-[0.22em] uppercase text-muted-foreground md:text-xs">
+            <p className="text-xs tracking-[0.22em] uppercase text-muted-foreground">
               {formattedDate}
             </p>
 

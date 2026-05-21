@@ -101,7 +101,7 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
           >
             <Button
               size="sm"
-              className={`rounded-md px-4 py-2 text-xs font-medium transition-colors ${button.primary}`}
+              className={`min-h-11 rounded-md px-4 py-2 text-xs font-medium transition-colors ${button.primary}`}
               onClick={handleAddToCart}
             >
               {t(currentLanguage, "merchPage.productDetail.addToCart")}

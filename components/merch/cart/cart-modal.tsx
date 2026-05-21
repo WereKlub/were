@@ -413,7 +413,7 @@ export default function CartModal() {
         variant="ghost"
         aria-label="Open cart"
         onClick={openCart}
-        className="flex items-center gap-2 h-auto px-2 py-1.5 text-foreground hover:bg-transparent hover:text-foreground/80"
+        className="flex min-h-11 min-w-11 items-center justify-center gap-2 px-2 py-1.5 text-foreground hover:bg-transparent hover:text-foreground/80"
         size="sm"
         onClickCapture={(e) => {
           // Prevent event bubbling that might interfere with modal

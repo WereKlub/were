@@ -29,7 +29,6 @@ export default function FloatingPromo({
   const { button } = useTheme();
 
   useEffect(() => {
-    // Small delay to allow for animation
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 500);
@@ -39,7 +38,7 @@ export default function FloatingPromo({
 
   const handleClose = () => {
     setIsVisible(false);
-    setTimeout(onClose, 300); // Allow animation to complete
+    setTimeout(onClose, 300);
   };
 
   return (
@@ -47,36 +46,29 @@ export default function FloatingPromo({
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: isVisible ? 1 : 0, scale: isVisible ? 1 : 0.9 }}
       transition={{ duration: 0.3 }}
-      className="fixed z-50 group
-                 right-4 bottom-4 w-[160px]  // Mobile: smaller, lower, less horizontal space
-                 sm:right-6 sm:bottom-6 sm:w-[180px] // Small screens: default size & pos
-                 md:right-8 md:bottom-16 md:w-[200px] // Medium screens and up: larger, higher up
-                 lg:right-10 lg:bottom-20 lg:w-[220px] // Larger screens: even more offset and larger
-                 "
+      className="group fixed z-40 right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] w-[160px] sm:right-6 sm:bottom-[max(1.5rem,env(safe-area-inset-bottom))] sm:w-[180px] md:right-8 md:bottom-16 md:w-[200px] lg:right-10 lg:bottom-20 lg:w-[220px]"
     >
-      {/* Close button - positioned as a separate element */}
-      <div className="absolute -top-3 -right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="absolute -top-3 -right-3 z-20 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200">
         <button
+          type="button"
           onClick={handleClose}
-          className="bg-muted rounded-md w-6 h-6 flex items-center justify-center shadow-md hover:bg-muted/80 transition-colors border border-border"
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-border bg-muted shadow-md transition-colors hover:bg-muted/80"
           aria-label="Close"
         >
           <X className="h-3.5 w-3.5 text-muted-foreground" />
         </button>
       </div>
 
-      <div className="bg-card rounded-md shadow-2xl overflow-hidden border border-border text-card-foreground relative">
-        {/* Traffic light buttons */}
-        <div className="flex items-center px-2 py-1.5 bg-muted/70 border-b border-border">
+      <div className="relative overflow-hidden rounded-md border border-border bg-card text-card-foreground shadow-2xl">
+        <div className="flex items-center border-b border-border bg-muted/70 px-2 py-1.5">
           <div className="flex space-x-1.5">
-            <div className="w-2 h-2 rounded-md bg-[#ff5f56]"></div>
-            <div className="w-2 h-2 rounded-md bg-[#ffbd2e]"></div>
-            <div className="w-2 h-2 rounded-md bg-[#27c93f]"></div>
+            <div className="h-2 w-2 rounded-md bg-[#ff5f56]" />
+            <div className="h-2 w-2 rounded-md bg-[#ffbd2e]" />
+            <div className="h-2 w-2 rounded-md bg-[#27c93f]" />
           </div>
         </div>
 
-        {/* Image - 16:9 ratio */}
-        <div className="relative w-full aspect-video">
+        <div className="relative aspect-video w-full">
           <Image
             src={imageUrl || "/placeholder.webp"}
             alt={title}
@@ -86,37 +78,34 @@ export default function FloatingPromo({
           />
         </div>
 
-        {/* Button */}
         <div className="w-full">
           {href ? (
             <Link
               href={href}
-              className={`w-full py-2.5 px-4 ${button.primary} text-sm font-medium transition-colors rounded-b-sm text-center flex items-center justify-center`}
+              className={`flex w-full items-center justify-center px-4 py-2.5 text-sm font-medium transition-colors rounded-b-sm text-center ${button.primary}`}
               onClick={() => {
-                // Track promo button click
                 trackEvent("Lead", {
                   content_name: title || "Floating Promo",
                   content_category: "promo",
                 });
               }}
             >
-              <PartyPopper className="h-3.5 w-3.5 mr-1.5" />
+              <PartyPopper className="mr-1.5 h-3.5 w-3.5" />
               {buttonText}
             </Link>
           ) : (
             <button
+              type="button"
               onClick={() => {
-                // Track promo button click
                 trackEvent("Lead", {
                   content_name: title || "Floating Promo",
                   content_category: "promo",
                 });
-                // Call the original onClick handler
                 onButtonClick();
               }}
-              className={`w-full py-2.5 px-4 ${button.primary} text-sm font-medium transition-colors rounded-b-sm flex items-center justify-center`}
+              className={`flex w-full items-center justify-center px-4 py-2.5 text-sm font-medium transition-colors rounded-b-sm ${button.primary}`}
             >
-              <PartyPopper className="h-3.5 w-3.5 mr-1.5" />
+              <PartyPopper className="mr-1.5 h-3.5 w-3.5" />
               {buttonText}
             </button>
           )}

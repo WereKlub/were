@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, MinusIcon } from "lucide-react";
+import { PlusIcon, MinusIcon, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "./cart/cart-context";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
@@ -22,6 +23,10 @@ import { useState, useMemo } from "react";
 import { normalizeColorName } from "@/lib/utils/color";
 import { cn } from "@/lib/actions/utils";
 import { openCartExternally } from "./cart/cart-modal";
+import { PageIntro } from "@/components/layout/page-intro";
+import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
+import { AppPageContainer } from "@/components/layout/app-page-shell";
+import { DetailSectionHeader } from "@/components/layout/detail-section-header";
 
 interface ProductImageCarouselProps {
   images: Array<{ url: string }>;
@@ -40,7 +45,7 @@ function ProductImageCarousel({
         <CarouselContent>
           {images.map((image, index) => (
             <CarouselItem key={index}>
-              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-md bg-muted shadow-2xl">
+              <div className="flex-1 min-h-[420px] md:min-h-[520px] relative overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg">
                 <Image
                   src={image.url}
                   alt={
@@ -263,12 +268,34 @@ function ProductDetail({ product }: ProductDetailContentProps) {
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
 
+  const productName =
+    typeof product.name === "string" ? product.name : "Product";
+  const formattedPrice =
+    typeof product.price === "number"
+      ? product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+      : "0";
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 pt-28 pb-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 lg:items-stretch">
+    <>
+      <PageIntro title={productName} bodyClassName="max-w-2xl md:max-w-3xl" />
+
+      <PageContentBelowIntro>
+        <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
+          <Link
+            href="/merch"
+            className="mb-8 inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {t(currentLanguage, "merchPage.productDetail.backToMerch")}
+          </Link>
+
+          <p className="mb-8 text-2xl font-bold text-primary md:text-3xl">
+            {formattedPrice} F CFA
+          </p>
+
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
-            className="space-y-4 flex flex-col h-full"
+            className="flex h-full flex-col space-y-4"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -279,7 +306,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                 productName={product.name}
               />
             ) : mainImage ? (
-              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-md bg-muted shadow-2xl">
+              <div className="flex-1 min-h-[420px] md:min-h-[520px] relative overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg">
                 <Image
                   src={mainImage}
                   alt={
@@ -292,7 +319,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                 <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
               </div>
             ) : (
-              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-md bg-muted flex items-center justify-center shadow-2xl">
+              <div className="relative flex min-h-[420px] flex-1 items-center justify-center overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:min-h-[520px]">
                 <span className="text-muted-foreground">
                   {t(currentLanguage, "merchPage.productDetail.noImage")}
                 </span>
@@ -301,38 +328,11 @@ function ProductDetail({ product }: ProductDetailContentProps) {
           </motion.div>
 
           <motion.div
-            className="space-y-8 min-h-[650px] flex flex-col mt-0"
+            className="mt-0 flex min-h-0 flex-col space-y-8"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="space-y-4">
-              <motion.h1
-                className="text-4xl md:text-5xl lg:text-6xl font-black mb-4 bg-linear-to-r from-foreground to-foreground/80 bg-clip-text text-transparent leading-tight"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-              >
-                {typeof product.name === "string" ? product.name : "Product"}
-              </motion.h1>
-
-              <div className="flex justify-start">
-                <motion.p
-                  className="text-3xl md:text-4xl font-bold text-primary"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                >
-                  {typeof product.price === "number"
-                    ? product.price
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-                    : "0"}{" "}
-                  F CFA
-                </motion.p>
-              </div>
-            </div>
-
             {product.colors && product.colors.length >= 1 && (
               <motion.div
                 className="mb-6"
@@ -340,7 +340,10 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
               >
-                <div className="flex gap-2 mb-3">
+                <p className="mb-3 text-xs tracking-[0.25em] uppercase text-muted-foreground">
+                  {t(currentLanguage, "merchPage.productDetail.color")}
+                </p>
+                <div className="mb-3 flex flex-wrap gap-2">
                   {product.colors.map((color, index) => {
                     const normalizedColor = normalizeColorName(color.name);
                     const isMix = normalizedColor === "mix";
@@ -354,7 +357,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                         onClick={() => handleColorChange(color.name)}
                         disabled={!color.available}
                         className={cn(
-                          "relative h-8 w-8 rounded-full border-2 transition-all duration-200 overflow-hidden",
+                          "relative h-10 w-10 rounded-full border-2 transition-all duration-200 overflow-hidden",
                           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                           "hover:ring-2 hover:ring-primary/60 hover:ring-offset-2 hover:ring-offset-background",
                           selectedColor === color.name
@@ -411,7 +414,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
               >
-                <p className="text-sm font-medium text-foreground mb-3">
+                <p className="mb-3 text-xs tracking-[0.25em] uppercase text-muted-foreground">
                   {t(currentLanguage, "merchPage.productDetail.size") || "Size"}
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -445,19 +448,23 @@ function ProductDetail({ product }: ProductDetailContentProps) {
 
             {product.description && (
               <motion.div
-                className="bg-card/30 backdrop-blur-sm rounded-md p-6 border border-border/20 min-h-[260px]"
+                className="rounded-md border border-border/50 bg-card/50 p-6 shadow-lg backdrop-blur-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-semibold text-foreground">
-                    {t(currentLanguage, "merchPage.productDetail.description")}
-                  </h3>
+                <div className="mb-4 flex items-center justify-between gap-4">
+                  <DetailSectionHeader
+                    title={t(
+                      currentLanguage,
+                      "merchPage.productDetail.description",
+                    )}
+                    className="mb-0 border-0 pb-0"
+                  />
                   {product.stock !== undefined && (
                     <div
                       className={cn(
-                        "px-4 py-2 rounded-md text-sm font-medium",
+                        "shrink-0 rounded-md px-4 py-2 text-sm font-medium",
                         typeof product.stock === "number" &&
                           product.stock > 0 &&
                           !isOutOfStock
@@ -468,8 +475,8 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                       {typeof product.stock === "number" &&
                       product.stock > 0 &&
                       !isOutOfStock
-                        ? `${product.stock} in stock`
-                        : "Out of Stock"}
+                        ? `${product.stock} ${t(currentLanguage, "merchPage.productDetail.inStock")}`
+                        : t(currentLanguage, "merchPage.productDetail.outOfStock")}
                     </div>
                   )}
                 </div>
@@ -496,41 +503,43 @@ function ProductDetail({ product }: ProductDetailContentProps) {
             >
               {!isOutOfStock && (
                 <>
-                  <div className="bg-card/30 backdrop-blur-sm rounded-md p-6 border border-border/20">
-                    <div className="flex items-center justify-between">
-                      <span className="text-lg font-medium text-foreground">
-                        {t(currentLanguage, "merchPage.productDetail.quantity")}
-                      </span>
-                      <div className="flex items-center space-x-3">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={decrementQuantity}
-                          disabled={quantity <= 1}
-                          className="h-10 w-10 rounded-md"
-                        >
-                          <MinusIcon className="h-4 w-4" />
-                        </Button>
-                        <motion.span
-                          key={quantity}
-                          initial={{ scale: 0.8, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          className="w-12 text-center text-lg font-semibold"
-                        >
-                          {quantity}
-                        </motion.span>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={incrementQuantity}
-                          className="h-10 w-10 rounded-md"
-                        >
-                          <PlusIcon className="h-4 w-4" />
-                        </Button>
-                      </div>
+                  <div className="rounded-md border border-border/50 bg-card/50 p-6 shadow-lg backdrop-blur-sm">
+                    <DetailSectionHeader
+                      title={t(
+                        currentLanguage,
+                        "merchPage.productDetail.quantity",
+                      )}
+                      className="mb-4 border-0 pb-0"
+                    />
+                    <div className="flex items-center justify-end gap-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={decrementQuantity}
+                        disabled={quantity <= 1}
+                        className="h-10 w-10 rounded-md"
+                      >
+                        <MinusIcon className="h-4 w-4" />
+                      </Button>
+                      <motion.span
+                        key={quantity}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="w-12 text-center text-lg font-semibold"
+                      >
+                        {quantity}
+                      </motion.span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={incrementQuantity}
+                        className="h-10 w-10 rounded-md"
+                      >
+                        <PlusIcon className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <div className="mt-4 pt-4 border-t border-border/20">
-                      <div className="flex justify-between items-center">
+                    <div className="mt-4 border-t border-border/20 pt-4">
+                      <div className="flex items-center justify-between">
                         <span className="text-sm text-muted-foreground">
                           {t(currentLanguage, "merchPage.productDetail.total")}
                         </span>
@@ -585,8 +594,9 @@ function ProductDetail({ product }: ProductDetailContentProps) {
             </motion.div>
           </motion.div>
         </div>
-      </div>
-    </div>
+        </AppPageContainer>
+      </PageContentBelowIntro>
+    </>
   );
 }
 

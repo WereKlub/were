@@ -9,7 +9,6 @@ import {
   type KeyboardEvent,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/actions/utils";
 import {
   Loader2,
@@ -17,7 +16,6 @@ import {
   XCircle,
   Shield,
   Calendar,
-  Ticket,
   AlertCircle,
   QrCode,
 } from "lucide-react";
@@ -27,12 +25,16 @@ import { useSearchParams } from "next/navigation";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { setStaffPinCookie } from "./actions";
+import type { ReactNode } from "react";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import {
   AppPageContainer,
   AppPageShell,
 } from "@/components/layout/app-page-shell";
+import { PageIntro } from "@/components/layout/page-intro";
+import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
+import { DetailSectionHeader } from "@/components/layout/detail-section-header";
 
 interface TicketData {
   purchase_id: string;
@@ -182,6 +184,35 @@ const storage = {
 interface VerifyClientProps {
   ticketId?: string;
   initialIsVerified?: boolean;
+}
+
+function VerifyPageFrame({
+  title,
+  subtitle,
+  children,
+  shellClassName,
+}: {
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+  shellClassName?: string;
+}) {
+  return (
+    <AppPageShell className={shellClassName}>
+      <Header />
+      <PageIntro
+        title={title}
+        subtitle={subtitle}
+        bodyClassName="max-w-2xl md:max-w-3xl"
+      />
+      <PageContentBelowIntro>
+        <AppPageContainer className="flex justify-center pb-16 pt-10 md:pb-20 md:pt-12">
+          <div className="w-full max-w-md">{children}</div>
+        </AppPageContainer>
+      </PageContentBelowIntro>
+      <Footer />
+    </AppPageShell>
+  );
 }
 
 export function VerifyClient({
@@ -691,218 +722,165 @@ export function VerifyClient({
   // If no ticket ID in URL, show manual entry with improved design
   if (!ticketId) {
     return (
-      <AppPageShell>
-        <Header />
-        <div className="flex flex-col grow justify-center py-12">
-          <AppPageContainer>
-            <div className="w-full max-w-sm mx-auto space-y-8">
-              <Card className="border-border">
-                <CardContent className="px-8 py-12">
-                  <div className="flex flex-col items-center text-center space-y-8">
-                    <QrCode className="h-8 w-8 text-muted-foreground" />
-                    <h2 className="text-lg font-display font-medium tracking-tight text-foreground">
-                      {t(currentLanguage, "ticketVerification.pageTitle")}
-                    </h2>
+      <VerifyPageFrame
+        title={t(currentLanguage, "ticketVerification.pageTitle")}
+        subtitle={t(
+          currentLanguage,
+          "ticketVerification.noTicketId.description",
+        )}
+      >
+        <div className="rounded-md border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm">
+          <div className="flex flex-col items-center space-y-6 text-center">
+            <QrCode className="h-8 w-8 text-muted-foreground" />
 
-                    <div className="w-full space-y-6">
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {t(
-                          currentLanguage,
-                          "ticketVerification.noTicketId.description",
-                        )}
-                      </p>
-
-                      <div className="bg-muted/50 rounded-lg p-4 text-left border border-border/50">
-                        <div className="flex items-center gap-2 mb-3">
-                          <Ticket className="w-4 h-4 text-foreground" />
-                          <h3 className="font-medium text-foreground text-sm">
-                            {t(
-                              currentLanguage,
-                              "ticketVerification.noTicketId.howToVerify.title",
-                            )}
-                          </h3>
-                        </div>
-                        <ul className="text-sm text-muted-foreground space-y-2">
-                          <li className="flex items-start">
-                            <span className="mr-2 mt-0.5">•</span>
-                            <span>
-                              {t(
-                                currentLanguage,
-                                "ticketVerification.noTicketId.howToVerify.scanQr",
-                              )}
-                            </span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2 mt-0.5">•</span>
-                            <span>
-                              {t(
-                                currentLanguage,
-                                "ticketVerification.noTicketId.howToVerify.enterPin",
-                              )}
-                            </span>
-                          </li>
-                          <li className="flex items-start">
-                            <span className="mr-2 mt-0.5">•</span>
-                            <span>
-                              {t(
-                                currentLanguage,
-                                "ticketVerification.noTicketId.howToVerify.reviewDetails",
-                              )}
-                            </span>
-                          </li>
-                        </ul>
-                      </div>
-
-                      <Button
-                        asChild
-                        className="w-full rounded-lg"
-                        variant="outline"
-                      >
-                        <Link href="/">
-                          <Calendar className="w-4 h-4 mr-2" />
-                          {t(
-                            currentLanguage,
-                            "ticketVerification.noTicketId.backToEvents",
-                          )}
-                        </Link>
-                      </Button>
-
-                      <p className="text-xs text-muted-foreground">
-                        {t(
-                          currentLanguage,
-                          "ticketVerification.noTicketId.needHelp",
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            <div className="w-full rounded-lg border border-border/50 bg-muted/50 p-4 text-left">
+              <DetailSectionHeader
+                title={t(
+                  currentLanguage,
+                  "ticketVerification.noTicketId.howToVerify.title",
+                )}
+                className="mb-3 border-0 pb-0"
+              />
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-start">
+                  <span className="mr-2 mt-0.5">•</span>
+                  <span>
+                    {t(
+                      currentLanguage,
+                      "ticketVerification.noTicketId.howToVerify.scanQr",
+                    )}
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2 mt-0.5">•</span>
+                  <span>
+                    {t(
+                      currentLanguage,
+                      "ticketVerification.noTicketId.howToVerify.enterPin",
+                    )}
+                  </span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2 mt-0.5">•</span>
+                  <span>
+                    {t(
+                      currentLanguage,
+                      "ticketVerification.noTicketId.howToVerify.reviewDetails",
+                    )}
+                  </span>
+                </li>
+              </ul>
             </div>
-          </AppPageContainer>
+
+            <Button asChild className="w-full rounded-md" variant="outline">
+              <Link href="/events">
+                <Calendar className="mr-2 h-4 w-4" />
+                {t(
+                  currentLanguage,
+                  "ticketVerification.noTicketId.backToEvents",
+                )}
+              </Link>
+            </Button>
+
+            <p className="text-xs text-muted-foreground">
+              {t(currentLanguage, "ticketVerification.noTicketId.needHelp")}
+            </p>
+          </div>
         </div>
-        <Footer />
-      </AppPageShell>
+      </VerifyPageFrame>
     );
   }
 
   // Show PIN entry if not verified yet
   if (!isVerified) {
     return (
-      <AppPageShell>
-        <Header />
-        <div className="flex flex-col grow justify-center py-12">
-          <AppPageContainer>
-            <div className="w-full max-w-sm mx-auto">
-              <Card className="border-border">
-                <CardContent className="px-6 py-10">
-                  <div className="flex flex-col items-center text-center space-y-6">
-                    <Shield className="h-7 w-7 text-muted-foreground" />
-                    <h2 className="text-base font-display font-medium tracking-tight text-foreground">
-                      {t(
-                        currentLanguage,
-                        "ticketVerification.staffVerification",
-                      )}
-                    </h2>
+      <VerifyPageFrame
+        title={t(currentLanguage, "ticketVerification.staffVerification")}
+        subtitle={t(
+          currentLanguage,
+          "ticketVerification.pinEntry.description",
+        )}
+      >
+        <div className="rounded-md border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm">
+          <div className="flex flex-col items-center space-y-6 text-center">
+            <Shield className="h-7 w-7 text-muted-foreground" />
 
-                    <div className="w-full space-y-5">
-                      <p className="text-sm text-muted-foreground leading-snug">
-                        {t(
-                          currentLanguage,
-                          "ticketVerification.pinEntry.description",
-                        )}
-                      </p>
+            <form
+              onSubmit={handlePinSubmit}
+              className="flex w-full flex-col items-center gap-5"
+            >
+              <div
+                className="flex justify-center gap-2"
+                onPaste={handlePinPaste}
+                role="group"
+                aria-label={t(
+                  currentLanguage,
+                  "ticketVerification.pinEntry.pinPlaceholder",
+                )}
+              >
+                {Array.from({ length: STAFF_PIN_LENGTH }, (_, i) => (
+                  <input
+                    key={i}
+                    ref={(el) => {
+                      pinInputRefs.current[i] = el;
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                    spellCheck={false}
+                    autoComplete={i === 0 ? "one-time-code" : "off"}
+                    name={`staff-pin-${i}`}
+                    maxLength={1}
+                    value={pinDigits[i]}
+                    disabled={isLoading}
+                    aria-invalid={error ? true : undefined}
+                    className={cn(
+                      "h-11 w-10 shrink-0 rounded-md border border-input bg-muted/50 text-center text-lg font-semibold tabular-nums text-foreground shadow-xs outline-none transition-[color,box-shadow]",
+                      "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                      "disabled:pointer-events-none disabled:opacity-50",
+                      "dark:bg-input/30",
+                    )}
+                    onChange={(e) => handleDigitInput(i, e.target.value)}
+                    onKeyDown={(e) => handleDigitKeyDown(i, e)}
+                  />
+                ))}
+              </div>
 
-                      <form
-                        onSubmit={handlePinSubmit}
-                        className="flex flex-col items-center gap-5"
-                      >
-                        <div
-                          className="flex justify-center gap-2"
-                          onPaste={handlePinPaste}
-                          role="group"
-                          aria-label={t(
-                            currentLanguage,
-                            "ticketVerification.pinEntry.pinPlaceholder",
-                          )}
-                        >
-                          {Array.from({ length: STAFF_PIN_LENGTH }, (_, i) => (
-                            <input
-                              key={i}
-                              ref={(el) => {
-                                pinInputRefs.current[i] = el;
-                              }}
-                              type="text"
-                              inputMode="numeric"
-                              pattern="[0-9]*"
-                              autoCapitalize="off"
-                              autoCorrect="off"
-                              spellCheck={false}
-                              autoComplete={i === 0 ? "one-time-code" : "off"}
-                              name={`staff-pin-${i}`}
-                              maxLength={1}
-                              value={pinDigits[i]}
-                              disabled={isLoading}
-                              aria-invalid={error ? true : undefined}
-                              className={cn(
-                                "h-11 w-10 shrink-0 rounded-md border border-input bg-muted/50 text-center text-lg font-semibold tabular-nums text-foreground shadow-xs outline-none transition-[color,box-shadow]",
-                                "focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
-                                "disabled:pointer-events-none disabled:opacity-50",
-                                "dark:bg-input/30",
-                              )}
-                              onChange={(e) =>
-                                handleDigitInput(i, e.target.value)
-                              }
-                              onKeyDown={(e) => handleDigitKeyDown(i, e)}
-                            />
-                          ))}
-                        </div>
+              <Button
+                type="submit"
+                size="sm"
+                className="rounded-md px-6"
+                disabled={pin.length !== STAFF_PIN_LENGTH || isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                    {t(
+                      currentLanguage,
+                      "ticketVerification.pinEntry.verifying",
+                    )}
+                  </>
+                ) : (
+                  t(
+                    currentLanguage,
+                    "ticketVerification.pinEntry.verifyButton",
+                  )
+                )}
+              </Button>
+            </form>
 
-                        <Button
-                          type="submit"
-                          size="sm"
-                          className="rounded-md px-6"
-                          disabled={
-                            pin.length !== STAFF_PIN_LENGTH || isLoading
-                          }
-                        >
-                          {isLoading ? (
-                            <>
-                              <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                              {t(
-                                currentLanguage,
-                                "ticketVerification.pinEntry.verifying",
-                              )}
-                            </>
-                          ) : (
-                            t(
-                              currentLanguage,
-                              "ticketVerification.pinEntry.verifyButton",
-                            )
-                          )}
-                        </Button>
-                      </form>
+            {error ? (
+              <p className="text-sm font-medium text-destructive">{error}</p>
+            ) : null}
 
-                      {error && (
-                        <p className="text-sm text-destructive font-medium">
-                          {error}
-                        </p>
-                      )}
-
-                      <p className="text-xs text-muted-foreground">
-                        {t(
-                          currentLanguage,
-                          "ticketVerification.pinEntry.staffOnly",
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </AppPageContainer>
+            <p className="text-xs text-muted-foreground">
+              {t(currentLanguage, "ticketVerification.pinEntry.staffOnly")}
+            </p>
+          </div>
         </div>
-        <Footer />
-      </AppPageShell>
+      </VerifyPageFrame>
     );
   }
 
@@ -910,97 +888,84 @@ export function VerifyClient({
 
   // Show ticket details after PIN verification
   return (
-    <AppPageShell className="relative">
-      {/* Flash Feedback Overlay */}
-      {flashColor && (
+    <VerifyPageFrame
+      title={t(currentLanguage, "ticketVerification.pageTitle")}
+      shellClassName="relative"
+    >
+      {flashColor ? (
         <div
           className={`fixed inset-0 pointer-events-none z-50 ${
             flashColor === "green" ? "bg-accent/25" : "bg-destructive/20"
           }`}
           style={{ animation: "flash 0.4s ease-out" }}
         />
-      )}
+      ) : null}
 
-      <Header />
-      <div className="flex flex-col grow justify-center py-12">
-        <AppPageContainer>
-          <div className="w-full max-w-sm mx-auto space-y-8">
-            {/* Loading State */}
-            {isLoading && !ticketData && (
-              <Card className="border-border">
-                <CardContent className="py-12 text-center">
-                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
-                    {t(
-                      currentLanguage,
-                      "ticketVerification.loading.ticketDetails",
-                    )}
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Status Card */}
-            {status && (
-              <Card
-                className={`border ${status.borderColor} ${status.bgColor}`}
-              >
-                <CardContent className="px-8 py-12">
-                  <div className="flex flex-col items-center text-center space-y-8">
-                    {status.icon}
-                    <h2
-                      className={`text-lg font-display font-medium tracking-tight ${status.textColor}`}
-                    >
-                      {status.statusText}
-                    </h2>
-                    {ticketData && (
-                      <div className="w-full space-y-6">
-                        <p className="text-sm text-muted-foreground uppercase tracking-wider leading-relaxed">
-                          {ticketData.ticket_name} · {ticketData.event_title}
-                        </p>
-                        <div className="space-y-1">
-                          <p className="text-2xl font-semibold text-foreground tracking-tight">
-                            {ticketData.customer_name}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {t(
-                              currentLanguage,
-                              "ticketVerification.quantity.scannedRemaining",
-                              {
-                                scannedCount:
-                                  ticketData.use_count != null
-                                    ? ticketData.use_count
-                                    : 1 - (ticketData.remaining_tickets || 0),
-                                remainingCount:
-                                  ticketData.remaining_tickets != null
-                                    ? ticketData.remaining_tickets
-                                    : (ticketData.total_quantity || 1) -
-                                      (ticketData.use_count || 0),
-                              },
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                    {error && (
-                      <p
-                        className={`text-sm ${
-                          errorCode === "ALREADY_USED"
-                            ? "text-muted-foreground"
-                            : "text-destructive"
-                        }`}
-                      >
-                        {error}
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+      <div className="space-y-6">
+        {isLoading && !ticketData ? (
+          <div className="rounded-md border border-border/50 bg-card/50 py-12 text-center shadow-lg backdrop-blur-sm">
+            <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              {t(currentLanguage, "ticketVerification.loading.ticketDetails")}
+            </p>
           </div>
-        </AppPageContainer>
+        ) : null}
+
+        {status ? (
+          <div
+            className={`rounded-md border bg-card/50 p-8 shadow-lg backdrop-blur-sm ${status.borderColor} ${status.bgColor}`}
+          >
+            <div className="flex flex-col items-center space-y-6 text-center">
+              {status.icon}
+              <p
+                className={`font-display text-lg font-medium tracking-tight ${status.textColor}`}
+              >
+                {status.statusText}
+              </p>
+              {ticketData ? (
+                <div className="w-full space-y-4">
+                  <p className="text-sm uppercase leading-relaxed tracking-wider text-muted-foreground">
+                    {ticketData.ticket_name} · {ticketData.event_title}
+                  </p>
+                  <div className="space-y-1">
+                    <p className="text-2xl font-semibold tracking-tight text-foreground">
+                      {ticketData.customer_name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {t(
+                        currentLanguage,
+                        "ticketVerification.quantity.scannedRemaining",
+                        {
+                          scannedCount:
+                            ticketData.use_count != null
+                              ? ticketData.use_count
+                              : 1 - (ticketData.remaining_tickets || 0),
+                          remainingCount:
+                            ticketData.remaining_tickets != null
+                              ? ticketData.remaining_tickets
+                              : (ticketData.total_quantity || 1) -
+                                (ticketData.use_count || 0),
+                        },
+                      )}
+                    </p>
+                  </div>
+                </div>
+              ) : null}
+              {error ? (
+                <p
+                  className={`text-sm ${
+                    errorCode === "ALREADY_USED"
+                      ? "text-muted-foreground"
+                      : "text-destructive"
+                  }`}
+                >
+                  {error}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        ) : null}
       </div>
-      <Footer />
-    </AppPageShell>
+    </VerifyPageFrame>
   );
 }
