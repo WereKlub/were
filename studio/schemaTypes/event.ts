@@ -185,6 +185,36 @@ export default {
       ],
     },
     {
+      name: 'cardBackgroundColor',
+      title: 'List card panel color',
+      type: 'string',
+      group: 'media',
+      description:
+        'Hex color for the text panel beside the flyer on the home and events pages (e.g. #e8f547). Pick a tone from the flyer. Leave empty for automatic alternating colors.',
+      validation: (Rule: Rule) =>
+        Rule.custom((value: string | undefined) => {
+          if (!value) return true
+          return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)
+            ? true
+            : 'Use a valid hex color like #e8f547'
+        }),
+    },
+    {
+      name: 'cardTextColor',
+      title: 'List card text color',
+      type: 'string',
+      group: 'media',
+      description:
+        'Optional hex text color on the panel. If empty, light or dark text is chosen automatically from the panel color.',
+      validation: (Rule: Rule) =>
+        Rule.custom((value: string | undefined) => {
+          if (!value) return true
+          return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)
+            ? true
+            : 'Use a valid hex color like #1a1a1a'
+        }),
+    },
+    {
       name: 'lineup',
       title: 'Lineup',
       type: 'array',

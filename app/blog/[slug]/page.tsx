@@ -1,18 +1,11 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
-import { PortableText } from "@portabletext/react";
-import { User, Tag } from "lucide-react";
 import { getNewsPostBySlug } from "@/lib/queries/news";
 import type { NewsPost } from "@/lib/types/news";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
-import {
-  AppPageShell,
-  AppPageContainer,
-} from "@/components/layout/app-page-shell";
+import { AppPageShell } from "@/components/layout/app-page-shell";
 import { buildPageMetadata } from "@/lib/site-metadata";
-
-// Category type is now handled by NewsPost type
+import { BlogArticleContent } from "./blog-article-content";
 
 export async function generateMetadata({
   params,
@@ -54,73 +47,7 @@ export default async function NewsPostPage({
   return (
     <AppPageShell>
       <Header />
-      <article className="grow flex flex-col min-w-0">
-        <AppPageContainer className="py-12 pb-16 md:pb-20">
-          {/* Article Header */}
-          <header className="mb-12 space-y-8">
-            <div className="text-left space-y-6">
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-foreground leading-tight mt-4">
-                {post.title}
-              </h1>
-
-              {/* Meta Information */}
-              <div className="flex flex-wrap gap-6 text-muted-foreground">
-                {post.author && (
-                  <div className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    <span className="font-medium">{post.author.name}</span>
-                  </div>
-                )}
-
-                {post.categories && post.categories.length > 0 && (
-                  <div className="flex items-center gap-2">
-                    <Tag className="h-5 w-5" />
-                    <span className="font-medium">
-                      {post.categories?.map((cat) => cat.title).join(", ") ||
-                        ""}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </header>
-
-          {/* Featured Image */}
-          {post.mainImage && (
-            <div className="relative aspect-video mb-12 rounded-md overflow-hidden shadow-2xl">
-              <Image
-                src={post.mainImage?.asset?.url || "/placeholder.webp"}
-                alt={post.mainImage?.alt || post.title}
-                fill
-                priority
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent" />
-            </div>
-          )}
-
-          {/* Article Content */}
-          <div className="bg-card/50 backdrop-blur-sm rounded-md p-8 md:p-12 shadow-lg border border-border/50">
-            <div className="prose prose-lg md:prose-xl max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-blockquote:border-primary prose-code:text-primary">
-              <PortableText value={post.body} />
-            </div>
-          </div>
-
-          {/* Article Footer */}
-          <footer className="mt-16 pt-8 border-t border-border/50">
-            <div className="text-center">
-              <p className="text-muted-foreground text-sm">
-                Published on{" "}
-                {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          </footer>
-        </AppPageContainer>
-      </article>
+      <BlogArticleContent post={post} />
       <Footer />
     </AppPageShell>
   );

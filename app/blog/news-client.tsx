@@ -10,6 +10,7 @@ import { t } from "@/lib/i18n/translations";
 import { PageIntro } from "@/components/layout/page-intro";
 import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
 import { PageEmptyState } from "@/components/layout/page-empty-state";
+import { AppPageContainer } from "@/components/layout/app-page-shell";
 
 interface NewsContentProps {
   posts: NewsPost[];
@@ -35,8 +36,8 @@ export default function NewsContent({ posts }: NewsContentProps) {
             {t(currentLanguage, "newsPage.noPosts")}
           </PageEmptyState>
         ) : (
-          <div className="px-4 md:px-8 lg:px-12 max-w-[1600px] mx-auto pb-16 md:pb-20 pt-10 md:pt-12">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+          <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 md:gap-6 xl:grid-cols-5">
               {posts.map((post) => (
                 <Link
                   key={post._id}
@@ -69,7 +70,7 @@ export default function NewsContent({ posts }: NewsContentProps) {
                 </Link>
               ))}
             </div>
-          </div>
+          </AppPageContainer>
         )}
       </PageContentBelowIntro>
     </>

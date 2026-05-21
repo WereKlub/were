@@ -19,6 +19,7 @@ export interface WereEventCard {
   hasGallery?: boolean;
   /** Split upcoming vs past — affects pricing and optional gallery hash link */
   isPast?: boolean;
+  ticketsAvailable?: boolean;
   image: string;
   bgColor: string;
   textColor: string;
@@ -26,23 +27,46 @@ export interface WereEventCard {
 
 interface WereEventCardProps {
   event: WereEventCard;
-  reversed?: boolean;
+  reserveLabel?: string;
+  galleryLabel?: string;
 }
 
-export function WereEventCard({ event, reversed = false }: WereEventCardProps) {
-  const cardHref =
-    event.isPast && event.hasGallery
-      ? `/events/${event.slug}#event-gallery`
-      : `/events/${event.slug}`;
+function eventHref(event: WereEventCard): string {
+  const base = `/events/${event.slug}`;
+  if (event.isPast && event.hasGallery) return `${base}#event-gallery`;
+  return base;
+}
+
+function panelButton(
+  event: WereEventCard,
+  reserveLabel?: string,
+  galleryLabel?: string,
+): { label: string; show: boolean } | null {
+  if (event.isPast) {
+    if (event.hasGallery && galleryLabel) {
+      return { label: galleryLabel, show: true };
+    }
+    return null;
+  }
+  if (event.ticketsAvailable !== false && reserveLabel) {
+    return { label: reserveLabel, show: true };
+  }
+  return null;
+}
+
+export function WereEventCard({
+  event,
+  reserveLabel,
+  galleryLabel,
+}: WereEventCardProps) {
+  const href = eventHref(event);
+  const cta = panelButton(event, reserveLabel, galleryLabel);
 
   return (
-    <Link
-      href={cardHref}
-      className="grid grid-cols-1 md:grid-cols-2 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
-      style={{ backgroundColor: event.bgColor }}
-    >
-      <div
-        className={`relative aspect-square md:aspect-auto md:min-h-[600px] ${reversed ? "md:order-2" : ""}`}
+    <article className="grid grid-cols-1 md:grid-cols-2 border-b border-border/20 last:border-b-0">
+      <Link
+        href={href}
+        className="relative aspect-square md:aspect-auto md:min-h-[min(100vw,520px)] lg:min-h-[600px] outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       >
         <Image
           src={event.image}
@@ -50,17 +74,24 @@ export function WereEventCard({ event, reversed = false }: WereEventCardProps) {
           fill
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 50vw"
+          priority={false}
         />
-      </div>
+      </Link>
 
       <div
-        className={`flex flex-col justify-between p-8 md:p-12 lg:p-16 ${reversed ? "md:order-1" : ""}`}
-        style={{ color: event.textColor }}
+        className="flex min-h-[min(100vw,420px)] md:min-h-[min(100vw,520px)] lg:min-h-[600px] flex-col justify-between p-8 md:p-12 lg:p-16"
+        style={{ backgroundColor: event.bgColor, color: event.textColor }}
       >
-        <div className="space-y-6">
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-balance uppercase">
+        <Link href={href} className="space-y-6 outline-none group">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-balance uppercase group-hover:opacity-90 transition-opacity">
             {event.title}
           </h2>
+
+          {event.subtitle ? (
+            <p className="text-sm md:text-base tracking-wide uppercase opacity-80 -mt-2">
+              {event.subtitle}
+            </p>
+          ) : null}
 
           <div className="space-y-2 text-sm md:text-base tracking-wide uppercase">
             <p className="font-semibold">{event.timeAndDate}</p>
@@ -68,7 +99,7 @@ export function WereEventCard({ event, reversed = false }: WereEventCardProps) {
             <p className="opacity-80">{event.address}</p>
           </div>
 
-          {event.features && event.features.length > 0 && (
+          {event.features && event.features.length > 0 ? (
             <div className="flex flex-wrap gap-2 pt-2">
               {event.features.map((feature) => (
                 <span
@@ -80,26 +111,26 @@ export function WereEventCard({ event, reversed = false }: WereEventCardProps) {
                 </span>
               ))}
             </div>
-          )}
-        </div>
+          ) : null}
+        </Link>
 
-        <div className="mt-12 space-y-6">
+        <div className="mt-10 md:mt-12 space-y-6">
           <div className="space-y-3">
-            <p className="text-xs tracking-widest uppercase opacity-70">
+            <p className="text-xs tracking-[0.25em] uppercase opacity-70">
               Line-up
             </p>
             <p className="text-sm md:text-base uppercase tracking-wide leading-relaxed font-medium">
-              {event.lineup.join(" • ")}
+              {event.lineup.join(" — ")}
             </p>
           </div>
 
-          {event.prices && (
+          {event.prices ? (
             <div
               className="flex gap-8 pt-4 border-t"
               style={{ borderColor: `${event.textColor}30` }}
             >
               <div>
-                <p className="text-xs tracking-widest uppercase opacity-70">
+                <p className="text-xs tracking-[0.25em] uppercase opacity-70">
                   Prévente
                 </p>
                 <p>
@@ -110,7 +141,7 @@ export function WereEventCard({ event, reversed = false }: WereEventCardProps) {
                 </p>
               </div>
               <div>
-                <p className="text-xs tracking-widest uppercase opacity-70">
+                <p className="text-xs tracking-[0.25em] uppercase opacity-70">
                   Sur place
                 </p>
                 <p>
@@ -121,9 +152,22 @@ export function WereEventCard({ event, reversed = false }: WereEventCardProps) {
                 </p>
               </div>
             </div>
-          )}
+          ) : null}
+
+          {cta?.show ? (
+            <Link
+              href={href}
+              className="inline-flex items-center justify-center rounded-full border px-6 py-2.5 text-xs md:text-sm font-semibold tracking-[0.2em] uppercase transition-opacity hover:opacity-80 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              style={{
+                borderColor: event.textColor,
+                color: event.textColor,
+              }}
+            >
+              {cta.label}
+            </Link>
+          ) : null}
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

@@ -553,8 +553,11 @@ export interface SanityEventCardSource {
     address?: string;
   };
   flyerUrl?: string | null;
+  cardBackgroundColor?: string | null;
+  cardTextColor?: string | null;
   lineup?: { name?: string }[];
   ticketTypes?: { name?: string; price?: number; active?: boolean }[];
+  ticketsAvailable?: boolean;
   /** From `count(gallery)` — used for past-event links to on-page gallery */
   galleryCount?: number;
 }
@@ -570,8 +573,11 @@ export async function getAllEventsForWereCards(): Promise<
     date,
     location,
     "flyerUrl": flyer.asset->url,
+    cardBackgroundColor,
+    cardTextColor,
     "lineup": lineup[]->{name},
     ticketTypes[]{name, price, active},
+    ticketsAvailable,
     "galleryCount": count(gallery)
   }`;
   return client.fetch<SanityEventCardSource[]>(

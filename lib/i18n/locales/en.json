@@ -104,7 +104,10 @@
     "subtitle": "Blazing nights, poolside chill, and everything in between. Upcoming dates and archives.",
     "noEvents": "No events published yet.",
     "upcomingSection": "Upcoming",
-    "pastSection": "Past"
+    "pastSection": "Past",
+    "reserve": "Book tickets",
+    "viewGallery": "View gallery",
+    "backToEvents": "Back to events"
   },
   "newsPage": {
     "sectionBanner": "Blog",
@@ -116,7 +119,9 @@
     "description": "News, recaps, and behind-the-scenes from Wêrê Klub.",
     "moreNews": "MORE POSTS",
     "readMore": "Read more →",
-    "noPosts": "No articles published yet."
+    "noPosts": "No articles published yet.",
+    "backToBlog": "Back to blog",
+    "publishedOn": "Published on {date}"
   },
   "merchPage": {
     "sectionBanner": "Shop",

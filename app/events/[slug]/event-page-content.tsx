@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { CalendarDays, Clock, MapPin, Users, Check } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, Clock, MapPin, Users, Check, ArrowLeft } from "lucide-react";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { Separator } from "@/components/ui/separator";
@@ -19,6 +20,9 @@ import {
   AppPageContainer,
   AppPageShell,
 } from "@/components/layout/app-page-shell";
+import { PageIntro } from "@/components/layout/page-intro";
+import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
+import { DetailSectionHeader } from "@/components/layout/detail-section-header";
 
 interface TicketTypeData {
   _key: string;
@@ -224,17 +228,19 @@ export default function EventPageContent({ event }: EventPageContentProps) {
 
   // Format Date and Time
   const eventDate = event.date ? new Date(event.date) : null;
+  const dateLocale = currentLanguage === "fr" ? "fr-FR" : "en-GB";
+  const timeLocale = currentLanguage === "fr" ? "fr-FR" : "en-US";
   const formattedDate =
-    eventDate?.toLocaleDateString("en-GB", {
-      day: "2-digit",
+    eventDate?.toLocaleDateString(dateLocale, {
+      day: "numeric",
       month: "long",
       year: "numeric",
     }) || t(currentLanguage, "eventSlugPage.dateTBC");
   const formattedTime =
-    eventDate?.toLocaleTimeString("en-US", {
+    eventDate?.toLocaleTimeString(timeLocale, {
       hour: "numeric",
       minute: "2-digit",
-      hour12: true,
+      hour12: currentLanguage !== "fr",
     }) || t(currentLanguage, "eventSlugPage.timeTBC");
 
   // Simplified availability check for the main "Get Tickets" section
@@ -248,107 +254,102 @@ export default function EventPageContent({ event }: EventPageContentProps) {
   return (
     <AppPageShell>
       <Header />
-      <AppPageContainer className="py-12 pb-16 md:pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 lg:gap-12 items-start">
-          {/* Event Flyer - Assign 2 columns */}
-          <div className="lg:col-span-2 relative aspect-2/3 rounded-md overflow-hidden shadow-lg bg-muted">
-            <Image
-              src={event.flyer?.url || "/banner.webp"}
-              alt={event.title}
-              priority
-              fill
-              className="object-center"
-            />
-          </div>
 
-          {/* Event Details - Assign 3 columns */}
-          <div className="lg:col-span-4">
-            {/* Title and Subtitle */}
-            <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-tight mb-3">
-              {event.title}
-            </h1>
-            {event.subtitle && (
-              <p className="text-xl md:text-2xl text-muted-foreground mt-1 mb-6">
-                {event.subtitle}
-              </p>
-            )}
+      <PageIntro
+        title={event.title}
+        subtitle={event.subtitle}
+        bodyClassName="max-w-2xl md:max-w-3xl"
+      />
 
-            {/* Date, Time, Location, Hosted By */}
-            <div className="flex flex-col gap-4 mb-8">
-              <div className="flex items-center gap-3">
-                <CalendarDays className="h-6 w-6 text-primary shrink-0" />
-                <span className="text-lg text-foreground">{formattedDate}</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Clock className="h-6 w-6 text-primary shrink-0" />
-                <span className="text-lg text-foreground">{formattedTime}</span>
-              </div>
-              {event.location?.venueName && (
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-6 w-6 text-primary shrink-0" />
-                  <div className="flex items-center justify-between flex-1 gap-2">
-                    <div className="flex items-center gap-2 flex-wrap text-base">
-                      {event.location.googleMapsUrl ? (
-                        <a
-                          href={event.location.googleMapsUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover:underline"
-                        >
-                          <span className="font-semibold text-foreground">
-                            {event.location.venueName}
-                          </span>
-                          {event.location.address && (
-                            <span className="text-sm text-muted-foreground block">
-                              {" "}
-                              ({event.location.address})
-                            </span>
-                          )}
-                        </a>
-                      ) : (
-                        <span>
-                          <span className="font-semibold text-foreground">
-                            {event.location.venueName}
-                          </span>
-                          {event.location.address && (
-                            <span className="text-sm text-muted-foreground block">
-                              {" "}
-                              ({event.location.address})
-                            </span>
-                          )}
-                        </span>
-                      )}
-                    </div>
-                    {event.location.yangoUrl && (
-                      <YangoButton href={event.location.yangoUrl} />
-                    )}
-                  </div>
-                </div>
-              )}
-              {event.hostedBy && (
-                <div className="flex items-center gap-3">
-                  <Users className="h-6 w-6 text-primary shrink-0" />
-                  <span className="text-lg text-foreground">
-                    {t(currentLanguage, "eventSlugPage.hostedBy", {
-                      name: event.hostedBy,
-                    })}
-                  </span>
-                </div>
-              )}
+      <PageContentBelowIntro>
+        <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
+          <Link
+            href="/events"
+            className="mb-8 inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-muted-foreground transition-colors hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {t(currentLanguage, "eventsPage.backToEvents")}
+          </Link>
+
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-6 lg:gap-12">
+            <div className="relative aspect-2/3 overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:sticky lg:top-28">
+              <Image
+                src={event.flyer?.url || "/banner.webp"}
+                alt={event.title}
+                priority
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 1024px) 100vw, 320px"
+              />
             </div>
 
-            <Separator className="my-6" />
+            <div className="lg:col-span-4">
+              <div className="mb-8 flex flex-col gap-4 border-b border-border pb-8">
+                <div className="flex items-start gap-3">
+                  <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <span className="text-base tracking-wide text-foreground uppercase md:text-lg">
+                    {formattedDate}
+                  </span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Clock className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                  <span className="text-base tracking-wide text-foreground uppercase md:text-lg">
+                    {formattedTime}
+                  </span>
+                </div>
+                {event.location?.venueName ? (
+                  <div className="flex items-start gap-3">
+                    <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <div className="flex flex-1 flex-wrap items-start justify-between gap-3">
+                      <div className="space-y-1 text-base tracking-wide uppercase md:text-lg">
+                        {event.location.googleMapsUrl ? (
+                          <a
+                            href={event.location.googleMapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-semibold text-foreground transition-colors hover:text-primary"
+                          >
+                            {event.location.venueName}
+                          </a>
+                        ) : (
+                          <span className="font-semibold text-foreground">
+                            {event.location.venueName}
+                          </span>
+                        )}
+                        {event.location.address ? (
+                          <p className="text-sm normal-case tracking-normal text-muted-foreground">
+                            {event.location.address}
+                          </p>
+                        ) : null}
+                      </div>
+                      {event.location.yangoUrl ? (
+                        <YangoButton href={event.location.yangoUrl} />
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+                {event.hostedBy ? (
+                  <div className="flex items-start gap-3">
+                    <Users className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                    <span className="text-base tracking-wide text-foreground md:text-lg">
+                      {t(currentLanguage, "eventSlugPage.hostedBy", {
+                        name: event.hostedBy,
+                      })}
+                    </span>
+                  </div>
+                ) : null}
+              </div>
 
-            {/* Tickets/Bundles Section - Always Link Checkout Mode Logic */}
-            <div className="py-4">
+            {/* Tickets/Bundles Section */}
+            <div className="py-2">
               {isPastEvent ? (
-                <div className="bg-muted/50 border border-border text-foreground p-4 rounded-md mb-6">
+                <div className="mb-6 rounded-md border border-border bg-muted/50 p-4 text-foreground">
                   <p className="font-medium leading-relaxed">
                     {t(currentLanguage, "eventSlugPage.tickets.eventPassed")}
                   </p>
                 </div>
               ) : !globallyTicketsOnSale ? (
-                <div className="bg-secondary text-secondary-foreground p-4 rounded-md mb-6">
+                <div className="mb-6 rounded-md bg-secondary p-4 text-secondary-foreground">
                   <p className="font-medium">
                     {t(
                       currentLanguage,
@@ -357,17 +358,17 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                   </p>
                 </div>
               ) : !hasAnyDefinedItems ? (
-                <div className="bg-secondary text-secondary-foreground p-4 rounded-md">
+                <div className="rounded-md bg-secondary p-4 text-secondary-foreground">
                   <p className="font-medium">
                     {t(currentLanguage, "eventSlugPage.tickets.noItemsListed")}
                   </p>
                 </div>
               ) : (
                 <>
-                  <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
-                    {t(currentLanguage, "eventSlugPage.tickets.title")}
-                  </h2>
-                  <div className="space-y-6 mt-6">
+                  <DetailSectionHeader
+                    title={t(currentLanguage, "eventSlugPage.tickets.title")}
+                  />
+                  <div className="mt-2 space-y-6">
                     {/* List Ticket Types */}
                     {hasDefinedTickets && (
                       <div className="space-y-3">
@@ -507,9 +508,9 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                     {/* List Bundles */}
                     {hasDefinedBundles && (
                       <div className="space-y-3">
-                        <h3 className="font-medium text-lg">
+                        <p className="text-xs tracking-[0.25em] uppercase text-muted-foreground">
                           {t(currentLanguage, "eventSlugPage.bundles.title")}
-                        </h3>
+                        </p>
                         {event.bundles?.map((bundle) => (
                           <Card
                             key={bundle.bundleId.current}
@@ -650,25 +651,24 @@ export default function EventPageContent({ event }: EventPageContentProps) {
 
             <Separator className="my-10" />
 
-            {/* Event Details, Venue, Lineup, Gallery - No longer in Tabs, shown sequentially or based on data presence */}
-            {event.description && (
-              <div className="mb-10 pt-6">
-                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
-                  {t(currentLanguage, "eventSlugPage.detailsSection.title")}
-                </h2>
-                <div className="prose prose-sm sm:prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed mt-1">
+            {event.description ? (
+              <div className="mb-10">
+                <DetailSectionHeader
+                  title={t(currentLanguage, "eventSlugPage.detailsSection.title")}
+                />
+                <div className="prose prose-sm sm:prose dark:prose-invert max-w-none leading-relaxed text-muted-foreground">
                   {renderFormattedText(event.description)}
                 </div>
               </div>
-            )}
+            ) : null}
 
-            {event.lineup && event.lineup.length > 0 && (
-              <div className="mb-10 pt-6">
-                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
-                  {t(currentLanguage, "eventSlugPage.lineupSection.title")}
-                </h2>
+            {event.lineup && event.lineup.length > 0 ? (
+              <div className="mb-10">
+                <DetailSectionHeader
+                  title={t(currentLanguage, "eventSlugPage.lineupSection.title")}
+                />
                 <div className="relative">
-                  <div className="flex overflow-x-auto space-x-4 pb-4 scrollbar-none">
+                  <div className="scrollbar-none flex space-x-4 overflow-x-auto pb-4">
                     {event.lineup.map((artist) => (
                       <div key={artist._id} className="shrink-0">
                         <ArtistCard
@@ -678,33 +678,30 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                       </div>
                     ))}
                   </div>
-                  {/* Optional: Add custom scroll indicators or buttons here if needed */}
                 </div>
               </div>
-            )}
+            ) : null}
 
-            {event.gallery && event.gallery.length > 0 && (
-              <div id="event-gallery" className="mb-10 pt-6 scroll-mt-28">
-                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
-                  {t(currentLanguage, "eventSlugPage.gallerySection.title")}
-                </h2>
-                <p className="text-sm text-muted-foreground mb-6 max-w-2xl">
-                  {t(
+            {event.gallery && event.gallery.length > 0 ? (
+              <div id="event-gallery" className="mb-10 scroll-mt-28">
+                <DetailSectionHeader
+                  title={t(currentLanguage, "eventSlugPage.gallerySection.title")}
+                  description={t(
                     currentLanguage,
                     "eventSlugPage.gallerySection.description",
                   )}
-                </p>
+                />
                 <EventGallery images={event.gallery} eventTitle={event.title} />
               </div>
-            )}
+            ) : null}
 
             {(event.location?.venueName ||
               event.location?.address ||
-              event.venueDetails) && (
-              <div className="mb-10 pt-6">
-                <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
-                  {t(currentLanguage, "eventSlugPage.venueSection.title")}
-                </h2>
+              event.venueDetails) ? (
+              <div className="mb-10">
+                <DetailSectionHeader
+                  title={t(currentLanguage, "eventSlugPage.venueSection.title")}
+                />
                 {event.location?.venueName && (
                   <p className="font-semibold text-foreground text-lg mt-2 mb-1">
                     {event.location.venueName}
@@ -716,8 +713,8 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                   </p>
                 )}
                 {/* Embedded Map ADDED HERE */}
-                {mapEmbedSrc && (
-                  <div className="my-6 relative w-full h-[300px] bg-muted rounded-md shadow-lg border border-border overflow-hidden">
+                {mapEmbedSrc ? (
+                  <div className="relative my-6 h-[300px] w-full overflow-hidden rounded-md border border-border bg-muted shadow-lg">
                     <iframe
                       src={mapEmbedSrc}
                       width="100%"
@@ -743,23 +740,24 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                       className="absolute top-0 left-0 w-full h-full"
                     ></iframe>
                   </div>
-                )}
-                {event.venueDetails && (
-                  <div className="prose prose-sm sm:prose dark:prose-invert max-w-none text-muted-foreground leading-relaxed mt-1">
+                ) : null}
+                {event.venueDetails ? (
+                  <div className="prose prose-sm sm:prose dark:prose-invert max-w-none leading-relaxed text-muted-foreground">
                     {renderFormattedText(event.venueDetails)}
                   </div>
-                )}
+                ) : null}
               </div>
-            )}
+            ) : null}
 
-            {/* Share Button - Separator above it if content sections were present */}
             {(event.description ||
               (event.lineup && event.lineup.length > 0) ||
               (event.gallery && event.gallery.length > 0) ||
               event.location?.venueName ||
               event.location?.address ||
-              event.venueDetails) && <Separator className="my-10" />}
-            <div className="flex items-center justify-end">
+              event.venueDetails) ? (
+              <Separator className="my-10" />
+            ) : null}
+            <div className="flex items-center justify-end pt-2">
               <EventShareButton
                 eventTitle={event.title}
                 eventSlug={event.slug.current}
@@ -767,7 +765,8 @@ export default function EventPageContent({ event }: EventPageContentProps) {
             </div>
           </div>
         </div>
-      </AppPageContainer>
+        </AppPageContainer>
+      </PageContentBelowIntro>
       <Footer />
     </AppPageShell>
   );

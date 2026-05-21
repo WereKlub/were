@@ -104,7 +104,10 @@
     "subtitle": "Soirées brûlantes, chill au bord de la piscine et tout ce qu'il y a entre les deux. Prochaines dates et archives.",
     "noEvents": "Aucun événement publié pour le moment.",
     "upcomingSection": "À venir",
-    "pastSection": "Passés"
+    "pastSection": "Passés",
+    "reserve": "Réserver",
+    "viewGallery": "Voir la galerie",
+    "backToEvents": "Retour aux événements"
   },
   "newsPage": {
     "sectionBanner": "Blog",
@@ -116,7 +119,9 @@
     "description": "Actus, comptes-rendus et coulisses du collectif Wêrê Klub.",
     "moreNews": "PLUS D'ACTUALITÉS",
     "readMore": "Lire plus →",
-    "noPosts": "Aucun article publié pour le moment."
+    "noPosts": "Aucun article publié pour le moment.",
+    "backToBlog": "Retour au blog",
+    "publishedOn": "Publié le {date}"
   },
   "merchPage": {
     "sectionBanner": "Boutique",

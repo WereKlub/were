@@ -1,8 +1,6 @@
 import type { WereEventCard } from "@/components/event/were-event-card";
 import type { SanityEventCardSource } from "@/lib/sanity/queries";
-
-const CREAM = "#f5f0eb";
-const INK = "#1a1a1a";
+import { resolveEventCardColors } from "@/lib/sanity/event-card-colors";
 
 function formatEventDate(iso: string): string {
   const d = new Date(iso);
@@ -65,9 +63,7 @@ export function mapSanityEventToWereCard(
     ?.map((a) => a.name?.trim())
     .filter(Boolean) as string[];
 
-  const lightBg = listIndex % 2 === 0;
-  const bgColor = lightBg ? CREAM : INK;
-  const textColor = lightBg ? INK : "#ffffff";
+  const { bgColor, textColor } = resolveEventCardColors(raw, listIndex);
 
   const timeStr = formatEventTime(raw.date);
   const dateStr = formatEventDate(raw.date);
@@ -91,6 +87,7 @@ export function mapSanityEventToWereCard(
     prices: isPast ? undefined : pickPrices(raw.ticketTypes),
     hasGallery: galleryCount > 0,
     isPast,
+    ticketsAvailable: raw.ticketsAvailable !== false,
     image: raw.flyerUrl || "/banner.webp",
     bgColor,
     textColor,
