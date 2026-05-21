@@ -282,7 +282,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
       <PageContentBelowIntro>
         <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
           <Link
-            href="/merch"
+            href="/boutique"
             className="mb-8 inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />

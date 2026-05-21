@@ -38,7 +38,7 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 rounded-md border-border/40 bg-card p-0 h-full flex flex-col">
       <div className="relative rounded-t-sm overflow-hidden">
         <Link
-          href={`/merch/${slug}`}
+          href={`/boutique/${slug}`}
           className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-label={`View details for ${product.name}, price ${product.price} F CFA`}
           prefetch
@@ -68,7 +68,7 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
 
       <CardContent className="pt-1 pb-4 px-4 flex flex-col min-h-[100px]">
         <div className="flex-1 space-y-1">
-          <Link href={`/merch/${slug}`} className="block">
+          <Link href={`/boutique/${slug}`} className="block">
             <h3 className="font-medium text-base leading-tight hover:text-primary transition-colors line-clamp-2">
               {product.name}
             </h3>

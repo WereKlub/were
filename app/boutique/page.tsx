@@ -8,7 +8,7 @@ export const metadata = buildPageMetadata({
   title: "Merch | Wêrê Klub",
   description:
     "Shop exclusive Wêrê Klub merchandise, apparel, and collectibles.",
-  path: "/merch",
+  path: "/boutique",
 });
 
 async function MerchContent() {

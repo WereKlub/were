@@ -42,7 +42,7 @@ export function MerchCarouselCard({
 
   return (
     <Link
-      href={`/merch/${product.slug}`}
+      href={`/boutique/${product.slug}`}
       className="group block h-full rounded-md border border-border bg-card overflow-hidden shadow-sm hover:shadow-md transition-shadow"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

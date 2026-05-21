@@ -140,10 +140,11 @@ export async function POST(request: NextRequest) {
         revalidateTag("products", {});
         if (slug?.current) {
           revalidateTag(`product-${slug.current}`, {});
+          revalidatePath(`/boutique/${slug.current}`);
           console.log(`Revalidated product: ${slug.current}`);
         }
         // Also revalidate specific paths
-        revalidatePath("/merch");
+        revalidatePath("/boutique");
         break;
 
       case "aboutPage":

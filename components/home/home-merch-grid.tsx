@@ -33,7 +33,7 @@ export function HomeMerchGrid({ products }: { products: MerchHomeProduct[] }) {
             {t(currentLanguage, "homePage.shopMerch")}
           </h2>
           <Link
-            href="/merch"
+            href="/boutique"
             className="text-xs tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground transition-colors shrink-0"
           >
             {t(currentLanguage, "homePage.viewAll")} →

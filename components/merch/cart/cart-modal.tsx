@@ -371,7 +371,7 @@ export default function CartModal() {
       return (
         <CartContainer className="flex w-full">
           <Link
-            href="/merch"
+            href="/boutique"
             className="p-6 w-full bg-card/30 backdrop-blur-sm rounded-md hover:bg-card/50 transition-all duration-300"
             onClick={closeCart}
           >

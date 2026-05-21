@@ -51,7 +51,7 @@ export default function Footer() {
 
   const footerNav: { href: string; labelKey: string }[] = [
     { href: "/events", labelKey: "header.nav.events" },
-    { href: "/merch", labelKey: "header.nav.shop" },
+    { href: "/boutique", labelKey: "header.nav.shop" },
     ...(showBlogInNavigation
       ? [{ href: "/blog", labelKey: "header.nav.blog" as const }]
       : []),

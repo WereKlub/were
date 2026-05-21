@@ -32,7 +32,7 @@ export default function Header() {
     ...(showBlogInNavigation
       ? [{ nameKey: "header.nav.blog" as const, path: "/blog" }]
       : []),
-    { nameKey: "header.nav.shop", path: "/merch" },
+    { nameKey: "header.nav.shop", path: "/boutique" },
     ...(showAboutInNavigation
       ? [{ nameKey: "header.nav.about" as const, path: "/about" }]
       : []),
