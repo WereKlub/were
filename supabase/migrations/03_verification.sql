@@ -1,58 +1,162 @@
--- Migration: Combined Multi-Ticket Verification System
--- This migration sets up the complete system for handling both new individual tickets and legacy multi-use tickets.
+-- Ticket verification: scan logging, individual ticket generation, verify/mark admission
 
--- 1. Create the table for individual tickets
-CREATE TABLE IF NOT EXISTS public.individual_tickets (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    purchase_id UUID NOT NULL REFERENCES public.purchases(id) ON DELETE CASCADE,
-    ticket_identifier TEXT UNIQUE NOT NULL,
-    status TEXT DEFAULT 'active' NOT NULL, -- 'active', 'used', 'cancelled'
-    is_used BOOLEAN DEFAULT FALSE NOT NULL,
-    used_at TIMESTAMPTZ,
-    verified_by TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
-);
+-- ---------------------------------------------------------------------------
+-- Verification logging
+-- ---------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.log_verification_attempt(
+    p_ticket_identifier TEXT,
+    p_event_id TEXT,
+    p_event_title TEXT,
+    p_success BOOLEAN,
+    p_error_code TEXT DEFAULT NULL,
+    p_error_message TEXT DEFAULT NULL,
+    p_scanner_email TEXT DEFAULT NULL
+)
+RETURNS UUID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    log_id UUID;
+BEGIN
+    INSERT INTO public.verification_attempts (
+        ticket_identifier,
+        event_id,
+        event_title,
+        success,
+        error_code,
+        error_message,
+        scanner_email
+    ) VALUES (
+        p_ticket_identifier,
+        p_event_id,
+        p_event_title,
+        p_success,
+        p_error_code,
+        p_error_message,
+        p_scanner_email
+    ) RETURNING id INTO log_id;
 
--- Add indexes for performance
-CREATE INDEX IF NOT EXISTS idx_individual_tickets_purchase_id ON public.individual_tickets(purchase_id);
-CREATE INDEX IF NOT EXISTS idx_individual_tickets_ticket_identifier ON public.individual_tickets(ticket_identifier);
+    RETURN log_id;
+END;
+$$;
 
--- Enable Row Level Security (RLS) on the individual_tickets table
-ALTER TABLE public.individual_tickets ENABLE ROW LEVEL SECURITY;
+COMMENT ON FUNCTION public.log_verification_attempt(TEXT, TEXT, TEXT, BOOLEAN, TEXT, TEXT, TEXT)
+IS 'Logs a verification attempt with success status and optional error details';
 
--- Allow service_role full access on individual_tickets
-CREATE POLICY "Allow service_role full access on individual_tickets"
-ON public.individual_tickets
-FOR ALL
-TO service_role
-USING (true)
-WITH CHECK (true);
+CREATE OR REPLACE FUNCTION public.get_recent_verification_errors(
+    p_limit INTEGER DEFAULT 20,
+    p_event_id TEXT DEFAULT NULL
+)
+RETURNS TABLE(
+    id UUID,
+    ticket_identifier TEXT,
+    event_id TEXT,
+    event_title TEXT,
+    attempt_timestamp TIMESTAMPTZ,
+    error_code TEXT,
+    error_message TEXT
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+#variable_conflict use_column
+BEGIN
+    RETURN QUERY
+    SELECT
+        va.id,
+        va.ticket_identifier,
+        va.event_id,
+        va.event_title,
+        va.attempt_timestamp,
+        va.error_code,
+        va.error_message
+    FROM public.verification_attempts va
+    WHERE va.success = FALSE
+    AND (p_event_id IS NULL OR va.event_id = p_event_id)
+    ORDER BY va.attempt_timestamp DESC
+    LIMIT p_limit;
+END;
+$$;
 
--- Allow authenticated users to read individual tickets (for verification)
-CREATE POLICY "Allow authenticated read on individual_tickets"
-ON public.individual_tickets
-FOR SELECT
-TO authenticated
-USING (true);
+COMMENT ON FUNCTION public.get_recent_verification_errors(INTEGER, TEXT)
+IS 'Returns recent failed verification attempts, optionally filtered by event';
 
--- Grant permissions to service_role and authenticated
-GRANT SELECT, INSERT, UPDATE, DELETE ON public.individual_tickets TO service_role;
-GRANT SELECT ON public.individual_tickets TO authenticated;
+CREATE OR REPLACE FUNCTION public.cleanup_old_verification_logs()
+RETURNS INTEGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    deleted_count INTEGER;
+BEGIN
+    DELETE FROM public.verification_attempts
+    WHERE attempt_timestamp < NOW() - INTERVAL '30 days';
 
--- Add comments for clarity
-COMMENT ON TABLE public.individual_tickets IS 'Stores individual tickets for multi-ticket purchases, each with a unique identifier for QR codes.';
-COMMENT ON COLUMN public.individual_tickets.status IS 'Status of the individual ticket (e.g., active, used, cancelled).';
+    GET DIAGNOSTICS deleted_count = ROW_COUNT;
+    RETURN deleted_count;
+END;
+$$;
 
--- 2. Add columns to the purchases table for legacy ticket handling and tracking
-ALTER TABLE public.purchases
-ADD COLUMN IF NOT EXISTS use_count INTEGER DEFAULT 0 NOT NULL,
-ADD COLUMN IF NOT EXISTS individual_tickets_generated BOOLEAN DEFAULT FALSE NOT NULL;
+COMMENT ON FUNCTION public.cleanup_old_verification_logs()
+IS 'Deletes verification logs older than 30 days';
 
-COMMENT ON COLUMN public.purchases.use_count IS 'For legacy tickets, tracks how many times a multi-person ticket has been scanned.';
-COMMENT ON COLUMN public.purchases.individual_tickets_generated IS 'Indicates if individual tickets have been generated for this purchase.';
+-- ---------------------------------------------------------------------------
+-- Staff PIN & stats
+-- ---------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION public.verify_staff_pin(p_pin TEXT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+DECLARE
+    stored_pin TEXT;
+BEGIN
+    SELECT config_value INTO stored_pin
+    FROM public.verification_config
+    WHERE config_key = 'staff_verification_pin';
 
--- 3. Function to generate individual tickets for a purchase
+    RETURN (stored_pin = p_pin);
+END;
+$$;
+
+COMMENT ON FUNCTION public.verify_staff_pin(TEXT)
+IS 'Securely verifies staff PIN against stored value';
+
+CREATE OR REPLACE FUNCTION public.get_event_verification_stats(p_event_id TEXT)
+RETURNS TABLE(
+    total_tickets INTEGER,
+    used_tickets INTEGER,
+    unused_tickets INTEGER,
+    total_attendees INTEGER
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        COUNT(*)::INTEGER AS total_tickets,
+        COUNT(CASE WHEN is_used = TRUE THEN 1 END)::INTEGER AS used_tickets,
+        COUNT(CASE WHEN is_used = FALSE THEN 1 END)::INTEGER AS unused_tickets,
+        COALESCE(SUM(CASE WHEN is_used = TRUE THEN quantity ELSE 0 END), 0)::INTEGER AS total_attendees
+    FROM public.purchases
+    WHERE event_id = p_event_id
+    AND status = 'paid';
+END;
+$$;
+
+COMMENT ON FUNCTION public.get_event_verification_stats(TEXT)
+IS 'Returns verification statistics for an event (total, used, unused tickets)';
+
+-- ---------------------------------------------------------------------------
+-- Individual ticket generation & purchase sync
+-- ---------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.generate_individual_tickets_for_purchase(
     p_purchase_id UUID
 )
@@ -67,31 +171,26 @@ DECLARE
     new_ticket_identifier TEXT;
     existing_ticket_count INTEGER;
 BEGIN
-    -- Get purchase details
     SELECT * INTO purchase_record FROM public.purchases WHERE id = p_purchase_id;
 
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Purchase with ID % not found.', p_purchase_id;
     END IF;
 
-    -- Prevent generating tickets for old purchases that shouldn't have them
     IF purchase_record.created_at < '2024-08-01' THEN
         RAISE EXCEPTION 'Cannot generate individual tickets for this legacy purchase.';
     END IF;
 
-    -- Determine the actual number of tickets
     actual_ticket_quantity := COALESCE(
         CASE WHEN purchase_record.is_bundle THEN purchase_record.quantity * purchase_record.tickets_per_bundle ELSE purchase_record.quantity END,
         purchase_record.quantity,
         1
     );
 
-    -- Check how many tickets already exist
     SELECT count(*) INTO existing_ticket_count FROM public.individual_tickets WHERE purchase_id = p_purchase_id;
 
     IF existing_ticket_count >= actual_ticket_quantity THEN
-        -- Tickets already exist, just return the existing ones (idempotent safe)
-        FOR new_ticket_identifier IN 
+        FOR new_ticket_identifier IN
             SELECT it.ticket_identifier FROM public.individual_tickets it WHERE it.purchase_id = p_purchase_id
         LOOP
             ticket_identifier := new_ticket_identifier;
@@ -100,37 +199,28 @@ BEGIN
         RETURN;
     END IF;
 
-    -- If there's a mismatch (partial generation failure previously), clean slate ONLY IF none are used
     IF existing_ticket_count > 0 THEN
         PERFORM 1 FROM public.individual_tickets WHERE purchase_id = p_purchase_id AND is_used = TRUE;
         IF FOUND THEN
             RAISE EXCEPTION 'Cannot regenerate tickets for purchase % because some tickets are already used.', p_purchase_id;
         END IF;
-        -- Safe to clean slate because none were used
         DELETE FROM public.individual_tickets WHERE purchase_id = p_purchase_id;
     END IF;
 
-    -- Generate N individual tickets and return their identifiers
     FOR i IN 1..actual_ticket_quantity LOOP
         new_ticket_identifier := gen_random_uuid()::TEXT;
         INSERT INTO public.individual_tickets (purchase_id, ticket_identifier)
         VALUES (p_purchase_id, new_ticket_identifier);
-        
-        -- Return the newly created identifier
+
         ticket_identifier := new_ticket_identifier;
         RETURN NEXT;
     END LOOP;
 
-    -- Mark the main purchase as having its tickets generated
     UPDATE public.purchases
     SET individual_tickets_generated = TRUE
     WHERE id = p_purchase_id;
 END;
 $$;
-
--- 4. Drop existing functions before creating new versions with different signatures
-DROP FUNCTION IF EXISTS public.verify_ticket(TEXT);
-DROP FUNCTION IF EXISTS public.mark_ticket_used(TEXT, TEXT);
 
 CREATE OR REPLACE FUNCTION public.sync_purchase_admission_from_individuals(p_purchase_id UUID)
 RETURNS VOID
@@ -166,6 +256,29 @@ BEGIN
 END;
 $$;
 
+COMMENT ON FUNCTION public.sync_purchase_admission_from_individuals(UUID)
+IS 'Copies admission totals from individual_tickets into purchases for orders that use per-ticket rows.';
+
+CREATE OR REPLACE FUNCTION public.purchase_has_individual_tickets(p_purchase_id UUID)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = ''
+AS $$
+    SELECT EXISTS (
+        SELECT 1
+        FROM public.individual_tickets it
+        WHERE it.purchase_id = p_purchase_id
+    );
+$$;
+
+COMMENT ON FUNCTION public.purchase_has_individual_tickets(UUID)
+IS 'TRUE if any individual_tickets rows exist for this purchase (e.g. guest list).';
+
+-- ---------------------------------------------------------------------------
+-- Verify & mark admission (individual + legacy)
+-- ---------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.verify_ticket(
     p_ticket_identifier TEXT,
     p_scanner_email TEXT DEFAULT NULL
@@ -210,7 +323,7 @@ BEGIN
     SELECT it.* INTO individual_ticket FROM public.individual_tickets it WHERE it.ticket_identifier = p_ticket_identifier;
 
     IF FOUND THEN
-        SELECT p.*, c.name as customer_name, c.email as customer_email, c.phone as customer_phone
+        SELECT p.*, c.name AS customer_name, c.email AS customer_email, c.phone AS customer_phone
         INTO purchase_record
         FROM public.purchases p
         INNER JOIN public.customers c ON p.customer_id = c.id
@@ -250,7 +363,7 @@ BEGIN
         RETURN;
     END IF;
 
-    SELECT p.*, c.name as customer_name, c.email as customer_email, c.phone as customer_phone
+    SELECT p.*, c.name AS customer_name, c.email AS customer_email, c.phone AS customer_phone
     INTO purchase_record
     FROM public.purchases p
     INNER JOIN public.customers c ON p.customer_id = c.id
@@ -304,6 +417,9 @@ BEGIN
     RAISE EXCEPTION 'TICKET_NOT_FOUND: Ticket not found in system';
 END;
 $$;
+
+COMMENT ON FUNCTION public.verify_ticket(TEXT, TEXT)
+IS 'Admission state for purchases with individual_tickets is derived from those rows; purchase unique_ticket_identifier resolves to aggregate counts.';
 
 CREATE OR REPLACE FUNCTION public.mark_ticket_used(
     p_ticket_identifier TEXT,
@@ -464,186 +580,25 @@ BEGIN
 END;
 $$;
 
--- One-time: mirror historical purchases.use_count onto individual rows (hybrid state before individual-only admissions)
-DO $$
-DECLARE
-    r RECORD;
-    iused INTEGER;
-    itotal INTEGER;
-    target INTEGER;
-    to_sync INTEGER;
-BEGIN
-    FOR r IN
-        SELECT p.id AS pid, p.use_count AS p_use
-        FROM public.purchases p
-        WHERE EXISTS (SELECT 1 FROM public.individual_tickets it WHERE it.purchase_id = p.id)
-    LOOP
-        SELECT
-            COUNT(*) FILTER (WHERE ita.is_used)::INTEGER,
-            COUNT(*)::INTEGER
-        INTO iused, itotal
-        FROM public.individual_tickets ita
-        WHERE ita.purchase_id = r.pid;
+COMMENT ON FUNCTION public.mark_ticket_used(TEXT, TEXT)
+IS 'Marks admission for individual or legacy tickets; returns SUCCESS, ALREADY_USED, DUPLICATE_SCAN, or NOT_FOUND.';
 
-        target := GREATEST(iused, LEAST(r.p_use, itotal));
-        to_sync := target - iused;
-
-        IF to_sync > 0 THEN
-            UPDATE public.individual_tickets it
-            SET is_used = TRUE, used_at = COALESCE(it.used_at, NOW()), verified_by = COALESCE(it.verified_by, 'reconciled'),
-                status = 'used', updated_at = NOW()
-            WHERE it.id IN (
-                SELECT it2.id
-                FROM public.individual_tickets it2
-                WHERE it2.purchase_id = r.pid AND it2.is_used = FALSE
-                ORDER BY it2.ticket_identifier ASC
-                LIMIT to_sync
-            );
-        END IF;
-
-        PERFORM public.sync_purchase_admission_from_individuals(r.pid);
-    END LOOP;
-END;
-$$;
-
-DROP FUNCTION IF EXISTS public.get_purchase_for_email_dispatch(UUID);
-
-CREATE FUNCTION public.get_purchase_for_email_dispatch(
-    p_purchase_id UUID
-)
-RETURNS TABLE(
-    purchase_id UUID,
-    customer_id UUID,
-    customer_name TEXT,
-    customer_email TEXT,
-    customer_phone TEXT,
-    event_id TEXT,
-    event_title TEXT,
-    event_date_text TEXT,
-    event_time_text TEXT,
-    event_venue_name TEXT,
-    ticket_type_id TEXT,
-    ticket_name TEXT,
-    quantity INTEGER,
-    price_per_ticket NUMERIC,
-    total_amount NUMERIC,
-    currency_code TEXT,
-    status TEXT,
-    email_dispatch_status TEXT,
-    email_dispatch_attempts INTEGER,
-    unique_ticket_identifier TEXT,
-    is_bundle BOOLEAN,
-    tickets_per_bundle INTEGER,
-    individual_tickets_generated BOOLEAN
-)
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = ''
-AS $$
-BEGIN
-    RETURN QUERY
-    SELECT
-        p.id AS purchase_id,
-        p.customer_id,
-        c.name AS customer_name,
-        c.email AS customer_email,
-        c.phone AS customer_phone,
-        p.event_id,
-        p.event_title,
-        p.event_date_text,
-        p.event_time_text,
-        p.event_venue_name,
-        p.ticket_type_id,
-        p.ticket_name,
-        p.quantity,
-        p.price_per_ticket,
-        p.total_amount,
-        p.currency_code,
-        p.status,
-        p.email_dispatch_status,
-        p.email_dispatch_attempts,
-        p.unique_ticket_identifier,
-        p.is_bundle,
-        p.tickets_per_bundle,
-        p.individual_tickets_generated
-    FROM public.purchases p
-    INNER JOIN public.customers c ON p.customer_id = c.id
-    WHERE p.id = p_purchase_id;
-END;
-$$;
-
-CREATE OR REPLACE FUNCTION public.purchase_has_individual_tickets(p_purchase_id UUID)
-RETURNS BOOLEAN
-LANGUAGE sql
-STABLE
-SECURITY DEFINER
-SET search_path = ''
-AS $$
-    SELECT EXISTS (
-        SELECT 1
-        FROM public.individual_tickets it
-        WHERE it.purchase_id = p_purchase_id
-    );
-$$;
-
-COMMENT ON FUNCTION public.verify_ticket(TEXT, TEXT) IS
-'Admission state for purchases with individual_tickets is derived from those rows; purchase unique_ticket_identifier resolves to aggregate counts; reconciles display with purchases.use_count when needed.';
-
-COMMENT ON FUNCTION public.sync_purchase_admission_from_individuals(UUID) IS
-'Copies admission totals from individual_tickets into purchases for orders that use per-ticket rows.';
-
-COMMENT ON FUNCTION public.get_purchase_for_email_dispatch(UUID) IS
-'Purchase + customer row for email dispatch; includes individual_tickets_generated for QR strategy.';
-
-COMMENT ON FUNCTION public.purchase_has_individual_tickets(UUID) IS
-'TRUE if any individual_tickets rows exist for this purchase (e.g. guest list); for Edge email dispatch when RLS blocks direct table reads.';
-
--- Grant permissions for the new functions
+-- ---------------------------------------------------------------------------
+-- Grants
+-- ---------------------------------------------------------------------------
+GRANT EXECUTE ON FUNCTION public.log_verification_attempt(TEXT, TEXT, TEXT, BOOLEAN, TEXT, TEXT, TEXT) TO service_role;
+GRANT EXECUTE ON FUNCTION public.log_verification_attempt(TEXT, TEXT, TEXT, BOOLEAN, TEXT, TEXT, TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_recent_verification_errors(INTEGER, TEXT) TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_recent_verification_errors(INTEGER, TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.cleanup_old_verification_logs() TO service_role;
+GRANT EXECUTE ON FUNCTION public.verify_staff_pin(TEXT) TO service_role;
+GRANT EXECUTE ON FUNCTION public.verify_staff_pin(TEXT) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_event_verification_stats(TEXT) TO service_role;
+GRANT EXECUTE ON FUNCTION public.get_event_verification_stats(TEXT) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.generate_individual_tickets_for_purchase(UUID) TO service_role;
 GRANT EXECUTE ON FUNCTION public.generate_individual_tickets_for_purchase(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.verify_ticket(TEXT, TEXT) TO service_role;
 GRANT EXECUTE ON FUNCTION public.verify_ticket(TEXT, TEXT) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.mark_ticket_used(TEXT, TEXT) TO service_role;
 GRANT EXECUTE ON FUNCTION public.mark_ticket_used(TEXT, TEXT) TO authenticated;
-GRANT EXECUTE ON FUNCTION public.get_purchase_for_email_dispatch(UUID) TO service_role;
 GRANT EXECUTE ON FUNCTION public.purchase_has_individual_tickets(UUID) TO service_role;
-
--- 6. Function to reset stuck email dispatch statuses
--- This helps resolve the issue where purchases get stuck in DISPATCH_IN_PROGRESS
-CREATE OR REPLACE FUNCTION public.reset_stuck_email_dispatches()
-RETURNS INTEGER
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = ''
-AS $$
-DECLARE
-    reset_count INTEGER;
-BEGIN
-    -- Reset purchases that have been in DISPATCH_IN_PROGRESS for more than 10 minutes
-    UPDATE public.purchases
-    SET 
-        email_dispatch_status = 'DISPATCH_FAILED',
-        email_dispatch_error = 'Dispatch timed out - reset by cleanup function',
-        updated_at = NOW()
-    WHERE email_dispatch_status = 'DISPATCH_IN_PROGRESS'
-    AND email_last_dispatch_attempt_at < NOW() - INTERVAL '10 minutes';
-    
-    GET DIAGNOSTICS reset_count = ROW_COUNT;
-    
-    RETURN reset_count;
-END;
-$$;
-
--- Grant execute permissions for the cleanup function
-GRANT EXECUTE ON FUNCTION public.reset_stuck_email_dispatches() TO service_role;
-
-COMMENT ON FUNCTION public.reset_stuck_email_dispatches()
-IS 'Resets email dispatch statuses that have been stuck in DISPATCH_IN_PROGRESS for more than 10 minutes';
-
--- Align flag for purchases that already have individual_tickets rows (e.g. guest list before issue_guest_ticket set the flag).
-UPDATE public.purchases p
-SET individual_tickets_generated = TRUE
-WHERE EXISTS (
-    SELECT 1 FROM public.individual_tickets it WHERE it.purchase_id = p.id
-)
-AND p.individual_tickets_generated = FALSE;

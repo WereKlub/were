@@ -2,15 +2,14 @@ import {defineType, defineField} from 'sanity'
 
 export default defineType({
   name: 'aboutPage',
-  title: 'About page (À propos)',
+  title: 'About',
   type: 'document',
-  description: 'Single page for /a-propos. Create only one document.',
+  description: 'One document only.',
   fields: [
     defineField({
       name: 'metaTitle',
       title: 'SEO title',
       type: 'string',
-      description: 'Browser title; defaults to À propos | Wêrê Klub if empty.',
     }),
     defineField({
       name: 'metaDescription',
@@ -19,46 +18,56 @@ export default defineType({
       rows: 2,
     }),
     defineField({
-      name: 'pageHeading',
-      title: 'Page heading (banner)',
-      type: 'string',
-      initialValue: 'À propos',
-    }),
-    defineField({
-      name: 'heroImage',
-      title: 'Hero image',
-      type: 'image',
-      options: {hotspot: true},
-      fields: [
-        defineField({
-          name: 'alt',
-          type: 'string',
-          title: 'Alt text',
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'collectifTitle',
-      title: 'Collectif block title',
-      type: 'string',
-      initialValue: 'Le collectif',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'collectifBody',
-      title: 'Collectif text',
-      type: 'array',
-      of: [{type: 'block'}],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'collectifPanelColor',
-      title: 'Collectif panel background (hex)',
+      name: 'panelColor',
+      title: 'Panel color',
       type: 'string',
       initialValue: '#7cb342',
-      description: 'e.g. #7cb342',
+      validation: (Rule) =>
+        Rule.regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+          name: 'hex color',
+          invert: false,
+        }).error('Use a valid hex color like #7cb342'),
+    }),
+    defineField({
+      name: 'carouselImages',
+      title: 'Carousel images',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: {hotspot: true},
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alt text',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        },
+      ],
+      validation: (Rule) => Rule.required().min(2),
+      description: 'At least 2 images.',
+    }),
+    defineField({
+      name: 'introLabel',
+      title: 'Intro label',
+      type: 'string',
+      initialValue: 'Le collectif Wêrê Klub',
+    }),
+    defineField({
+      name: 'heading',
+      title: 'Heading',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+      initialValue: 'AMOUR ET BOUCAN',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Body text',
+      type: 'array',
+      of: [{type: 'block'}],
+      validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: 'stats',
@@ -74,13 +83,13 @@ export default defineType({
           ],
         },
       ],
-      validation: (Rule) => Rule.required().min(1).max(4),
+      validation: (Rule) => Rule.max(4),
     }),
     defineField({
       name: 'teamHeading',
-      title: 'Team section heading',
+      title: 'Team heading',
       type: 'string',
-      initialValue: "L'équipe",
+      initialValue: "L'ÉQUIPE",
     }),
     defineField({
       name: 'team',
@@ -102,31 +111,9 @@ export default defineType({
           ],
         },
       ],
-      validation: (Rule) => Rule.required().min(1),
-    }),
-    defineField({
-      name: 'teamSectionImage',
-      title: 'Team section (large side image)',
-      type: 'image',
-      options: {hotspot: true},
-      fields: [
-        defineField({
-          name: 'alt',
-          type: 'string',
-          title: 'Alt text',
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'teamPanelColor',
-      title: 'Team text panel background (hex)',
-      type: 'string',
-      initialValue: '#e8b4bc',
     }),
   ],
   preview: {
-    prepare: () => ({title: 'About page (À propos)'}),
+    prepare: () => ({title: 'About'}),
   },
 })

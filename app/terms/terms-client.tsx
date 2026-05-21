@@ -51,7 +51,7 @@ export default function TermsClientPage() {
               {/* 01 – Introduction */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  01 — {t(currentLanguage, "termsPage.introduction.title")}
+                  01. {t(currentLanguage, "termsPage.introduction.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.introduction.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.introduction.p2")}</p>
@@ -62,7 +62,7 @@ export default function TermsClientPage() {
               {/* 02 – Mission */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  02 — {t(currentLanguage, "termsPage.mission.title")}
+                  02. {t(currentLanguage, "termsPage.mission.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.mission.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.mission.p2")}</p>
@@ -73,7 +73,7 @@ export default function TermsClientPage() {
               {/* 03 – Code of Conduct */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  03 — {t(currentLanguage, "termsPage.conduct.title")}
+                  03. {t(currentLanguage, "termsPage.conduct.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.conduct.p1")}</p>
                 <ul>
@@ -89,7 +89,7 @@ export default function TermsClientPage() {
               {/* 04 – Tickets & Events */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  04 — {t(currentLanguage, "termsPage.tickets.title")}
+                  04. {t(currentLanguage, "termsPage.tickets.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.tickets.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.tickets.p2")}</p>
@@ -101,7 +101,7 @@ export default function TermsClientPage() {
               {/* 05 – Intellectual Property */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  05 — {t(currentLanguage, "termsPage.ip.title")}
+                  05. {t(currentLanguage, "termsPage.ip.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.ip.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.ip.p2")}</p>
@@ -112,7 +112,7 @@ export default function TermsClientPage() {
               {/* 06 – User Content */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  06 — {t(currentLanguage, "termsPage.userContent.title")}
+                  06. {t(currentLanguage, "termsPage.userContent.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.userContent.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.userContent.p2")}</p>
@@ -123,7 +123,7 @@ export default function TermsClientPage() {
               {/* 07 – Liability */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  07 — {t(currentLanguage, "termsPage.liability.title")}
+                  07. {t(currentLanguage, "termsPage.liability.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.liability.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.liability.p2")}</p>
@@ -135,7 +135,7 @@ export default function TermsClientPage() {
               {/* 08 – Indemnification */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  08 — {t(currentLanguage, "termsPage.indemnification.title")}
+                  08. {t(currentLanguage, "termsPage.indemnification.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.indemnification.p1")}</p>
               </section>
@@ -145,7 +145,7 @@ export default function TermsClientPage() {
               {/* 09 – Governing Law */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  09 — {t(currentLanguage, "termsPage.governingLaw.title")}
+                  09. {t(currentLanguage, "termsPage.governingLaw.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.governingLaw.p1")}</p>
               </section>
@@ -155,7 +155,7 @@ export default function TermsClientPage() {
               {/* 10 – Changes */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  10 — {t(currentLanguage, "termsPage.changes.title")}
+                  10. {t(currentLanguage, "termsPage.changes.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.changes.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.changes.p2")}</p>
@@ -166,7 +166,7 @@ export default function TermsClientPage() {
               {/* 11 – Contact */}
               <section className="space-y-3 md:space-y-4">
                 <p className="text-[11px] md:text-xs font-medium tracking-[0.2em] uppercase text-muted-foreground">
-                  11 — {t(currentLanguage, "termsPage.contact.title")}
+                  11. {t(currentLanguage, "termsPage.contact.title")}
                 </p>
                 <p>{t(currentLanguage, "termsPage.contact.p1")}</p>
                 <p>{t(currentLanguage, "termsPage.contact.p2")}</p>

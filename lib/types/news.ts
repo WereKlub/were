@@ -37,9 +37,6 @@ export interface NewsPost {
   categories?: {
     _id: string;
     title: string;
-    slug: {
-      current: string;
-    };
   }[];
   author?: {
     _id: string;

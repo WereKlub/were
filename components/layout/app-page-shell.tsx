@@ -16,9 +16,7 @@ export function AppPageShell({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <div className={cn(appPageShellClass, className)}>{children}</div>
-  );
+  return <div className={cn(appPageShellClass, className)}>{children}</div>;
 }
 
 export function AppPageContainer({
@@ -28,7 +26,5 @@ export function AppPageContainer({
   children: ReactNode;
   className?: string;
 }) {
-  return (
-    <div className={cn(appPageContainerClass, className)}>{children}</div>
-  );
+  return <div className={cn(appPageContainerClass, className)}>{children}</div>;
 }

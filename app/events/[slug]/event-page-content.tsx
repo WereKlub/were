@@ -11,6 +11,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { t } from "@/lib/i18n/translations";
 import CheckoutButton from "@/components/event/CheckoutButton";
 import ArtistCard from "@/components/event/ArtistCard";
+import { EventGallery } from "@/components/event/event-gallery";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { trackViewContent } from "@/components/ui/FacebookPixel";
 import { useEffect } from "react";
@@ -78,7 +79,13 @@ type EventData = {
     socialLink?: string;
     isResident?: boolean;
   }[];
-  gallery?: { _key: string; url: string; caption?: string }[];
+  gallery?: {
+    _key: string;
+    url: string;
+    caption?: string;
+    width?: number;
+    height?: number;
+  }[];
 };
 
 interface EventPageContentProps {
@@ -244,7 +251,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
       <AppPageContainer className="py-12 pb-16 md:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-8 lg:gap-12 items-start">
           {/* Event Flyer - Assign 2 columns */}
-          <div className="lg:col-span-2 relative aspect-2/3 rounded-sm overflow-hidden shadow-lg bg-muted">
+          <div className="lg:col-span-2 relative aspect-2/3 rounded-md overflow-hidden shadow-lg bg-muted">
             <Image
               src={event.flyer?.url || "/banner.webp"}
               alt={event.title}
@@ -335,16 +342,13 @@ export default function EventPageContent({ event }: EventPageContentProps) {
             {/* Tickets/Bundles Section - Always Link Checkout Mode Logic */}
             <div className="py-4">
               {isPastEvent ? (
-                <div className="bg-muted/50 border border-border text-foreground p-4 rounded-sm mb-6">
+                <div className="bg-muted/50 border border-border text-foreground p-4 rounded-md mb-6">
                   <p className="font-medium leading-relaxed">
-                    {t(
-                      currentLanguage,
-                      "eventSlugPage.tickets.eventPassed",
-                    )}
+                    {t(currentLanguage, "eventSlugPage.tickets.eventPassed")}
                   </p>
                 </div>
               ) : !globallyTicketsOnSale ? (
-                <div className="bg-secondary text-secondary-foreground p-4 rounded-sm mb-6">
+                <div className="bg-secondary text-secondary-foreground p-4 rounded-md mb-6">
                   <p className="font-medium">
                     {t(
                       currentLanguage,
@@ -353,7 +357,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                   </p>
                 </div>
               ) : !hasAnyDefinedItems ? (
-                <div className="bg-secondary text-secondary-foreground p-4 rounded-sm">
+                <div className="bg-secondary text-secondary-foreground p-4 rounded-md">
                   <p className="font-medium">
                     {t(currentLanguage, "eventSlugPage.tickets.noItemsListed")}
                   </p>
@@ -370,10 +374,10 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                         {event.ticketTypes?.map((ticket) => (
                           <Card
                             key={ticket._key}
-                            className="border-border bg-background shadow-lg rounded-sm overflow-hidden flex flex-col"
+                            className="border-border bg-background shadow-lg rounded-md overflow-hidden flex flex-col"
                           >
                             <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
-                              <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-sm pt-1 pb-1 px-3 flex flex-col grow">
+                              <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-md pt-1 pb-1 px-3 flex flex-col grow">
                                 <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
                                   <div className="grow">
                                     <div className="flex flex-wrap items-baseline mb-3">
@@ -509,10 +513,10 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                         {event.bundles?.map((bundle) => (
                           <Card
                             key={bundle.bundleId.current}
-                            className="border-border bg-background shadow-lg rounded-sm overflow-hidden flex flex-col"
+                            className="border-border bg-background shadow-lg rounded-md overflow-hidden flex flex-col"
                           >
                             <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
-                              <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-sm pt-1 pb-1 px-3 flex flex-col grow">
+                              <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-md pt-1 pb-1 px-3 flex flex-col grow">
                                 <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
                                   <div className="grow">
                                     <div className="flex flex-wrap items-baseline mb-3">
@@ -680,10 +684,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
             )}
 
             {event.gallery && event.gallery.length > 0 && (
-              <div
-                id="event-gallery"
-                className="mb-10 pt-6 scroll-mt-28"
-              >
+              <div id="event-gallery" className="mb-10 pt-6 scroll-mt-28">
                 <h2 className="text-2xl font-bold text-foreground mb-4 tracking-tight">
                   {t(currentLanguage, "eventSlugPage.gallerySection.title")}
                 </h2>
@@ -693,27 +694,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                     "eventSlugPage.gallerySection.description",
                   )}
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
-                  {event.gallery.map((img) => (
-                    <figure
-                      key={img._key}
-                      className="relative aspect-square overflow-hidden rounded-sm bg-muted"
-                    >
-                      <Image
-                        src={img.url}
-                        alt={img.caption || `${event.title} — photo`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                      />
-                      {img.caption ? (
-                        <figcaption className="sr-only">
-                          {img.caption}
-                        </figcaption>
-                      ) : null}
-                    </figure>
-                  ))}
-                </div>
+                <EventGallery images={event.gallery} eventTitle={event.title} />
               </div>
             )}
 
@@ -736,7 +717,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                 )}
                 {/* Embedded Map ADDED HERE */}
                 {mapEmbedSrc && (
-                  <div className="my-6 relative w-full h-[300px] bg-muted rounded-sm shadow-lg border border-border overflow-hidden">
+                  <div className="my-6 relative w-full h-[300px] bg-muted rounded-md shadow-lg border border-border overflow-hidden">
                     <iframe
                       src={mapEmbedSrc}
                       width="100%"

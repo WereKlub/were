@@ -6,7 +6,11 @@ import { getNewsPostBySlug } from "@/lib/queries/news";
 import type { NewsPost } from "@/lib/types/news";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
-import { AppPageShell, AppPageContainer } from "@/components/layout/app-page-shell";
+import {
+  AppPageShell,
+  AppPageContainer,
+} from "@/components/layout/app-page-shell";
+import { buildPageMetadata } from "@/lib/site-metadata";
 
 // Category type is now handled by NewsPost type
 
@@ -19,15 +23,20 @@ export async function generateMetadata({
   const post: NewsPost | null = await getNewsPostBySlug(slug);
 
   if (!post) {
-    return {
-      title: "Post Not Found",
-    };
+    return { title: "Post Not Found" };
   }
 
-  return {
+  const imageUrl =
+    post.mainImage?.asset?.url ?? post.image?.asset?.url ?? undefined;
+
+  return buildPageMetadata({
     title: `${post.title} | Wêrê Klub Blog`,
     description: post.excerpt,
-  };
+    path: `/blog/${slug}`,
+    imageUrl,
+    imageAlt: post.mainImage?.alt ?? post.title,
+    type: "article",
+  });
 }
 
 export default async function NewsPostPage({
@@ -78,7 +87,7 @@ export default async function NewsPostPage({
 
           {/* Featured Image */}
           {post.mainImage && (
-            <div className="relative aspect-video mb-12 rounded-sm overflow-hidden shadow-2xl">
+            <div className="relative aspect-video mb-12 rounded-md overflow-hidden shadow-2xl">
               <Image
                 src={post.mainImage?.asset?.url || "/placeholder.webp"}
                 alt={post.mainImage?.alt || post.title}
@@ -91,7 +100,7 @@ export default async function NewsPostPage({
           )}
 
           {/* Article Content */}
-          <div className="bg-card/50 backdrop-blur-sm rounded-sm p-8 md:p-12 shadow-lg border border-border/50">
+          <div className="bg-card/50 backdrop-blur-sm rounded-md p-8 md:p-12 shadow-lg border border-border/50">
             <div className="prose prose-lg md:prose-xl max-w-none prose-headings:text-foreground prose-p:text-muted-foreground prose-strong:text-foreground prose-a:text-primary hover:prose-a:text-primary/80 prose-blockquote:border-primary prose-code:text-primary">
               <PortableText value={post.body} />
             </div>

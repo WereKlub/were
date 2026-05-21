@@ -1,14 +1,15 @@
-import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getAllProducts } from "@/lib/sanity/queries";
-import LoadingComponent from "@/components/ui/Bouncer";
+import CardioLoader from "@/components/ui/cardio-loader";
 import MerchContentClient from "./merch-content-client";
+import { buildPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: "Merch | Wêrê Klub",
   description:
     "Shop exclusive Wêrê Klub merchandise, apparel, and collectibles.",
-};
+  path: "/merch",
+});
 
 async function MerchContent() {
   const products = await getAllProducts();
@@ -17,7 +18,7 @@ async function MerchContent() {
 
 export default async function MerchPage() {
   return (
-    <Suspense fallback={<LoadingComponent />}>
+    <Suspense fallback={<CardioLoader />}>
       <MerchContent />
     </Suspense>
   );

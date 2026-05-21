@@ -518,7 +518,7 @@ export function HeroSection({
                 currentItem.type === "media") && (
                 <button
                   onClick={togglePlayPause}
-                  className={`p-4 rounded-sm border-2 transition-all duration-300 ${
+                  className={`p-4 rounded-md border-2 transition-all duration-300 ${
                     showControls
                       ? "opacity-100 scale-100"
                       : "opacity-0 scale-95"
@@ -561,7 +561,7 @@ export function HeroSection({
                         window.open(currentItem.videoUrl, "_blank");
                       }
                     }}
-                    className="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 rounded-sm transition-all duration-300"
+                    className="px-6 py-3 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 rounded-md transition-all duration-300"
                   >
                     {currentItem.type === "article" &&
                       t(
@@ -603,7 +603,7 @@ export function HeroSection({
       {currentItem.type === "video" && (
         <button
           onClick={toggleSound}
-          className="absolute bottom-2 md:bottom-8 left-4 md:left-8 z-20 p-2 bg-black/10 hover:bg-black/30 rounded-sm text-white focus:outline-none transition-colors duration-200"
+          className="absolute bottom-2 md:bottom-8 left-4 md:left-8 z-20 p-2 bg-black/10 hover:bg-black/30 rounded-md text-white focus:outline-none transition-colors duration-200"
           aria-label={isMuted ? "Unmute video" : "Mute video"}
         >
           {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
@@ -622,7 +622,7 @@ export function HeroSection({
             }}
             onMouseEnter={() => setShowLeftArrow(true)}
             onMouseLeave={() => setShowLeftArrow(false)}
-            className={`p-3 md:p-2 rounded-sm bg-black/10 hover:bg-black/20 text-white transition-all duration-200 backdrop-blur-sm cursor-pointer z-20 ${showLeftArrow ? "opacity-100" : "opacity-30"}`}
+            className={`p-3 md:p-2 rounded-md bg-black/10 hover:bg-black/20 text-white transition-all duration-200 backdrop-blur-sm cursor-pointer z-20 ${showLeftArrow ? "opacity-100" : "opacity-30"}`}
             aria-label="Previous content"
           >
             <ChevronLeft className="w-6 h-6 md:w-5 md:h-5" />
@@ -639,7 +639,7 @@ export function HeroSection({
             }}
             onMouseEnter={() => setShowRightArrow(true)}
             onMouseLeave={() => setShowRightArrow(false)}
-            className={`p-3 md:p-2 rounded-sm bg-black/10 hover:bg-black/20 text-white transition-all duration-200 backdrop-blur-sm cursor-pointer z-20 ${showRightArrow ? "opacity-100" : "opacity-30"}`}
+            className={`p-3 md:p-2 rounded-md bg-black/10 hover:bg-black/20 text-white transition-all duration-200 backdrop-blur-sm cursor-pointer z-20 ${showRightArrow ? "opacity-100" : "opacity-30"}`}
             aria-label="Next content"
           >
             <ChevronRight className="w-6 h-6 md:w-5 md:h-5" />
@@ -658,7 +658,7 @@ export function HeroSection({
                 console.log("Dot clicked:", index);
                 goToIndex(index);
               }}
-              className={`w-3 h-1.5 rounded-sm transition-all duration-200 cursor-pointer ${
+              className={`w-3 h-1.5 rounded-md transition-all duration-200 cursor-pointer ${
                 index === currentIndex
                   ? "bg-white scale-110"
                   : "bg-white/30 hover:bg-white/50"

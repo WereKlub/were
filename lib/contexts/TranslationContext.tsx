@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import type { Language } from "@/lib/i18n/config";
-import { languages } from "@/lib/i18n/config";
+import { languages, LOCALE_COOKIE_NAME } from "@/lib/i18n/config";
 import {
   getLocalStorageItem,
   setLocalStorageItem,
@@ -35,6 +35,9 @@ export function TranslationProvider({
       languages.some((lang) => lang.code === savedLanguage)
     ) {
       setCurrentLanguage(savedLanguage as Language);
+      if (typeof document !== "undefined") {
+        document.cookie = `${LOCALE_COOKIE_NAME}=${savedLanguage};path=/;max-age=31536000;SameSite=Lax`;
+      }
     } else {
       // Try to detect browser language
       if (typeof navigator !== "undefined") {
@@ -50,6 +53,9 @@ export function TranslationProvider({
   const setLanguage = (lang: Language) => {
     setCurrentLanguage(lang);
     setLocalStorageItem("jumbo.language", lang);
+    if (typeof document !== "undefined") {
+      document.cookie = `${LOCALE_COOKIE_NAME}=${lang};path=/;max-age=31536000;SameSite=Lax`;
+    }
   };
 
   return (

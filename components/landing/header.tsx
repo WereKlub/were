@@ -18,21 +18,25 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { currentLanguage } = useTranslation();
-  const { showBlogInNavigation, showGalleryInNavigation } =
-    useNavigationSettings();
+  const {
+    showBlogInNavigation,
+    showAboutInNavigation,
+    showAgencyInNavigation,
+  } = useNavigationSettings();
 
   const navItems: NavItem[] = [
     { nameKey: "header.nav.home", path: "/" },
     { nameKey: "header.nav.events", path: "/events" },
-    ...(showGalleryInNavigation
-      ? [{ nameKey: "header.nav.gallery" as const, path: "/gallery" }]
-      : []),
     ...(showBlogInNavigation
       ? [{ nameKey: "header.nav.blog" as const, path: "/blog" }]
       : []),
     { nameKey: "header.nav.shop", path: "/merch" },
-    { nameKey: "header.nav.about", path: "/a-propos" },
-    { nameKey: "header.nav.agency", path: "/agence" },
+    ...(showAboutInNavigation
+      ? [{ nameKey: "header.nav.about" as const, path: "/about" }]
+      : []),
+    ...(showAgencyInNavigation
+      ? [{ nameKey: "header.nav.agency" as const, path: "/agency" }]
+      : []),
   ];
 
   return (
@@ -45,7 +49,7 @@ export default function Header() {
               href={item.path}
               className={`text-xs tracking-[0.2em] transition-colors hover:text-foreground/70 uppercase ${
                 pathname === item.path
-                  ? "border border-foreground px-3 py-1.5 text-foreground"
+                  ? "border border-foreground px-3 py-1.5 text-foreground rounded-md"
                   : "text-foreground"
               }`}
             >

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { getProductBySlug } from "@/lib/sanity/queries";
 import { notFound } from "next/navigation";
-import LoadingComponent from "@/components/ui/Bouncer";
+import CardioLoader from "@/components/ui/cardio-loader";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { ProductDetailContent } from "@/components/merch/product-detail-content";
@@ -32,7 +32,7 @@ async function ProductContent({ params }: Props) {
 
 export default async function ProductDetailPage({ params }: Props) {
   return (
-    <Suspense fallback={<LoadingComponent />}>
+    <Suspense fallback={<CardioLoader />}>
       <ProductContent params={params} />
     </Suspense>
   );

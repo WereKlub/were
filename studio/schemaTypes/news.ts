@@ -2,7 +2,7 @@ import {Rule} from 'sanity'
 
 export default {
   name: 'news',
-  title: 'News Post',
+  title: 'Blog',
   type: 'document',
   fields: [
     {
@@ -29,7 +29,7 @@ export default {
     },
     {
       name: 'mainImage',
-      title: 'Main image',
+      title: 'Cover image',
       type: 'image',
       options: {
         hotspot: true,
@@ -68,7 +68,7 @@ export default {
     },
     {
       name: 'postType',
-      title: 'Post Type',
+      title: 'Type',
       type: 'string',
       options: {
         list: [
@@ -116,7 +116,7 @@ export default {
               name: 'url',
               title: 'Video URL',
               type: 'url',
-              description: 'URL from YouTube, Vimeo, etc.',
+              description: 'YouTube or Vimeo URL.',
               validation: (Rule: Rule) => Rule.required(),
             },
             {
@@ -130,10 +130,10 @@ export default {
     },
     {
       name: 'isFeatured',
-      title: 'Featured post?',
+      title: 'Featured',
       type: 'boolean',
       initialValue: false,
-      description: 'Feature this post on the homepage or blog landing page.',
+      description: 'Show on blog homepage.',
     },
   ],
 }

@@ -11,6 +11,7 @@ import { ThemeModeSwitch } from "@/components/landing/theme-mode-switch";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { useFooterStripUrls } from "@/lib/contexts/FooterStripContext";
+import { useNavigationSettings } from "@/lib/contexts/NavigationSettingsContext";
 
 const SOCIAL_LINKS = [
   {
@@ -42,19 +43,30 @@ const SOCIAL_LINKS = [
 export default function Footer() {
   const { currentLanguage } = useTranslation();
   const stripUrls = useFooterStripUrls();
+  const {
+    showBlogInNavigation,
+    showAboutInNavigation,
+    showAgencyInNavigation,
+  } = useNavigationSettings();
 
-  const footerNav = [
-    { href: "/events", labelKey: "header.nav.events" as const },
-    { href: "/merch", labelKey: "header.nav.shop" as const },
-    { href: "/gallery", labelKey: "header.nav.gallery" as const },
-    { href: "/blog", labelKey: "header.nav.blog" as const },
-    { href: "/a-propos", labelKey: "header.nav.about" as const },
-    { href: "/agence", labelKey: "header.nav.agency" as const },
-    { href: "/terms", labelKey: "footer.links.terms" as const },
+  const footerNav: { href: string; labelKey: string }[] = [
+    { href: "/events", labelKey: "header.nav.events" },
+    { href: "/merch", labelKey: "header.nav.shop" },
+    ...(showBlogInNavigation
+      ? [{ href: "/blog", labelKey: "header.nav.blog" as const }]
+      : []),
+    ...(showAboutInNavigation
+      ? [{ href: "/about", labelKey: "header.nav.about" as const }]
+      : []),
+    ...(showAgencyInNavigation
+      ? [{ href: "/agency", labelKey: "header.nav.agency" as const }]
+      : []),
+    { href: "/terms", labelKey: "footer.links.terms" },
   ];
 
-  const footerNavCol1 = footerNav.slice(0, 4);
-  const footerNavCol2 = footerNav.slice(4);
+  const mid = Math.ceil(footerNav.length / 2);
+  const footerNavCol1 = footerNav.slice(0, mid);
+  const footerNavCol2 = footerNav.slice(mid);
 
   const displayStrip =
     stripUrls.length >= 4

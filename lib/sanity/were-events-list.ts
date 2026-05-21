@@ -15,14 +15,10 @@ export function buildWereEventLists(raw: SanityEventCardSource[]): {
   const t0 = startOfTodayMs();
   const upcomingRaw = raw
     .filter((e) => new Date(e.date).getTime() >= t0)
-    .sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-    );
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   const pastRaw = raw
     .filter((e) => new Date(e.date).getTime() < t0)
-    .sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const upcomingCards = upcomingRaw
     .map((e, i) => mapSanityEventToWereCard(e, i, { isPast: false }))

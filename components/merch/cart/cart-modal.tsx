@@ -6,7 +6,7 @@ import { useFormStatus } from "react-dom";
 import { useCart } from "./cart-context";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import Loader from "@/components/ui/Bouncer";
+import CardioLoader from "@/components/ui/cardio-loader";
 import { CartItemCard } from "./cart-item-card";
 import Link from "next/link";
 import { cn } from "@/lib/actions/utils";
@@ -47,7 +47,7 @@ const CartItems = ({
         <span className="font-medium">
           {t(currentLanguage, "cartModal.products")}
         </span>
-        <span className="bg-muted/50 px-2 py-1 rounded-sm text-xs">
+        <span className="bg-muted/50 px-2 py-1 rounded-md text-xs">
           {t(
             currentLanguage,
             cart.totalQuantity !== 1
@@ -372,11 +372,11 @@ export default function CartModal() {
         <CartContainer className="flex w-full">
           <Link
             href="/merch"
-            className="p-6 w-full bg-card/30 backdrop-blur-sm rounded-sm hover:bg-card/50 transition-all duration-300"
+            className="p-6 w-full bg-card/30 backdrop-blur-sm rounded-md hover:bg-card/50 transition-all duration-300"
             onClick={closeCart}
           >
             <div className="flex flex-row gap-6 items-center">
-              <div className="flex overflow-hidden relative justify-center items-center rounded-sm border border-dashed size-20 shrink-0 border-border/50 bg-muted/30">
+              <div className="flex overflow-hidden relative justify-center items-center rounded-md border border-dashed size-20 shrink-0 border-border/50 bg-muted/30">
                 <PlusCircleIcon className="size-6 text-muted-foreground" />
               </div>
               <div className="flex flex-col flex-1 gap-2">
@@ -488,7 +488,7 @@ export default function CartModal() {
                   onClick={(e) => e.stopPropagation()} // Prevent event bubbling to cart button
                 >
                   <div
-                    className="flex flex-col py-4 px-2 md:px-4 w-full min-h-0 bg-card text-card-foreground backdrop-blur-xl rounded-t-xl md:rounded-sm shadow-2xl border border-border md:border-border h-[min(96dvh,100%)] md:h-full md:max-h-none dark:bg-[#1a1a1a]"
+                    className="flex flex-col py-4 px-2 md:px-4 w-full min-h-0 bg-card text-card-foreground backdrop-blur-xl rounded-t-xl md:rounded-md shadow-2xl border border-border md:border-border h-[min(96dvh,100%)] md:h-full md:max-h-none dark:bg-[#1a1a1a]"
                     style={
                       isMobile && mobileVisibleHeight != null
                         ? { maxHeight: mobileVisibleHeight }
@@ -539,7 +539,7 @@ function CheckoutButton({
         type="submit"
         disabled={isDisabled}
         size="lg"
-        className={`flex relative gap-3 justify-between items-center w-full ${button.secondary} rounded-sm font-semibold py-4`}
+        className={`flex relative gap-3 justify-between items-center w-full ${button.secondary} rounded-md font-semibold py-4`}
         onClick={onProceedToCheckout}
       >
         <AnimatePresence initial={false} mode="wait">
@@ -552,7 +552,7 @@ function CheckoutButton({
             className="flex justify-center items-center w-full"
           >
             {isLoading ? (
-              <Loader />
+              <CardioLoader variant="inline" />
             ) : (
               <span className="font-semibold">
                 {t(currentLanguage, "cartModal.proceedToCheckout")}

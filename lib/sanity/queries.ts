@@ -89,7 +89,9 @@ export async function getEventBySlug(slug: string, locale: string) {
       gallery[]{
         _key,
         "url": asset->url,
-        "caption": caption
+        "caption": caption,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height
       },
       bundles[]{
         _key,
@@ -121,30 +123,6 @@ export async function getEventBySlug(slug: string, locale: string) {
   return event;
 }
 
-// Blog
-
-export async function getBlogPostBySlug(slug: string) {
-  const post = await client.fetch(
-    `
-    *[_type == "post" && slug.current == $slug][0] {
-      _id,
-      title,
-      "slug": slug.current,
-      publishedAt,
-      "mainImage": {
-        "url": mainImage.asset->url
-      },
-      "author": author->{name, "image": image.asset->url},
-      body,
-      "categories": categories[]->{title}
-    }
-  `,
-    { slug },
-  );
-
-  return post;
-}
-
 // Helper function to get cache configuration based on environment
 const getCacheConfig = (tags: string[]) => ({
   next: {
@@ -156,12 +134,11 @@ const getCacheConfig = (tags: string[]) => ({
 export interface AboutPageData {
   metaTitle?: string;
   metaDescription?: string;
-  pageHeading?: string;
-  heroUrl: string | null;
-  heroAlt: string;
-  collectifTitle: string;
-  collectifBody: unknown;
-  collectifPanelColor?: string;
+  panelColor?: string;
+  carouselImages: { url: string; alt: string }[];
+  introLabel?: string;
+  heading: string;
+  body: unknown;
   stats: { value: string; label: string }[];
   teamHeading?: string;
   team: {
@@ -170,21 +147,20 @@ export interface AboutPageData {
     imageUrl?: string | null;
     imageAlt?: string;
   }[];
-  teamSectionUrl: string | null;
-  teamSectionAlt: string;
-  teamPanelColor?: string;
 }
 
 export async function getAboutPage(): Promise<AboutPageData | null> {
   const query = `*[_type == "aboutPage"] | order(_updatedAt desc) [0] {
     metaTitle,
     metaDescription,
-    pageHeading,
-    "heroUrl": heroImage.asset->url,
-    "heroAlt": coalesce(heroImage.alt, ""),
-    collectifTitle,
-    collectifBody,
-    collectifPanelColor,
+    panelColor,
+    "carouselImages": carouselImages[]{
+      "url": asset->url,
+      "alt": coalesce(alt, "")
+    },
+    introLabel,
+    heading,
+    body,
     stats[]{ value, label },
     teamHeading,
     team[]{
@@ -192,51 +168,92 @@ export async function getAboutPage(): Promise<AboutPageData | null> {
       role,
       "imageUrl": image.asset->url,
       "imageAlt": image.alt
-    },
-    "teamSectionUrl": teamSectionImage.asset->url,
-    "teamSectionAlt": coalesce(teamSectionImage.alt, ""),
-    teamPanelColor
+    }
   }`;
-  return client.fetch<AboutPageData | null>(query, {}, getCacheConfig(["aboutPage"]));
+  return client.fetch<AboutPageData | null>(
+    query,
+    {},
+    getCacheConfig(["aboutPage"]),
+  );
 }
 
 export interface AgencyPageData {
   metaTitle?: string;
   metaDescription?: string;
-  pageHeading?: string;
-  services: { title: string; description: string }[];
-  accomplishmentsHeading?: string;
-  accomplishments: { name: string; client: string }[];
-  realisationsUrl: string | null;
-  realisationsAlt: string;
-  ctaUrl: string | null;
-  ctaAlt: string;
-  ctaTitle: string;
-  ctaIntro: string;
-  contactEmail: string;
-  bookingEmail: string;
-  ctaPanelColor?: string;
+  panelColor?: string;
+  carouselImages: { url: string; alt: string }[];
+  introLabel?: string;
+  heading: string;
+  body: unknown;
+  missionHeading?: string;
+  missionBody?: string;
+  logosIntro?: string;
+  logoBoxLabel?: string;
+  partnerLogos: {
+    name: string;
+    logoUrl: string;
+    logoAlt: string;
+    url?: string | null;
+  }[];
+  contactEmail?: string;
+  bookingEmail?: string;
 }
 
 export async function getAgencyPage(): Promise<AgencyPageData | null> {
   const query = `*[_type == "agencyPage"] | order(_updatedAt desc) [0] {
     metaTitle,
     metaDescription,
-    pageHeading,
-    services[]{ title, description },
-    accomplishmentsHeading,
-    accomplishments[]{ name, client },
-    "realisationsUrl": realisationsImage.asset->url,
-    "realisationsAlt": coalesce(realisationsImage.alt, ""),
-    "ctaUrl": ctaImage.asset->url,
-    "ctaAlt": coalesce(ctaImage.alt, ""),
-    ctaTitle,
-    ctaIntro,
+    panelColor,
+    "carouselImages": carouselImages[]{
+      "url": asset->url,
+      "alt": coalesce(alt, "")
+    },
+    introLabel,
+    heading,
+    body,
+    missionHeading,
+    missionBody,
+    logosIntro,
+    logoBoxLabel,
+    partnerLogos[]{
+      name,
+      "logoUrl": logo.asset->url,
+      "logoAlt": coalesce(logo.alt, name),
+      url
+    },
     contactEmail,
-    bookingEmail,
-    ctaPanelColor
+    bookingEmail
   }`;
-  return client.fetch<AgencyPageData | null>(query, {}, getCacheConfig(["agencyPage"]));
+  return client.fetch<AgencyPageData | null>(
+    query,
+    {},
+    getCacheConfig(["agencyPage"]),
+  );
+}
+
+function isPortableBlocks(value: unknown): value is unknown[] {
+  return Array.isArray(value) && value.length > 0;
+}
+
+/** Matches /about: show nav link only when CMS has at least one visible block. */
+export function shouldShowAboutInNavigation(
+  data: AboutPageData | null,
+): boolean {
+  if (!data) return false;
+  const hasCarousel = (data.carouselImages?.length ?? 0) > 0;
+  const hasCopy = Boolean(data.heading?.trim()) && isPortableBlocks(data.body);
+  return hasCarousel || hasCopy;
+}
+
+/** Matches /agency: show nav link only when CMS has at least one visible block. */
+export function shouldShowAgencyInNavigation(
+  data: AgencyPageData | null,
+): boolean {
+  if (!data) return false;
+  const hasCarousel = (data.carouselImages?.length ?? 0) > 0;
+  const hasCopy = Boolean(data.heading?.trim()) && isPortableBlocks(data.body);
+  const hasLogos = (data.partnerLogos?.length ?? 0) > 0;
+  return hasCarousel || hasCopy || hasLogos;
 }
 
 // Products (Enhanced Section)
@@ -374,39 +391,39 @@ export const getShippingSettings = async (): Promise<ShippingSettings> => {
 // ================================= Navigation Settings ================================
 export interface NavigationSettings {
   showBlogInNavigation?: boolean;
-  showGalleryInNavigation?: boolean;
+  showAboutInNavigation?: boolean;
+  showAgencyInNavigation?: boolean;
 }
 
 export const getNavigationSettings = async (): Promise<NavigationSettings> => {
   try {
-    // Order by _updatedAt desc so we get the single/latest homepage document
-    const query = `*[_type == "homepage"] | order(_updatedAt desc) [0] {
+    const homeQuery = `*[_type == "homepage"] | order(_updatedAt desc) [0] {
       showBlogInNavigation,
-      showGalleryInNavigation,
     }`;
-    const result = await clientNoCdn.fetch<NavigationSettings>(
-      query,
-      {},
-      getCacheConfig(["homepage", "navigation"]),
-    );
-    // Only default to true when value is explicitly undefined (missing); false must be respected
+    const [result, aboutData, agencyData] = await Promise.all([
+      clientNoCdn.fetch<Pick<NavigationSettings, "showBlogInNavigation">>(
+        homeQuery,
+        {},
+        getCacheConfig(["homepage", "navigation"]),
+      ),
+      getAboutPage(),
+      getAgencyPage(),
+    ]);
     const showBlog =
       result?.showBlogInNavigation === undefined
         ? true
         : Boolean(result.showBlogInNavigation);
-    const showGallery =
-      result?.showGalleryInNavigation === undefined
-        ? true
-        : Boolean(result.showGalleryInNavigation);
     return {
       showBlogInNavigation: showBlog,
-      showGalleryInNavigation: showGallery,
+      showAboutInNavigation: shouldShowAboutInNavigation(aboutData),
+      showAgencyInNavigation: shouldShowAgencyInNavigation(agencyData),
     };
   } catch (error) {
     console.error("Error fetching navigation settings:", error);
     return {
       showBlogInNavigation: true,
-      showGalleryInNavigation: true,
+      showAboutInNavigation: false,
+      showAgencyInNavigation: false,
     };
   }
 };
@@ -441,7 +458,6 @@ export const getHomepageThemeSettings =
 // Interface for homepage data
 export interface HomepageData {
   showBlogInNavigation?: boolean;
-  showGalleryInNavigation?: boolean;
   heroContent?: {
     _key: string;
     title?: string;
@@ -486,7 +502,6 @@ export interface HomepageData {
 export const getHomepageContent = async (): Promise<HomepageData | null> => {
   const query = `*[_type == "homepage"][0] {
     showBlogInNavigation,
-    showGalleryInNavigation,
     heroContent[]{
       _key,
       title,
@@ -559,23 +574,26 @@ export async function getAllEventsForWereCards(): Promise<
     ticketTypes[]{name, price, active},
     "galleryCount": count(gallery)
   }`;
-  return client.fetch<SanityEventCardSource[]>(query, {}, getCacheConfig(["events"]));
+  return client.fetch<SanityEventCardSource[]>(
+    query,
+    {},
+    getCacheConfig(["events"]),
+  );
 }
 
 export async function getFooterStripImageUrls(): Promise<string[]> {
   try {
-    const galleryQuery = `*[_type == "gallery"] | order(_createdAt desc) [0]{
-      "urls": images[].asset->url
+    const eventGalleryQuery = `*[_type == "event" && count(gallery) > 0] | order(date desc) [0]{
+      "urls": gallery[].asset->url
     }`;
-    const g = await client.fetch<{ urls?: (string | null)[] } | null>(
-      galleryQuery,
-      {},
-      getCacheConfig(["gallery", "footer"]),
-    );
-    const fromGallery =
-      g?.urls?.filter((u): u is string => Boolean(u)).slice(0, 6) ?? [];
-    if (fromGallery.length > 0) {
-      return fromGallery;
+    const eventGallery = await client.fetch<{
+      urls?: (string | null)[];
+    } | null>(eventGalleryQuery, {}, getCacheConfig(["events", "footer"]));
+    const fromEventGallery =
+      eventGallery?.urls?.filter((u): u is string => Boolean(u)).slice(0, 6) ??
+      [];
+    if (fromEventGallery.length > 0) {
+      return fromEventGallery;
     }
   } catch (e) {
     console.error("getFooterStripImageUrls:", e);
@@ -665,107 +683,3 @@ export const getHomepagePromoEvent =
     );
     return result?.promoEvent ?? null;
   };
-
-// ================================= Gallery ================================
-
-/** Raw image item as returned by the gallery GROQ query (with asset dereferenced). */
-interface GalleryImageRaw {
-  _key: string;
-  asset?: {
-    _id: string;
-    url?: string;
-    metadata?: {
-      dimensions?: { width?: number; height?: number };
-    };
-  };
-  alt?: string;
-}
-
-/** Raw gallery document as returned by the GROQ query (before transformation). */
-interface GalleryRaw {
-  _id: string;
-  title: string;
-  images: GalleryImageRaw[];
-}
-
-export interface GalleryImage {
-  _id: string;
-  _key: string;
-  url: string;
-  width?: number;
-  height?: number;
-  alt?: string;
-  assetId?: string;
-}
-
-export interface Gallery {
-  _id: string;
-  title: string;
-  images: GalleryImage[];
-}
-
-export const getAllGalleries = async (): Promise<Gallery[]> => {
-  const query = `*[_type == "gallery"] | order(_createdAt desc) {
-    _id,
-    title,
-    images[]{
-      _key,
-      asset->{
-        _id,
-        url,
-        metadata {
-          dimensions {
-            width,
-            height
-          }
-        }
-      },
-      alt
-    }
-  }`;
-
-  const result = await client.fetch<GalleryRaw[]>(
-    query,
-    {},
-    getCacheConfig(["gallery"]),
-  );
-
-  // Transform the data to flatten images and extract dimensions
-  return result.map((gallery) => ({
-    _id: gallery._id,
-    title: gallery.title,
-    images: gallery.images
-      .filter((img) => img.asset?.url) // Filter out images without URLs
-      .map((img) => ({
-        _id: img.asset?._id || img._key,
-        _key: img._key,
-        url: img.asset?.url || "",
-        width: img.asset?.metadata?.dimensions?.width,
-        height: img.asset?.metadata?.dimensions?.height,
-        alt: img.alt || "",
-        assetId: img.asset?._id,
-      })),
-  }));
-};
-
-// Get all gallery images flattened (all images from all galleries)
-export const getAllGalleryImages = async () => {
-  const galleries = await getAllGalleries();
-
-  // Flatten all images from all galleries into a single array
-  const allImages: Array<GalleryImage & { galleryTitle: string; id: number }> =
-    [];
-  let idCounter = 0;
-
-  galleries.forEach((gallery) => {
-    gallery.images.forEach((image) => {
-      allImages.push({
-        ...image,
-        galleryTitle: gallery.title,
-        id: idCounter++,
-      });
-    });
-  });
-
-  return allImages;
-};

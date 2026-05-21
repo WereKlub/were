@@ -111,6 +111,7 @@ export async function POST(request: NextRequest) {
       case "event":
         // Revalidate by tags (more efficient)
         revalidateTag("events", {});
+        revalidateTag("footer", {});
         if (slug?.current) {
           revalidateTag(`event-${slug.current}`, {});
           console.log(`Revalidated event: ${slug.current}`);
@@ -120,14 +121,16 @@ export async function POST(request: NextRequest) {
         revalidatePath("/events");
         break;
 
-      case "post":
-        // Revalidate by tags
+      case "news":
+      case "post": // legacy Sanity webhook type name
+        revalidateTag("news", {});
         revalidateTag("posts", {});
         if (slug?.current) {
+          revalidateTag(`news-${slug.current}`, {});
           revalidateTag(`post-${slug.current}`, {});
+          revalidatePath(`/blog/${slug.current}`);
           console.log(`Revalidated blog post: ${slug.current}`);
         }
-        // Also revalidate specific paths
         revalidatePath("/blog");
         revalidatePath("/");
         break;
@@ -145,11 +148,13 @@ export async function POST(request: NextRequest) {
 
       case "aboutPage":
         revalidateTag("aboutPage", {});
+        revalidatePath("/about");
         revalidatePath("/a-propos");
         break;
 
       case "agencyPage":
         revalidateTag("agencyPage", {});
+        revalidatePath("/agency");
         revalidatePath("/agence");
         break;
 

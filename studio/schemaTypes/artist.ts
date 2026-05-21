@@ -2,7 +2,7 @@ import {defineType, defineField} from 'sanity'
 
 export default defineType({
   name: 'artist',
-  title: 'Artist / Performer',
+  title: 'Artist',
   type: 'document',
   fields: [
     defineField({
@@ -19,12 +19,11 @@ export default defineType({
         source: 'name',
         maxLength: 96,
       },
-      description: 'Unique identifier for the artist, used for URLs if needed.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'bio',
-      title: 'Short Bio',
+      title: 'Bio',
       type: 'text',
     }),
     defineField({
@@ -35,19 +34,15 @@ export default defineType({
     }),
     defineField({
       name: 'socialLink',
-      title: 'Social Media Link',
+      title: 'Social link',
       type: 'url',
-      description:
-        'Link to their primary social media profile (e.g., Instagram, Twitter, Website).',
     }),
     defineField({
       name: 'isResident',
-      title: 'Is Resident?',
+      title: 'Resident',
       type: 'boolean',
       initialValue: false,
-      description: 'Check if this artist is a resident for the event series or venue.',
     }),
-    // Add any other relevant fields for artists here
   ],
   preview: {
     select: {

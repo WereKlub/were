@@ -39,11 +39,11 @@ export function CartItemCard({ item }: CartItemCardProps) {
   };
 
   return (
-    <div className="flex gap-8 p-3 bg-muted/40 hover:bg-muted/60 dark:bg-[#1a1a1a]/50 dark:hover:bg-[#1a1a1a]/70 rounded-sm transition-colors items-stretch">
+    <div className="flex gap-8 p-3 bg-muted/40 hover:bg-muted/60 dark:bg-[#1a1a1a]/50 dark:hover:bg-[#1a1a1a]/70 rounded-md transition-colors items-stretch">
       {/* Product Image */}
       <div className="shrink-0 w-16">
         {image ? (
-          <div className="h-full aspect-square relative overflow-hidden rounded-sm bg-muted">
+          <div className="h-full aspect-square relative overflow-hidden rounded-md bg-muted">
             <Image
               src={image}
               alt={product.name}
@@ -52,7 +52,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
             />
           </div>
         ) : (
-          <div className="h-full aspect-square bg-muted rounded-sm flex items-center justify-center">
+          <div className="h-full aspect-square bg-muted rounded-md flex items-center justify-center">
             <span className="text-xs text-muted-foreground dark:text-white/70">
               {t(currentLanguage, "cartItemCard.noImage")}
             </span>

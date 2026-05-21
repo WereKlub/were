@@ -5,7 +5,6 @@ import product from './product'
 import homepage from './homepage'
 import artist from './artist'
 import news from './news'
-import gallery from './gallery'
 import aboutPage from './aboutPage'
 import agencyPage from './agencyPage'
 
@@ -19,5 +18,4 @@ export const schemaTypes = [
   product,
   artist,
   news,
-  gallery,
 ]

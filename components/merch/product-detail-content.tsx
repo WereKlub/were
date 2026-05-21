@@ -40,7 +40,7 @@ function ProductImageCarousel({
         <CarouselContent>
           {images.map((image, index) => (
             <CarouselItem key={index}>
-              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-sm bg-muted shadow-2xl">
+              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-md bg-muted shadow-2xl">
                 <Image
                   src={image.url}
                   alt={
@@ -55,8 +55,8 @@ function ProductImageCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 rounded-sm" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 rounded-sm" />
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 rounded-md" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 rounded-md" />
       </Carousel>
 
       {images.length > 1 && (
@@ -66,7 +66,7 @@ function ProductImageCarousel({
               key={`thumb-${index}`}
               type="button"
               onClick={() => api?.scrollTo(index)}
-              className="relative w-full pb-[100%] overflow-hidden rounded-sm border border-border/40 hover:border-primary transition-colors"
+              className="relative w-full pb-[100%] overflow-hidden rounded-md border border-border/40 hover:border-primary transition-colors"
             >
               <Image
                 src={image.url}
@@ -150,7 +150,7 @@ const descriptionComponents: PortableTextComponents = {
       if (!url) return null;
       return (
         <figure className="my-6">
-          <div className="relative w-full overflow-hidden rounded-sm border border-border/30 bg-muted aspect-4/3">
+          <div className="relative w-full overflow-hidden rounded-md border border-border/30 bg-muted aspect-4/3">
             <Image
               src={url}
               alt={image.alt || image.caption || "Product detail"}
@@ -279,7 +279,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                 productName={product.name}
               />
             ) : mainImage ? (
-              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-sm bg-muted shadow-2xl">
+              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-md bg-muted shadow-2xl">
                 <Image
                   src={mainImage}
                   alt={
@@ -292,7 +292,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                 <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
               </div>
             ) : (
-              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-sm bg-muted flex items-center justify-center shadow-2xl">
+              <div className="flex-1 min-h-[650px] relative overflow-hidden rounded-md bg-muted flex items-center justify-center shadow-2xl">
                 <span className="text-muted-foreground">
                   {t(currentLanguage, "merchPage.productDetail.noImage")}
                 </span>
@@ -423,7 +423,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                       }
                       disabled={!size.available}
                       className={cn(
-                        "relative flex h-10 min-w-[48px] items-center justify-center rounded-sm border px-4 text-sm font-medium transition-colors",
+                        "relative flex h-10 min-w-[48px] items-center justify-center rounded-md border px-4 text-sm font-medium transition-colors",
                         selectedSize === size.name
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-border bg-card text-foreground hover:border-primary",
@@ -445,7 +445,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
 
             {product.description && (
               <motion.div
-                className="bg-card/30 backdrop-blur-sm rounded-sm p-6 border border-border/20 min-h-[260px]"
+                className="bg-card/30 backdrop-blur-sm rounded-md p-6 border border-border/20 min-h-[260px]"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
@@ -457,7 +457,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                   {product.stock !== undefined && (
                     <div
                       className={cn(
-                        "px-4 py-2 rounded-sm text-sm font-medium",
+                        "px-4 py-2 rounded-md text-sm font-medium",
                         typeof product.stock === "number" &&
                           product.stock > 0 &&
                           !isOutOfStock
@@ -496,7 +496,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
             >
               {!isOutOfStock && (
                 <>
-                  <div className="bg-card/30 backdrop-blur-sm rounded-sm p-6 border border-border/20">
+                  <div className="bg-card/30 backdrop-blur-sm rounded-md p-6 border border-border/20">
                     <div className="flex items-center justify-between">
                       <span className="text-lg font-medium text-foreground">
                         {t(currentLanguage, "merchPage.productDetail.quantity")}
@@ -507,7 +507,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                           size="sm"
                           onClick={decrementQuantity}
                           disabled={quantity <= 1}
-                          className="h-10 w-10 rounded-sm"
+                          className="h-10 w-10 rounded-md"
                         >
                           <MinusIcon className="h-4 w-4" />
                         </Button>
@@ -523,7 +523,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                           variant="outline"
                           size="sm"
                           onClick={incrementQuantity}
-                          className="h-10 w-10 rounded-sm"
+                          className="h-10 w-10 rounded-md"
                         >
                           <PlusIcon className="h-4 w-4" />
                         </Button>
@@ -550,7 +550,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
 
                   <div className="space-y-3">
                     <Button
-                      className={`w-full ${button.secondaryBorder} h-14 text-lg font-semibold rounded-sm`}
+                      className={`w-full ${button.secondaryBorder} h-14 text-lg font-semibold rounded-md`}
                       size="lg"
                       onClick={handleAddToCart}
                       disabled={isAddToCartDisabled}
@@ -571,7 +571,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                             )}
                     </Button>
                     <Button
-                      className="w-full h-14 text-lg font-semibold rounded-sm bg-blue-600 hover:bg-blue-700 text-white"
+                      className="w-full h-14 text-lg font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white"
                       size="lg"
                       onClick={handleBuyNow}
                       disabled={isAddToCartDisabled}

@@ -49,7 +49,9 @@ export default function RevalidatePage() {
         {status === "success" && (
           <>
             <div className="text-2xl mb-4">✅</div>
-            <h1 className="text-2xl font-display font-bold mb-2">Revalidation complete!</h1>
+            <h1 className="text-2xl font-display font-bold mb-2">
+              Revalidation complete!
+            </h1>
             <p className="text-muted-foreground">Redirecting to home page...</p>
           </>
         )}
@@ -57,7 +59,9 @@ export default function RevalidatePage() {
         {status === "error" && (
           <>
             <div className="text-2xl mb-4">❌</div>
-            <h1 className="text-2xl font-display font-bold mb-2">Revalidation failed</h1>
+            <h1 className="text-2xl font-display font-bold mb-2">
+              Revalidation failed
+            </h1>
             <p className="text-muted-foreground">
               Please try again or check the console
             </p>

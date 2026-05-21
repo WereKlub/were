@@ -11,7 +11,7 @@ function eventHref(event: WereEventCard): string {
 export function EventIndexGrid({ events }: { events: WereEventCard[] }) {
   if (events.length === 0) return null;
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 px-4 md:px-8 lg:px-12 max-w-7xl mx-auto pb-16 md:pb-20">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 px-4 md:px-8 lg:px-12 max-w-[1600px] mx-auto pb-16 md:pb-20">
       {events.map((event) => (
         <EventIndexCard key={event.id} event={event} />
       ))}
@@ -23,7 +23,7 @@ function EventIndexCard({ event }: { event: WereEventCard }) {
   return (
     <Link
       href={eventHref(event)}
-      className="group flex flex-col border border-border bg-card text-card-foreground hover:border-foreground/25 transition-colors rounded-sm overflow-hidden shadow-sm"
+      className="group flex flex-col border border-border bg-card text-card-foreground hover:border-foreground/25 transition-colors rounded-md overflow-hidden shadow-sm"
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden bg-muted">
         <Image
@@ -31,7 +31,7 @@ function EventIndexCard({ event }: { event: WereEventCard }) {
           alt={event.title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1280px) 25vw, 20vw"
         />
       </div>
       <div className="p-3 md:p-4 border-t border-border flex flex-col gap-2 grow">

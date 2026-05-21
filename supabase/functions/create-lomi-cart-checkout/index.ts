@@ -260,6 +260,7 @@ serve(async (req: Request) => {
         app_source: "wereklub_merch_app",
         is_cart_checkout: true,
         item_count: payload.cartItems.length,
+        order_shipping: String(orderShipping),
       },
       require_billing_address: true,
     };
@@ -360,12 +361,15 @@ serve(async (req: Request) => {
     const checkoutUrl = lomiResponseData.checkout_url;
 
     // --- Update Purchase Records with lomi. details using RPC ---
-    for (const purchaseId of purchaseIds) {
+    // Only the first row stores lomi_session_id (UNIQUE); all rows share checkout URL.
+    for (let i = 0; i < purchaseIds.length; i++) {
+      const purchaseId = purchaseIds[i];
       const { error: updatePurchaseError } = await supabase.rpc(
         "update_purchase_lomi_session",
         {
           p_purchase_id: purchaseId,
-          p_lomi_session_id: lomiResponseData.checkout_session_id,
+          p_lomi_session_id:
+            i === 0 ? lomiResponseData.checkout_session_id : null,
           p_lomi_checkout_url: checkoutUrl,
           p_payment_processor_details: {
             request: lomiPayload,

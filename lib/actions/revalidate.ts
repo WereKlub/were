@@ -31,7 +31,10 @@ export async function triggerRevalidation(options?: {
 
 // Quick revalidation functions for common content types
 export const revalidateEvents = () => triggerRevalidation({ tags: ["events"] });
-export const revalidatePosts = () => triggerRevalidation({ tags: ["posts"] });
+export const revalidatePosts = () =>
+  triggerRevalidation({ tags: ["news", "posts"], paths: ["/blog"] });
+export const revalidateNews = () =>
+  triggerRevalidation({ tags: ["news"], paths: ["/blog"] });
 export const revalidateProducts = () =>
   triggerRevalidation({ tags: ["products"] });
 export const revalidateHomepage = () =>

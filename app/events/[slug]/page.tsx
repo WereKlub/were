@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { getEventBySlug } from "@/lib/sanity/queries";
+import { getServerLocale } from "@/lib/i18n/server-locale";
+import { buildPageMetadata } from "@/lib/site-metadata";
 import EventPageContent from "./event-page-content";
 
 // Define specific type for TicketType
@@ -64,7 +66,13 @@ type EventData = {
     socialLink?: string;
     isResident?: boolean;
   }[];
-  gallery?: { _key: string; url: string; caption?: string }[];
+  gallery?: {
+    _key: string;
+    url: string;
+    caption?: string;
+    width?: number;
+    height?: number;
+  }[];
 };
 
 export async function generateMetadata({
@@ -74,18 +82,20 @@ export async function generateMetadata({
 }) {
   const params = await paramsPromise;
   const { slug } = params;
-  const event: EventData | null = await getEventBySlug(slug, "en");
+  const locale = await getServerLocale();
+  const event: EventData | null = await getEventBySlug(slug, locale);
 
   if (!event) {
-    return {
-      title: `Event Not Found`,
-    };
+    return { title: "Event Not Found" };
   }
 
-  return {
-    title: `${event.title}`,
+  return buildPageMetadata({
+    title: event.title,
     description: event.subtitle || event.description,
-  };
+    path: `/events/${slug}`,
+    imageUrl: event.flyer?.url,
+    imageAlt: event.title,
+  });
 }
 
 export default async function EventPage({
@@ -95,7 +105,8 @@ export default async function EventPage({
 }) {
   const params = await paramsPromise;
   const { slug } = params;
-  const event: EventData | null = await getEventBySlug(slug, "en");
+  const locale = await getServerLocale();
+  const event: EventData | null = await getEventBySlug(slug, locale);
 
   if (!event) {
     notFound();

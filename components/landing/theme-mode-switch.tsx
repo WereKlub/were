@@ -15,20 +15,20 @@ export function ThemeModeSwitch({ className = "" }: { className?: string }) {
   if (!mounted) {
     return (
       <div
-        className={`h-8 w-[88px] shrink-0 rounded-sm border border-border bg-transparent ${className}`}
+        className={`h-8 w-[88px] shrink-0 rounded-md border border-border bg-transparent ${className}`}
         aria-hidden
       />
     );
   }
 
   const btn =
-    "inline-flex h-7 w-7 items-center justify-center rounded-sm text-foreground/60 transition-colors hover:text-foreground aria-pressed:bg-muted aria-pressed:text-foreground dark:text-white/55 dark:hover:text-white dark:aria-pressed:text-white";
+    "inline-flex h-7 w-7 items-center justify-center rounded-md text-foreground/60 transition-colors hover:text-foreground aria-pressed:bg-muted aria-pressed:text-foreground dark:text-white/55 dark:hover:text-white dark:aria-pressed:text-white";
 
   return (
     <div
       role="group"
       aria-label="Theme"
-      className={`flex shrink-0 items-center gap-0.5 rounded-sm border border-border p-0.5 ${className}`}
+      className={`flex shrink-0 items-center gap-0.5 rounded-md border border-border p-0.5 ${className}`}
     >
       <button
         type="button"

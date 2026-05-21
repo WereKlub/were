@@ -70,7 +70,7 @@ export default function PhoneNumberInput({
     <div className={cn("w-full relative", className)}>
       <div
         className={cn(
-          "flex w-full rounded-sm border border-input bg-transparent shadow-xs transition-[color,box-shadow]",
+          "flex w-full rounded-md border border-input bg-transparent shadow-xs transition-[color,box-shadow]",
           isFocused && "border-ring ring-ring/50 ring-[3px]",
         )}
         onFocus={() => setIsFocused(true)}
@@ -180,7 +180,7 @@ const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
   const Flag = flags[country];
 
   return (
-    <span className="w-5 h-4 overflow-hidden rounded-sm flex items-center justify-center">
+    <span className="w-5 h-4 overflow-hidden rounded-md flex items-center justify-center">
       {Flag ? (
         <Flag title={countryName} />
       ) : (

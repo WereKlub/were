@@ -150,7 +150,7 @@ export default function CartPurchaseForm() {
         <span className="font-medium">
           {t(currentLanguage, "cartPurchaseForm.title")}
         </span>
-        <span className="bg-muted/50 px-2 py-1 rounded-sm text-xs">
+        <span className="bg-muted/50 px-2 py-1 rounded-md text-xs">
           {cart?.lines.length === 1
             ? t(currentLanguage, "cartPurchaseForm.itemCount", {
                 count: cart?.lines.length || 0,
@@ -181,7 +181,7 @@ export default function CartPurchaseForm() {
                 autoComplete="name"
                 enterKeyHint="next"
                 autoCapitalize="words"
-                className="rounded-sm min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
+                className="rounded-md min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
                 placeholder={t(
                   currentLanguage,
                   "cartPurchaseForm.placeholders.name",
@@ -204,7 +204,7 @@ export default function CartPurchaseForm() {
                 autoComplete="email"
                 enterKeyHint="next"
                 inputMode="email"
-                className="rounded-sm min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
+                className="rounded-md min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
                 placeholder={t(
                   currentLanguage,
                   "cartPurchaseForm.placeholders.email",
@@ -223,7 +223,7 @@ export default function CartPurchaseForm() {
               <PhoneNumberInput
                 value={userPhone}
                 onChange={(value) => setUserPhone(value || "")}
-                className="rounded-sm h-9 text-sm mt-2"
+                className="rounded-md h-9 text-sm mt-2"
                 placeholder={t(
                   currentLanguage,
                   "cartPurchaseForm.placeholders.phone",
@@ -232,7 +232,7 @@ export default function CartPurchaseForm() {
             </div>
 
             {error && (
-              <div className="text-xs text-red-400 text-center px-2 py-2 bg-red-900/20 rounded-sm border border-red-700/50">
+              <div className="text-xs text-red-400 text-center px-2 py-2 bg-red-900/20 rounded-md border border-red-700/50">
                 {error}
               </div>
             )}
@@ -281,7 +281,7 @@ export default function CartPurchaseForm() {
               !userEmail.trim() ||
               !userPhone.trim()
             }
-            className={`w-full ${button.secondary} rounded-sm font-semibold min-h-11 h-11 md:h-9 md:min-h-0`}
+            className={`w-full ${button.secondary} rounded-md font-semibold min-h-11 h-11 md:h-9 md:min-h-0`}
           >
             {isLoading ? (
               <>

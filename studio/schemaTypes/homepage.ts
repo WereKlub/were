@@ -4,38 +4,27 @@ export default defineType({
   name: 'homepage',
   title: 'Homepage',
   type: 'document',
-  // Uncomment limiter if using @sanity/document-internationalization
-  // __experimental_actions: [/* 'create', */ 'update', /* 'delete', */ 'publish'],
   fields: [
     defineField({
       name: 'defaultShippingCost',
-      title: 'Default shipping cost (F CFA)',
+      title: 'Shipping cost (F CFA)',
       type: 'number',
-      description: 'Set the default shipping costs. Leave at 0 if shipping is free.',
+      description: '0 = free shipping.',
       initialValue: 3000,
       validation: (Rule) => Rule.min(0),
     }),
     defineField({
       name: 'promoEvent',
-      title: 'Promoted Event (for Homepage Floating flyer)',
+      title: 'Promoted event',
       type: 'reference',
       to: [{type: 'event'}],
-      description:
-        "Select an event to feature in the floating promo on the homepage. The event's flyer will be used as the image, and the promo will link to the event page.",
+      description: 'Shows as floating promo on homepage.',
     }),
     defineField({
       name: 'showBlogInNavigation',
-      title: 'Show Blog in Navigation',
+      title: 'Show blog in menu',
       type: 'boolean',
       initialValue: true,
-      description: 'Show or hide the blog page link in the navigation menu',
-    }),
-    defineField({
-      name: 'showGalleryInNavigation',
-      title: 'Show Gallery in Navigation',
-      type: 'boolean',
-      initialValue: true,
-      description: 'Show or hide the gallery page link in the navigation menu',
     }),
     defineField({
       name: 'primaryButtonColor',
@@ -57,12 +46,11 @@ export default defineType({
         layout: 'dropdown',
       },
       initialValue: 'teal',
-      description:
-        'Color for themed buttons (cart button in header, floating promo CTA). Change in Sanity to update site-wide.',
+      description: 'Site-wide button color.',
     }),
     defineField({
       name: 'featuredEvents',
-      title: 'Featured Events for Hero Carousel',
+      title: 'Featured events',
       type: 'array',
       of: [
         {
@@ -70,13 +58,11 @@ export default defineType({
           to: [{type: 'event'}],
         },
       ],
-      description:
-        'Select events to feature in the hero section carousel. These will appear alongside videos and images.',
       validation: (Rule) => Rule.max(5),
     }),
     defineField({
       name: 'heroContent',
-      title: 'Hero Section Content',
+      title: 'Hero',
       type: 'array',
       of: [
         {
@@ -87,18 +73,16 @@ export default defineType({
               name: 'title',
               title: 'Title',
               type: 'string',
-              description: 'Main title to display in the hero section',
             }),
             defineField({
               name: 'description',
               title: 'Description',
               type: 'text',
               rows: 3,
-              description: 'Subtitle or description text',
             }),
             defineField({
               name: 'type',
-              title: 'Media Type',
+              title: 'Media type',
               type: 'string',
               options: {
                 list: [
@@ -118,7 +102,7 @@ export default defineType({
               fields: [
                 {
                   name: 'alt',
-                  title: 'Alt Text',
+                  title: 'Alt text',
                   type: 'string',
                   validation: (Rule) => Rule.required(),
                 },
@@ -135,21 +119,18 @@ export default defineType({
               type: 'file',
               options: {accept: 'video/*'},
               hidden: ({parent}) => parent?.type !== 'video',
-              description: 'Upload a video file for the hero section',
             }),
             defineField({
               name: 'videoUrl',
               title: 'Video URL',
               type: 'url',
               hidden: ({parent}) => parent?.type !== 'video',
-              description: 'External video URL (YouTube, Vimeo, etc.)',
             }),
             defineField({
               name: 'isActive',
               title: 'Active',
               type: 'boolean',
               initialValue: true,
-              description: 'Show this hero item on the homepage',
             }),
           ],
           preview: {
@@ -161,7 +142,7 @@ export default defineType({
             },
             prepare({title, type, image, isActive}) {
               return {
-                title: title || 'Untitled Hero Item',
+                title: title || 'Untitled',
                 subtitle: `${type} • ${isActive ? 'Active' : 'Inactive'}`,
                 media: image,
               }
@@ -169,7 +150,6 @@ export default defineType({
           },
         },
       ],
-      description: 'Hero section content - supports multiple items for carousel/slideshow',
       validation: (Rule) => Rule.max(5),
     }),
   ],
@@ -180,7 +160,7 @@ export default defineType({
       featuredEvents: 'featuredEvents',
     },
     prepare({promoEventTitle, heroItems, featuredEvents}) {
-      let previewTitle = 'Homepage Settings'
+      let previewTitle = 'Homepage'
 
       const counts = []
       if (heroItems?.length) counts.push(`${heroItems.length} hero`)

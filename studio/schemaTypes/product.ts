@@ -5,16 +5,16 @@ export default {
   title: 'Products',
   type: 'document',
   groups: [
-    {name: 'details', title: 'Product details', default: true},
-    {name: 'variants', title: 'Variants & Inventory'},
+    {name: 'details', title: 'Details', default: true},
+    {name: 'variants', title: 'Variants'},
     {name: 'media', title: 'Media'},
-    {name: 'organization', title: 'Organization'},
+    {name: 'organization', title: 'Categories'},
     {name: 'shipping', title: 'Shipping'},
   ],
   fields: [
     {
       name: 'name',
-      title: 'Product name',
+      title: 'Name',
       type: 'string',
       group: 'details',
       validation: (Rule: Rule) => Rule.required(),
@@ -46,7 +46,7 @@ export default {
     },
     {
       name: 'images',
-      title: 'Product images',
+      title: 'Images',
       type: 'array',
       group: 'media',
       options: {
@@ -78,7 +78,6 @@ export default {
     {
       name: 'basePrice',
       title: 'Base price (XOF)',
-      description: 'The main price. Variant pricing can adjust this.',
       type: 'number',
       group: 'variants',
       validation: (Rule: Rule) => Rule.required().min(0),
@@ -88,7 +87,6 @@ export default {
       title: 'Colors',
       type: 'array',
       group: 'variants',
-      description: 'Available colors for this product',
       initialValue: () => [
         {name: 'Noir', available: true},
         {name: 'Blanc', available: true},
@@ -101,15 +99,13 @@ export default {
               name: 'name',
               title: 'Color name',
               type: 'string',
-              description:
-                'The color name automatically determines the color display. Use CSS color names (e.g., black, white, red, blue, noir, blanc) or "mix" for a half-white, half-black display. French and English color names are supported. Examples: noir, blanc, black, white, red, blue, mix, etc.',
+              description: 'e.g. noir, blanc, red, mix',
               validation: (Rule: Rule) => Rule.required(),
             },
             {
               name: 'image',
               title: 'Color image',
               type: 'image',
-              description: 'Image to show when this color is selected',
               options: {
                 hotspot: true,
               },
@@ -118,7 +114,6 @@ export default {
               name: 'available',
               title: 'Available',
               type: 'boolean',
-              description: 'Whether this color is currently available',
               initialValue: true,
             },
           ],
@@ -139,11 +134,10 @@ export default {
     },
     {
       name: 'sizes',
-      title: 'Product sizes',
+      title: 'Sizes',
       type: 'array',
       group: 'variants',
-      description:
-        'Select sizes for this product. Mark as available if in stock, or uncheck to mark as out of stock (rupture). Sizes not listed are not available.',
+      description: 'Uncheck to mark out of stock.',
       initialValue: () => [
         {name: 'S', available: true},
         {name: 'M', available: true},
@@ -156,7 +150,7 @@ export default {
           fields: [
             {
               name: 'name',
-              title: 'Size name',
+              title: 'Size',
               type: 'string',
               options: {
                 list: [
@@ -174,10 +168,8 @@ export default {
             },
             {
               name: 'available',
-              title: 'Available (in stock)',
+              title: 'In stock',
               type: 'boolean',
-              description:
-                'Check if this size is in stock. Uncheck to mark as out of stock (rupture de stock) - it will appear with a vertical slash.',
               initialValue: true,
             },
           ],
@@ -189,7 +181,7 @@ export default {
             prepare({name, available}: {name: string; available: boolean}) {
               return {
                 title: name || 'Unnamed Size',
-                subtitle: available ? 'In stock' : 'Out of stock (rupture)',
+                subtitle: available ? 'In stock' : 'Out of stock',
               }
             },
           },
@@ -201,7 +193,7 @@ export default {
       title: 'Base stock',
       type: 'number',
       group: 'variants',
-      description: 'Number of items available if not using variants. Set 0 for Sold Out.',
+      description: 'Set 0 for sold out.',
       validation: (Rule: Rule) => Rule.integer().min(0),
     },
     {

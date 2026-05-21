@@ -3,10 +3,9 @@
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { SectionHeader } from "@/components/landing/section-header";
-import {
-  EventIndexGrid,
-} from "@/components/event/event-index-grid";
+import { EventIndexGrid } from "@/components/event/event-index-grid";
 import type { WereEventCard } from "@/components/event/were-event-card";
+import { PageEmptyState } from "@/components/layout/page-empty-state";
 
 export function HomeEventsBlock({
   upcomingCards,
@@ -20,9 +19,9 @@ export function HomeEventsBlock({
   if (upcomingCards.length === 0 && pastCards.length === 0) {
     return (
       <section id="events" className="border-t border-border/40">
-        <div className="py-20 text-center text-muted-foreground px-6 max-w-7xl mx-auto">
+        <PageEmptyState>
           {t(currentLanguage, "eventsPage.noEvents")}
-        </div>
+        </PageEmptyState>
       </section>
     );
   }

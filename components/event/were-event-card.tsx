@@ -102,13 +102,23 @@ export function WereEventCard({ event, reversed = false }: WereEventCardProps) {
                 <p className="text-xs tracking-widest uppercase opacity-70">
                   Prévente
                 </p>
-                <p><span className="text-lg md:text-xl font-bold">{event.prices.prevente}</span>{" "}F</p>
+                <p>
+                  <span className="text-lg md:text-xl font-bold">
+                    {event.prices.prevente}
+                  </span>{" "}
+                  F
+                </p>
               </div>
               <div>
                 <p className="text-xs tracking-widest uppercase opacity-70">
                   Sur place
                 </p>
-                <p><span className="text-lg md:text-xl font-bold">{event.prices.surplace}</span>{" "}F</p>
+                <p>
+                  <span className="text-lg md:text-xl font-bold">
+                    {event.prices.surplace}
+                  </span>{" "}
+                  F
+                </p>
               </div>
             </div>
           )}

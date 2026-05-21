@@ -8,10 +8,9 @@ import { SectionHeader } from "@/components/landing/section-header";
 import { EventIndexGrid } from "@/components/event/event-index-grid";
 import type { WereEventCard as WereEventCardModel } from "@/components/event/were-event-card";
 import { PageIntro } from "@/components/layout/page-intro";
-import {
-  AppPageContainer,
-  AppPageShell,
-} from "@/components/layout/app-page-shell";
+import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
+import { PageEmptyState } from "@/components/layout/page-empty-state";
+import { AppPageShell } from "@/components/layout/app-page-shell";
 
 interface EventsPageContentProps {
   upcomingCards: WereEventCardModel[];
@@ -23,47 +22,44 @@ export default function EventsPageContent({
   pastCards,
 }: EventsPageContentProps) {
   const { currentLanguage } = useTranslation();
-
-  if (upcomingCards.length === 0 && pastCards.length === 0) {
-    return (
-      <AppPageShell>
-        <Header />
-        <div className="flex flex-col grow">
-          <PageIntro
-            title={t(currentLanguage, "eventsPage.title")}
-            subtitle={t(currentLanguage, "eventsPage.noEvents")}
-          />
-        </div>
-        <Footer />
-      </AppPageShell>
-    );
-  }
+  const hasAnyEvents = upcomingCards.length > 0 || pastCards.length > 0;
 
   return (
     <AppPageShell>
       <Header />
       <div className="flex flex-col grow min-w-0" id="events">
-        <AppPageContainer className="pt-12 md:pt-16 pb-4">
-          <h1 className="font-display text-4xl md:text-5xl font-black uppercase tracking-tight text-balance">
-            {t(currentLanguage, "eventsPage.title")}
-          </h1>
-        </AppPageContainer>
-        {upcomingCards.length > 0 ? (
-          <>
-            <SectionHeader
-              title={t(currentLanguage, "eventsPage.upcomingSection")}
-            />
-            <EventIndexGrid events={upcomingCards} />
-          </>
-        ) : null}
-        {pastCards.length > 0 ? (
-          <>
-            <SectionHeader
-              title={t(currentLanguage, "eventsPage.pastSection")}
-            />
-            <EventIndexGrid events={pastCards} />
-          </>
-        ) : null}
+        <PageIntro
+          title={t(currentLanguage, "eventsPage.title")}
+          subtitle={
+            hasAnyEvents ? t(currentLanguage, "eventsPage.subtitle") : undefined
+          }
+        />
+
+        <PageContentBelowIntro>
+          {!hasAnyEvents ? (
+            <PageEmptyState>
+              {t(currentLanguage, "eventsPage.noEvents")}
+            </PageEmptyState>
+          ) : null}
+
+          {upcomingCards.length > 0 ? (
+            <>
+              <SectionHeader
+                title={t(currentLanguage, "eventsPage.upcomingSection")}
+              />
+              <EventIndexGrid events={upcomingCards} />
+            </>
+          ) : null}
+
+          {pastCards.length > 0 ? (
+            <>
+              <SectionHeader
+                title={t(currentLanguage, "eventsPage.pastSection")}
+              />
+              <EventIndexGrid events={pastCards} />
+            </>
+          ) : null}
+        </PageContentBelowIntro>
       </div>
       <Footer />
     </AppPageShell>

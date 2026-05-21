@@ -5,29 +5,29 @@ export default {
   title: 'Event',
   type: 'document',
   groups: [
-    {name: 'details', title: 'Event details', default: true},
+    {name: 'details', title: 'Details', default: true},
     {name: 'location', title: 'Location'},
-    {name: 'media', title: 'Media & Lineup'},
-    {name: 'tickets', title: 'Tickets & Offerings'},
+    {name: 'media', title: 'Media'},
+    {name: 'tickets', title: 'Tickets'},
   ],
   orderings: [
     {
-      title: 'Event Date (Newest First)',
+      title: 'Newest first',
       name: 'eventDateDesc',
       by: [{field: 'date', direction: 'desc'}],
     },
     {
-      title: 'Event Date (Oldest First)',
+      title: 'Oldest first',
       name: 'eventDateAsc',
       by: [{field: 'date', direction: 'asc'}],
     },
     {
-      title: 'Title (A-Z)',
+      title: 'A–Z',
       name: 'titleAsc',
       by: [{field: 'title', direction: 'asc'}],
     },
     {
-      title: 'Title (Z-A)',
+      title: 'Z–A',
       name: 'titleDesc',
       by: [{field: 'title', direction: 'desc'}],
     },
@@ -48,11 +48,10 @@ export default {
     },
     {
       name: 'number',
-      title: 'Event Number',
+      title: 'Number',
       type: 'string',
       group: 'details',
-      description:
-        'Custom number for this event (used in parallax display). Supports formats like: S01, SCHOOL001, 016, ABC123',
+      description: 'Shown on events list (e.g. S01, 016).',
       validation: (Rule: Rule) =>
         Rule.required()
           .regex(/^[A-Za-z0-9]{1,20}$/, {
@@ -60,9 +59,7 @@ export default {
             invert: false,
           })
           .custom((value: string) => {
-            // Ensure leading zeros are preserved by treating as string
             if (value && /^0\d+$/.test(value)) {
-              // This is a string with leading zero - should be preserved
               return true
             }
             return true
@@ -99,7 +96,6 @@ export default {
     {
       name: 'date',
       title: 'Date & Time',
-      description: 'The main start date and time for the event.',
       type: 'datetime',
       group: 'details',
       options: {dateFormat: 'YYYY-MM-DD', timeFormat: 'HH:mm', timeStep: 15},
@@ -137,7 +133,7 @@ export default {
     },
     {
       name: 'location',
-      title: 'Location & Venue',
+      title: 'Venue',
       type: 'object',
       group: 'location',
       fields: [
@@ -146,17 +142,16 @@ export default {
         {name: 'googleMapsUrl', title: 'Google Maps URL', type: 'url'},
         {
           name: 'yangoUrl',
-          title: 'Yango Ride URL',
+          title: 'Yango URL',
           type: 'url',
-          description:
-            'Direct URL to open Yango app for a ride to the venue (e.g., a pre-filled destination link). The format should be: https://yango.go.link/route?end-lat={latitude}&end-lon={longitude}',
+          description: 'Yango ride link to venue.',
         },
       ],
     },
     {
       name: 'venueDetails',
-      title: 'Additional details',
-      description: 'Info about parking, access, etc.',
+      title: 'Venue details',
+      description: 'Parking, access, etc.',
       type: 'object',
       group: 'location',
       fields: [
@@ -174,7 +169,7 @@ export default {
     },
     {
       name: 'flyer',
-      title: 'Event flyer',
+      title: 'Flyer',
       type: 'image',
       group: 'media',
       options: {
@@ -191,11 +186,9 @@ export default {
     },
     {
       name: 'lineup',
-      title: 'Lineup / Artists',
+      title: 'Lineup',
       type: 'array',
       group: 'media',
-      description:
-        'Add artists performing at this event. Create new artists or link existing ones.',
       of: [
         {
           name: 'artistReference',
@@ -213,9 +206,10 @@ export default {
     },
     {
       name: 'gallery',
-      title: 'Event Gallery',
+      title: 'Gallery',
       type: 'array',
       group: 'media',
+      description: 'Photos shown on the event page.',
       of: [
         {
           type: 'image',
@@ -228,20 +222,20 @@ export default {
     },
     {
       name: 'ticketsAvailable',
-      title: 'Tickets currently on sale?',
+      title: 'Tickets on sale',
       type: 'boolean',
       group: 'tickets',
       initialValue: true,
     },
     {
       name: 'ticketTypes',
-      title: 'Ticket Types / Offerings',
+      title: 'Tickets',
       type: 'array',
       group: 'tickets',
       of: [
         {
           name: 'ticketType',
-          title: 'Ticket / Offering',
+          title: 'Ticket',
           type: 'object',
           fields: [
             {
@@ -258,10 +252,9 @@ export default {
             },
             {
               name: 'productId',
-              title: 'lomi. Product ID',
+              title: 'lomi product ID',
               type: 'string',
-              description:
-                'Optional lomi.africa product ID for this ticket type (UUID format). Leave empty if not this event is not tied to a specific product.',
+              description: 'Optional.',
             },
             {
               name: 'description',
@@ -270,35 +263,31 @@ export default {
             },
             {
               name: 'details',
-              title: 'More details / Perks',
+              title: 'Details',
               type: 'text',
-              description:
-                'Use this field to list inclusions, benefits, or conditions (e.g., "Includes 1 bottle of champagne", "VIP seating area access", "Valid for entry before 11 PM").',
             },
             {
               name: 'stock',
-              title: 'Available stock',
+              title: 'Stock',
               type: 'number',
-              description: "Number of tickets available. Leave empty or set 0 for 'Sold Out'.",
+              description: 'Leave empty or set 0 for sold out.',
               validation: (Rule: Rule) => Rule.integer().min(0),
             },
             {
               name: 'active',
-              title: 'Active for Sale',
+              title: 'Active',
               type: 'boolean',
-              description:
-                'Is this ticket type currently available for sale (independent of stock/dates)?',
               initialValue: true,
             },
             {
               name: 'salesStart',
-              title: 'Sales Start Date/Time',
+              title: 'Sales start',
               type: 'datetime',
               options: {dateFormat: 'YYYY-MM-DD', timeFormat: 'HH:mm'},
             },
             {
               name: 'salesEnd',
-              title: 'Sales End Date/Time',
+              title: 'Sales end',
               type: 'datetime',
               options: {dateFormat: 'YYYY-MM-DD', timeFormat: 'HH:mm'},
             },
@@ -343,19 +332,18 @@ export default {
     },
     {
       name: 'bundles',
-      title: 'Ticket bundles / Packages',
+      title: 'Bundles',
       type: 'array',
       group: 'tickets',
-      description: 'Define special packages combining tickets or offering unique value.',
       of: [
         {
           name: 'bundle',
-          title: 'Bundle / Package',
+          title: 'Bundle',
           type: 'object',
           fields: [
             {
               name: 'name',
-              title: 'Bundle name',
+              title: 'Name',
               type: 'string',
               validation: (Rule: Rule) => Rule.required(),
             },
@@ -364,29 +352,24 @@ export default {
               title: 'Bundle ID',
               type: 'slug',
               options: {source: 'name', maxLength: 50},
-              description:
-                'Unique identifier for this bundle (e.g., vip-duo-pack). Auto-generated if blank.',
               validation: (Rule: Rule) => Rule.required(),
             },
             {
               name: 'price',
-              title: 'Bundle price (XOF)',
+              title: 'Price (XOF)',
               type: 'number',
               validation: (Rule: Rule) => Rule.required().min(0),
             },
             {
               name: 'productId',
-              title: 'lomi. Product ID',
+              title: 'lomi product ID',
               type: 'string',
-              description:
-                'Optional lomi. product ID for this bundle (UUID format). Leave empty if not this event is not tied to a specific product.',
+              description: 'Optional.',
             },
             {
               name: 'ticketsIncluded',
-              title: 'Tickets included per bundle',
+              title: 'Tickets per bundle',
               type: 'number',
-              description:
-                'Number of tickets included with each bundle purchase. For example, if set to 2, buying 1 bundle will generate 2 tickets.',
               initialValue: 1,
               validation: (Rule: Rule) => Rule.required().integer().min(1),
             },
@@ -397,34 +380,31 @@ export default {
             },
             {
               name: 'details',
-              title: 'Bundle details',
+              title: 'Details',
               type: 'text',
-              description:
-                'List everything included in this bundle (e.g., "2x VIP Tickets, 1x Champagne Bottle").',
             },
             {
               name: 'stock',
-              title: 'Available bundles',
+              title: 'Stock',
               type: 'number',
-              description: "Number of bundles available. Leave empty or set 0 for 'Sold Out'.",
+              description: 'Leave empty or set 0 for sold out.',
               validation: (Rule: Rule) => Rule.integer().min(0),
             },
             {
               name: 'active',
               title: 'Active',
               type: 'boolean',
-              description: 'Is this bundle currently active for sale?',
               initialValue: true,
             },
             {
               name: 'salesStart',
-              title: 'Sales Start Date/Time',
+              title: 'Sales start',
               type: 'datetime',
               options: {dateFormat: 'YYYY-MM-DD', timeFormat: 'HH:mm'},
             },
             {
               name: 'salesEnd',
-              title: 'Sales End Date/Time',
+              title: 'Sales end',
               type: 'datetime',
               options: {dateFormat: 'YYYY-MM-DD', timeFormat: 'HH:mm'},
             },

@@ -56,7 +56,7 @@ import {
   UserPlus,
   MailWarning,
 } from "lucide-react";
-import LoadingSpinner from "@/components/ui/Bouncer";
+import CardioLoader from "@/components/ui/cardio-loader";
 import {
   appPageContainerClass,
   appPageShellClass,
@@ -353,6 +353,119 @@ export default function AdminClient() {
     });
   }, [selectedEvent, paidGuestRowsForPdf, purchases, events]);
 
+  const loadScanLogs = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.rpc(
+        "get_admin_verification_logs",
+        {
+          p_event_id: selectedEvent,
+          p_limit: 50,
+        },
+      );
+      if (error) {
+        console.error("Error loading scan logs:", error);
+      } else {
+        setScanLogs(data || []);
+      }
+    } catch (error) {
+      console.error("Error loading scan logs:", error);
+    }
+  }, [selectedEvent]);
+
+  const loadPurchases = useCallback(async () => {
+    const gen = ++loadPurchasesGeneration.current;
+    const eventAtRequestStart = selectedEvent;
+    const rpcName = eventAtRequestStart
+      ? "get_admin_purchases_by_event"
+      : "get_admin_purchases";
+    console.info("[admin-purchases] load start", {
+      gen,
+      eventAtRequestStart,
+      rpcName,
+    });
+    setLoading(true);
+    try {
+      if (eventAtRequestStart) {
+        const { data, error } = await supabase.rpc(
+          "get_admin_purchases_by_event",
+          {
+            p_event_id: eventAtRequestStart,
+          },
+        );
+        const rowCount = data?.length ?? 0;
+        const stale = gen !== loadPurchasesGeneration.current;
+        if (error) {
+          console.error("Error loading purchases:", error);
+        } else if (stale) {
+          console.info("[admin-purchases] load end (stale, ignored)", {
+            gen,
+            rpcName,
+            rowCount,
+            latestGen: loadPurchasesGeneration.current,
+          });
+        } else {
+          console.info("[admin-purchases] load end", {
+            gen,
+            rpcName,
+            eventAtRequestStart,
+            rowCount,
+          });
+          setPurchases(data || []);
+        }
+      } else {
+        const { data, error } = await supabase.rpc("get_admin_purchases");
+        const rowCount = data?.length ?? 0;
+        const stale = gen !== loadPurchasesGeneration.current;
+        if (error) {
+          console.error("Error loading purchases:", error);
+        } else if (stale) {
+          console.info("[admin-purchases] load end (stale, ignored)", {
+            gen,
+            rpcName,
+            rowCount,
+            latestGen: loadPurchasesGeneration.current,
+          });
+        } else {
+          console.info("[admin-purchases] load end", {
+            gen,
+            rpcName,
+            rowCount,
+          });
+          setPurchases(data || []);
+        }
+      }
+    } catch (error) {
+      console.info("[admin-purchases] load threw", {
+        gen,
+        error: String(error),
+        latestGen: loadPurchasesGeneration.current,
+      });
+      console.error("Error loading purchases:", error);
+    } finally {
+      if (gen === loadPurchasesGeneration.current) {
+        setLoading(false);
+      }
+    }
+  }, [selectedEvent]);
+
+  const loadEvents = useCallback(async () => {
+    try {
+      const { data, error } = await supabase.rpc("get_admin_events_list", {
+        p_status_filter: "all",
+      });
+      if (error) {
+        console.error("Error loading events:", error);
+      } else {
+        const validEvents = (data || []).filter(
+          (e: EventInfo) => e.event_id && String(e.event_id).trim() !== "",
+        );
+        setEvents(validEvents);
+      }
+    } catch (error) {
+      console.error("Error loading events:", error);
+    }
+  }, []);
+
   // Check authentication on mount
   useEffect(() => {
     const authStatus = localStorage.getItem("admin_authenticated");
@@ -362,8 +475,7 @@ export default function AdminClient() {
       // loadPurchases: deferred to the [selectedEvent, isAuthenticated] effect so we
       // do not race get_admin_purchases (100 cap) against get_admin_purchases_by_event.
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loadEvents]);
 
   // Auto-select the most recent event when events are loaded
   useEffect(() => {
@@ -386,27 +498,7 @@ export default function AdminClient() {
       loadPurchases();
       loadScanLogs();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedEvent, isAuthenticated]);
-
-  const loadScanLogs = useCallback(async () => {
-    try {
-      const { data, error } = await supabase.rpc(
-        "get_admin_verification_logs",
-        {
-          p_event_id: selectedEvent,
-          p_limit: 50,
-        },
-      );
-      if (error) {
-        console.error("Error loading scan logs:", error);
-      } else {
-        setScanLogs(data || []);
-      }
-    } catch (error) {
-      console.error("Error loading scan logs:", error);
-    }
-  }, [selectedEvent]);
+  }, [selectedEvent, isAuthenticated, loadEvents, loadPurchases, loadScanLogs]);
 
   // Load logs when tab changes to scans
   useEffect(() => {
@@ -446,108 +538,6 @@ export default function AdminClient() {
     localStorage.removeItem("admin_authenticated");
     setPin("");
     setPurchases([]);
-  };
-
-  const loadPurchases = async () => {
-    const gen = ++loadPurchasesGeneration.current;
-    const eventAtRequestStart = selectedEvent;
-    const rpcName = eventAtRequestStart
-      ? "get_admin_purchases_by_event"
-      : "get_admin_purchases";
-    console.info("[admin-purchases] load start", {
-      gen,
-      eventAtRequestStart,
-      rpcName,
-    });
-    setLoading(true);
-    try {
-      if (eventAtRequestStart) {
-        // Load purchases for specific event
-        const { data, error } = await supabase.rpc(
-          "get_admin_purchases_by_event",
-          {
-            p_event_id: eventAtRequestStart,
-          },
-        );
-        const rowCount = data?.length ?? 0;
-        const stale = gen !== loadPurchasesGeneration.current;
-        if (error) {
-          console.error("Error loading purchases:", error);
-        } else if (stale) {
-          console.info("[admin-purchases] load end (stale, ignored)", {
-            gen,
-            rpcName,
-            rowCount,
-            latestGen: loadPurchasesGeneration.current,
-          });
-        } else {
-          console.info("[admin-purchases] load end", {
-            gen,
-            rpcName,
-            eventAtRequestStart,
-            rowCount,
-          });
-          setPurchases(data || []);
-        }
-      } else {
-        // Load all purchases
-        const { data, error } = await supabase.rpc("get_admin_purchases");
-        const rowCount = data?.length ?? 0;
-        const stale = gen !== loadPurchasesGeneration.current;
-        if (error) {
-          console.error("Error loading purchases:", error);
-        } else if (stale) {
-          console.info("[admin-purchases] load end (stale, ignored)", {
-            gen,
-            rpcName,
-            rowCount,
-            latestGen: loadPurchasesGeneration.current,
-          });
-        } else {
-          console.info("[admin-purchases] load end", {
-            gen,
-            rpcName,
-            rowCount,
-          });
-          setPurchases(data || []);
-        }
-      }
-    } catch (error) {
-      console.info("[admin-purchases] load threw", {
-        gen,
-        error: String(error),
-        latestGen: loadPurchasesGeneration.current,
-      });
-      console.error("Error loading purchases:", error);
-    } finally {
-      if (gen === loadPurchasesGeneration.current) {
-        setLoading(false);
-      }
-    }
-  };
-
-  const loadEvents = async () => {
-    try {
-      // Always use "all" for event list so the dropdown stays stable when switching
-      // status filters (paid/pending/failed). Otherwise, clicking "Failed" would
-      // replace the list with only events that have failed purchases, causing the
-      // selected event to disappear and the dropdown to show "All Events" or blank.
-      const { data, error } = await supabase.rpc("get_admin_events_list", {
-        p_status_filter: "all",
-      });
-      if (error) {
-        console.error("Error loading events:", error);
-      } else {
-        // Filter out events with null/empty event_id to prevent "event without title"
-        // (can occur when purchases have null event_id - they group into one row)
-        const validEvents = (data || []).filter(
-          (e: EventInfo) => e.event_id && String(e.event_id).trim() !== "",
-        );
-        setEvents(validEvents);
-      }
-    } catch (error) {
-      console.error("Error loading events:", error);
-    }
   };
 
   const handleInviteGuest = async () => {
@@ -972,7 +962,8 @@ export default function AdminClient() {
       table_rows_filteredPurchases: filteredPurchases.length,
       statusFilter,
       paid_rows_in_buffer: byStatus("paid"),
-      card_total_purchases_paid_only: currentEventStats?.total_purchases ?? null,
+      card_total_purchases_paid_only:
+        currentEventStats?.total_purchases ?? null,
       selectedEvent,
       admissionFilter,
       offeringFilter,
@@ -992,12 +983,7 @@ export default function AdminClient() {
 
   if (!isAuthenticated) {
     return (
-      <div
-        className={cn(
-          appPageShellClass,
-          "items-center justify-center p-4",
-        )}
-      >
+      <div className={cn(appPageShellClass, "items-center justify-center p-4")}>
         <Card className="w-full max-w-md rounded-sm border-border bg-card">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-display text-foreground">
@@ -1409,7 +1395,7 @@ export default function AdminClient() {
               <Card className="rounded-sm border-border bg-card backdrop-blur-sm">
                 <CardContent className="p-0">
                   {loading ? (
-                    <LoadingSpinner />
+                    <CardioLoader variant="compact" />
                   ) : filteredPurchases.length === 0 ? (
                     <motion.div
                       className="text-center py-12 sm:py-20"
@@ -1564,7 +1550,9 @@ export default function AdminClient() {
                                   <span className="text-green-600 dark:text-green-400">
                                     {getScannedCount(purchase)}
                                   </span>
-                                  <span className="text-muted-foreground mx-1">/</span>
+                                  <span className="text-muted-foreground mx-1">
+                                    /
+                                  </span>
                                   {getAdmissionTotal(purchase)}
                                 </div>
                                 <div className="text-xs text-muted-foreground">

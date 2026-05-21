@@ -2,9 +2,9 @@ import {defineType, defineField} from 'sanity'
 
 export default defineType({
   name: 'agencyPage',
-  title: 'Agency page',
+  title: 'Agency',
   type: 'document',
-  description: 'Single page for /agence. Create only one document.',
+  description: 'One document only.',
   fields: [
     defineField({
       name: 'metaTitle',
@@ -18,120 +18,130 @@ export default defineType({
       rows: 2,
     }),
     defineField({
-      name: 'pageHeading',
-      title: 'Page heading (banner)',
+      name: 'panelColor',
+      title: 'Panel color',
       type: 'string',
-      initialValue: 'Agence',
+      initialValue: '#9DB7A8',
+      validation: (Rule) =>
+        Rule.regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
+          name: 'hex color',
+          invert: false,
+        }).error('Use a valid hex color like #9DB7A8'),
     }),
     defineField({
-      name: 'services',
-      title: 'Services',
+      name: 'carouselImages',
+      title: 'Carousel images',
+      type: 'array',
+      of: [
+        {
+          type: 'image',
+          options: {hotspot: true},
+          fields: [
+            defineField({
+              name: 'alt',
+              type: 'string',
+              title: 'Alt text',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+        },
+      ],
+      validation: (Rule) => Rule.required().min(2),
+      description: 'At least 2 images.',
+    }),
+    defineField({
+      name: 'introLabel',
+      title: 'Intro label',
+      type: 'string',
+      initialValue: 'Un partenaire créatif pour les marques.',
+    }),
+    defineField({
+      name: 'heading',
+      title: 'Heading',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+      initialValue: 'CRÉER AUTREMENT AVEC WÊRÊ KLUB',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Body text',
+      type: 'array',
+      of: [{type: 'block'}],
+      validation: (Rule) => Rule.required().min(1),
+    }),
+    defineField({
+      name: 'missionHeading',
+      title: 'Mission heading',
+      type: 'string',
+      initialValue: 'NOTRE MISSION',
+    }),
+    defineField({
+      name: 'missionBody',
+      title: 'Mission text',
+      type: 'text',
+      rows: 4,
+    }),
+    defineField({
+      name: 'logosIntro',
+      title: 'Logos intro',
+      type: 'string',
+      initialValue: 'Quelques références de nos dernières collaborations.',
+    }),
+    defineField({
+      name: 'partnerLogos',
+      title: 'Partner logos',
       type: 'array',
       of: [
         {
           type: 'object',
-          name: 'service',
+          name: 'partner',
           fields: [
-            {name: 'title', type: 'string', validation: (Rule) => Rule.required()},
             {
-              name: 'description',
-              type: 'text',
-              rows: 3,
+              name: 'name',
+              type: 'string',
+              title: 'Partner name',
               validation: (Rule) => Rule.required(),
             },
+            {
+              name: 'logo',
+              type: 'image',
+              title: 'Logo',
+              options: {hotspot: true},
+              fields: [{name: 'alt', type: 'string', title: 'Alt text'}],
+              validation: (Rule) => Rule.required(),
+            },
+            {
+              name: 'url',
+              type: 'url',
+              title: 'Website (optional)',
+            },
           ],
+          preview: {
+            select: {title: 'name', media: 'logo'},
+          },
         },
       ],
-      validation: (Rule) => Rule.required().min(1),
+      validation: (Rule) => Rule.min(1),
     }),
     defineField({
-      name: 'accomplishmentsHeading',
-      title: 'Accomplishments heading',
+      name: 'logoBoxLabel',
+      title: 'Logo box label',
       type: 'string',
-      initialValue: 'Réalisations',
-    }),
-    defineField({
-      name: 'accomplishments',
-      title: 'Past work / réalisations',
-      type: 'array',
-      of: [
-        {
-          type: 'object',
-          name: 'item',
-          fields: [
-            {name: 'name', type: 'string', validation: (Rule) => Rule.required()},
-            {name: 'client', type: 'string', validation: (Rule) => Rule.required()},
-          ],
-        },
-      ],
-      validation: (Rule) => Rule.required().min(1),
-    }),
-    defineField({
-      name: 'realisationsImage',
-      title: 'Image beside réalisations column',
-      type: 'image',
-      options: {hotspot: true},
-      fields: [
-        defineField({
-          name: 'alt',
-          type: 'string',
-          title: 'Alt text',
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'ctaImage',
-      title: 'CTA section image (left column)',
-      type: 'image',
-      options: {hotspot: true},
-      fields: [
-        defineField({
-          name: 'alt',
-          type: 'string',
-          title: 'Alt text',
-          validation: (Rule) => Rule.required(),
-        }),
-      ],
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'ctaTitle',
-      title: 'CTA title',
-      type: 'string',
-      initialValue: 'Un projet ?',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'ctaIntro',
-      title: 'CTA intro text',
-      type: 'text',
-      rows: 3,
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'contactEmail',
       title: 'Contact email',
       type: 'string',
-      validation: (Rule) => Rule.required(),
       initialValue: 'contact@wereklub.com',
     }),
     defineField({
       name: 'bookingEmail',
       title: 'Booking email',
       type: 'string',
-      validation: (Rule) => Rule.required(),
       initialValue: 'booking@wereklub.com',
-    }),
-    defineField({
-      name: 'ctaPanelColor',
-      title: 'CTA panel background (hex)',
-      type: 'string',
-      initialValue: '#d4a574',
     }),
   ],
   preview: {
-    prepare: () => ({title: 'Agency page'}),
+    prepare: () => ({title: 'Agency'}),
   },
 })

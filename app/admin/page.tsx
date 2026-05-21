@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import AdminClient from "./admin-client";
-import LoadingComponent from "@/components/ui/Bouncer";
+import CardioLoader from "@/components/ui/cardio-loader";
 
 export default function AdminPage() {
   return (
-    <Suspense fallback={<LoadingComponent />}>
+    <Suspense fallback={<CardioLoader />}>
       <AdminClient />
     </Suspense>
   );

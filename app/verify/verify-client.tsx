@@ -362,17 +362,6 @@ export function VerifyClient({
     }
   }, [ticketId]);
 
-  // Auto-verify ticket when page loads with ID and user is verified
-  // useRef guard ensures exactly ONE request fires per unique ticketId
-  useEffect(() => {
-    if (!ticketId || !isVerified) return;
-    const normalized = normalizeTicketIdentifier(ticketId);
-    if (verifiedTicketRef.current === normalized) return;
-    verifiedTicketRef.current = normalized;
-    verifyTicket(normalized);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ticketId, isVerified]);
-
   // Helper to parse error codes from database exceptions
   const parseErrorMessage = (
     errorMessage: string,
@@ -509,6 +498,16 @@ export function VerifyClient({
     [getUserFriendlyError],
   );
 
+  // Auto-verify ticket when page loads with ID and user is verified
+  // useRef guard ensures exactly ONE request fires per unique ticketId
+  useEffect(() => {
+    if (!ticketId || !isVerified) return;
+    const normalized = normalizeTicketIdentifier(ticketId);
+    if (verifiedTicketRef.current === normalized) return;
+    verifiedTicketRef.current = normalized;
+    verifyTicket(normalized);
+  }, [ticketId, isVerified, verifyTicket]);
+
   useEffect(() => {
     verifyTicketFnRef.current = verifyTicket;
   }, [verifyTicket]);
@@ -602,9 +601,7 @@ export function VerifyClient({
         bgColor: "bg-card",
         borderColor: "border-border",
         textColor: "text-foreground",
-        icon: (
-          <AlertCircle className="h-8 w-8 text-muted-foreground" />
-        ),
+        icon: <AlertCircle className="h-8 w-8 text-muted-foreground" />,
         badgeVariant: "secondary" as const,
         badgeText: t(currentLanguage, "ticketVerification.badges.fullyUsed"),
         statusText: t(currentLanguage, "ticketVerification.status.fullyUsed"),
@@ -630,9 +627,7 @@ export function VerifyClient({
         bgColor: "bg-card",
         borderColor: "border-accent/40",
         textColor: "text-foreground",
-        icon: (
-          <CheckCircle className="h-8 w-8 text-accent" />
-        ),
+        icon: <CheckCircle className="h-8 w-8 text-accent" />,
         badgeVariant: "default" as const,
         badgeText: t(currentLanguage, "ticketVerification.badges.valid"),
         statusText: t(currentLanguage, "ticketVerification.status.valid"),
@@ -644,9 +639,7 @@ export function VerifyClient({
         bgColor: "bg-card",
         borderColor: "border-border",
         textColor: "text-foreground",
-        icon: (
-          <AlertCircle className="h-8 w-8 text-muted-foreground" />
-        ),
+        icon: <AlertCircle className="h-8 w-8 text-muted-foreground" />,
         badgeVariant: "secondary" as const,
         badgeText: t(currentLanguage, "ticketVerification.badges.fullyUsed"),
         statusText: t(currentLanguage, "ticketVerification.status.fullyUsed"),
@@ -661,9 +654,7 @@ export function VerifyClient({
           bgColor: "bg-card",
           borderColor: "border-border",
           textColor: "text-foreground",
-          icon: (
-            <AlertCircle className="h-8 w-8 text-muted-foreground" />
-          ),
+          icon: <AlertCircle className="h-8 w-8 text-muted-foreground" />,
           badgeVariant: "secondary" as const,
           badgeText: t(currentLanguage, "ticketVerification.badges.fullyUsed"),
           statusText: t(currentLanguage, "ticketVerification.status.fullyUsed"),
@@ -675,9 +666,7 @@ export function VerifyClient({
         bgColor: "bg-card",
         borderColor: "border-border",
         textColor: "text-foreground",
-        icon: (
-          <AlertCircle className="h-8 w-8 text-muted-foreground" />
-        ),
+        icon: <AlertCircle className="h-8 w-8 text-muted-foreground" />,
         badgeVariant: "secondary" as const,
         badgeText: t(currentLanguage, "ticketVerification.badges.fullyUsed"),
         statusText: t(currentLanguage, "ticketVerification.status.fullyUsed"),
@@ -689,9 +678,7 @@ export function VerifyClient({
         bgColor: "bg-card",
         borderColor: "border-accent/40",
         textColor: "text-foreground",
-        icon: (
-          <CheckCircle className="h-8 w-8 text-accent" />
-        ),
+        icon: <CheckCircle className="h-8 w-8 text-accent" />,
         badgeVariant: "default" as const,
         badgeText: t(currentLanguage, "ticketVerification.badges.valid"),
         statusText: t(currentLanguage, "ticketVerification.status.valid"),
@@ -811,7 +798,10 @@ export function VerifyClient({
                   <div className="flex flex-col items-center text-center space-y-6">
                     <Shield className="h-7 w-7 text-muted-foreground" />
                     <h2 className="text-base font-display font-medium tracking-tight text-foreground">
-                      {t(currentLanguage, "ticketVerification.staffVerification")}
+                      {t(
+                        currentLanguage,
+                        "ticketVerification.staffVerification",
+                      )}
                     </h2>
 
                     <div className="w-full space-y-5">
@@ -966,7 +956,7 @@ export function VerifyClient({
                     {ticketData && (
                       <div className="w-full space-y-6">
                         <p className="text-sm text-muted-foreground uppercase tracking-wider leading-relaxed">
-                          {ticketData.ticket_name} — {ticketData.event_title}
+                          {ticketData.ticket_name} · {ticketData.event_title}
                         </p>
                         <div className="space-y-1">
                           <p className="text-2xl font-semibold text-foreground tracking-tight">

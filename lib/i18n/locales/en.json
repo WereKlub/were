@@ -3,7 +3,7 @@
     "links": {
       "terms": "Terms"
     },
-    "copyright": "© {year} Wêrê Klub — All rights reserved.",
+    "copyright": "© {year} Wêrê Klub. All rights reserved.",
     "socialHeading": "Follow us",
     "social": {
       "whatsapp": "WhatsApp",
@@ -16,7 +16,6 @@
     "nav": {
       "home": "Home",
       "events": "Events",
-      "gallery": "Gallery",
       "shop": "Shop",
       "blog": "Blog",
       "soon": "Soon",
@@ -27,7 +26,7 @@
       "toggle": "Toggle menu",
       "title": "Mobile Menu",
       "close": "Close menu",
-      "description": "Abidjan-based collective organizing music events—focused on atmosphere, inclusion, and the dancefloor."
+      "description": "Wêrê Klub collective from Abidjan. Love and boucan. Parties, decks, visual arts, and connection."
     }
   },
   "termsPage": {
@@ -40,12 +39,12 @@
     "introduction": {
       "title": "Introduction",
       "p1": "Welcome to Wêrê Klub (\"we,\" \"us,\" or \"our\"). Based in Abidjan, Côte d'Ivoire, we organize music events and related services. These Terms and Conditions (\"Terms\") govern your use of our website (e.g., wereklub.com), our services (including event promotion and organization), and your attendance at our events.",
-      "p2": "Wêrê Klub is built around energy, openness, and respect on the dancefloor—qualities we channel into creating unique, freeing experiences. By accessing our services, purchasing tickets, or attending our events, you agree to be bound by these Terms. If you disagree with any part of these Terms, you may not access our services or attend our events."
+      "p2": "Wêrê Klub is love and boucan: open, inclusive energy we share on the dancefloor and beyond. By accessing our services, purchasing tickets, or attending our events, you agree to be bound by these Terms. If you disagree with any part of these Terms, you may not access our services or attend our events."
     },
     "mission": {
       "title": "Our Mission & Your Experience",
-      "p1": "We curate events that leave room for different sounds and audiences in Abidjan. Our aim is welcoming spaces where people can discover music and enjoy themselves responsibly.",
-      "p2": "Our values include openness, respect, and safety on the dancefloor. Everyone attending is expected to behave responsibly toward staff, artists, and other guests."
+      "p1": "Founded by Soumia and Lucie, Wêrê Klub champions an open, inclusive vision of club culture in Abidjan, where music meets visual arts, knowledge-sharing, and connection. Our hybrid spaces invite you to dance as much as to breathe.",
+      "p2": "Our values include openness, respect, and safety on the dancefloor and in our venues. Everyone attending is expected to behave responsibly toward staff, artists, and other guests."
     },
     "conduct": {
       "title": "Use of Our Services & Event Conduct",
@@ -92,16 +91,17 @@
     },
     "contact": {
       "title": "Contact Us",
-      "p1": "If you have any questions about these Terms, or wish to learn more about Wêrê Klub and our mission to energize Abidjan's music scene, please contact us at: contact@wereklub.com.",
-      "p2": "Thanks for coming through—and see you on the dancefloor."
+      "p1": "If you have any questions about these Terms, or wish to learn more about Wêrê Klub and our artistic mission in Abidjan, please contact us at: contact@wereklub.com.",
+      "p2": "Thanks for being here. Love and boucan, see you soon."
     }
   },
   "eventsPage": {
     "metadata": {
       "title": "Events",
-      "description": "Explore upcoming events from Wêrê Klub"
+      "description": "Wêrê nights, residencies, and boucan. Upcoming dates and archives from the Abidjan collective."
     },
     "title": "Events",
+    "subtitle": "Blazing nights, poolside chill, and everything in between. Upcoming dates and archives.",
     "noEvents": "No events published yet.",
     "upcomingSection": "Upcoming",
     "pastSection": "Past"
@@ -110,34 +110,25 @@
     "sectionBanner": "Blog",
     "metadata": {
       "title": "Blog | Wêrê Klub",
-      "description": "Latest news, event recaps, and entertainment insights from Wêrê Klub"
+      "description": "News, residencies, and behind-the-scenes from Wêrê Klub. Love and boucan in Abidjan."
     },
     "title": "Blog",
-    "description": "Stay updated with the latest news, event recaps, and insights from Wêrê Klub. Discover stories from the vibrant music scene of Abidjan and beyond.",
+    "description": "News, recaps, and behind-the-scenes from Wêrê Klub.",
     "moreNews": "MORE POSTS",
-    "readMore": "Read more →"
-  },
-  "galleryPage": {
-    "title": "Gallery",
-    "description": "Explore our archives. From electrifying performances to behind-the-scenes moments, discover the energy and passion that defines our community.",
-    "highlights": "Highlights",
-    "moreShots": "More shots",
-    "gallery": "Gallery",
-    "noImages": "No images found.",
-    "untitledSection": "Gallery",
-    "sectionBanner": "Gallery"
+    "readMore": "Read more →",
+    "noPosts": "No articles published yet."
   },
   "merchPage": {
     "sectionBanner": "Shop",
     "title": "Wêrê Klub Shop",
-    "subtitle": "Show your support for Wêrê Klub with official merchandise and collectibles.",
+    "subtitle": "Wear the collective's colors. Official Wêrê Klub pieces.",
     "breadcrumb": "Shop",
     "loading": "Loading...",
     "searchPlaceholder": "Search products...",
     "categoryFilter": "Categories",
     "tagPlaceholder": "Tag",
     "tagFilter": "Tags",
-    "noProductsFound": "No products found",
+    "noProductsFound": "No products published yet.",
     "noProductsFoundDescription": "Try adjusting your filters or search terms.",
     "comingSoon": {
       "title": "Coming Soon",
@@ -183,7 +174,7 @@
     "tickets": {
       "salesClosedGlobal": "Ticket sales are currently closed for this event.",
       "noItemsListed": "No tickets or bundles are currently listed for this event.",
-      "eventPassed": "This event has already taken place — ticket sales are closed.",
+      "eventPassed": "This event has already taken place. Ticket sales are closed.",
       "title": "Tickets",
       "buyNow": "Buy now",
       "getETicket": "Get Ticket",
@@ -200,7 +191,7 @@
     },
     "gallerySection": {
       "title": "Photos",
-      "description": "Pictures from this night are added here over time — check back after the event."
+      "description": "Pictures from this night are added here over time. Check back after the event."
     },
     "venueSection": {
       "title": "Venue",
@@ -435,6 +426,9 @@
     "checkedInLabel": "Checked in:"
   },
   "homePage": {
+    "tagline": "Love and boucan ✨",
+    "heroSubtitle": "A space to have fun, let go, create, and connect, from blazing nights to poolside chill.",
+    "byline": "by Soumia & Lucie",
     "latestEvents": "Latest events",
     "shopMerch": "Shop merch",
     "viewAll": "View all"

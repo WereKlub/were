@@ -439,7 +439,7 @@ export default function PurchaseFormModal({
               onClick={(e) => e.stopPropagation()}
             >
               <div
-                className="flex flex-col w-full min-h-0 bg-card text-card-foreground backdrop-blur-xl rounded-t-xl md:rounded-sm shadow-2xl border border-border p-4 md:h-full md:min-h-0 h-[min(96dvh,100%)] dark:bg-[#1a1a1a]"
+                className="flex flex-col w-full min-h-0 bg-card text-card-foreground backdrop-blur-xl rounded-t-xl md:rounded-md shadow-2xl border border-border p-4 md:h-full md:min-h-0 h-[min(96dvh,100%)] dark:bg-[#1a1a1a]"
                 style={
                   isMobile && mobileVisibleHeight != null
                     ? { maxHeight: mobileVisibleHeight }
@@ -466,7 +466,7 @@ export default function PurchaseFormModal({
                     onSubmit={handleSubmit}
                     className="space-y-5 md:space-y-6 py-1 md:py-2"
                   >
-                    <div className="bg-muted/30 p-3 rounded-sm">
+                    <div className="bg-muted/30 p-3 rounded-md">
                       <div className="flex justify-between items-center">
                         <div>
                           <h4 className="font-medium text-sm">{item.name}</h4>
@@ -480,7 +480,7 @@ export default function PurchaseFormModal({
                         </div>
                         <div className="flex flex-col items-end gap-1">
                           {item.isBundle && (
-                            <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-sm">
+                            <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-md">
                               {t(currentLanguage, "purchaseModal.bundleBadge", {
                                 count: item.ticketsIncluded || 1,
                               })}
@@ -490,7 +490,7 @@ export default function PurchaseFormModal({
                             item.stock !== null &&
                             item.stock !== undefined &&
                             item.stock > 0 && (
-                              <span className="text-xs px-2 py-0.5 rounded-sm bg-muted/50 text-muted-foreground">
+                              <span className="text-xs px-2 py-0.5 rounded-md bg-muted/50 text-muted-foreground">
                                 {t(currentLanguage, "purchaseModal.only")}{" "}
                                 {item.stock}{" "}
                                 {item.stock === 1
@@ -521,7 +521,7 @@ export default function PurchaseFormModal({
                         autoComplete="name"
                         enterKeyHint="next"
                         autoCapitalize="words"
-                        className="rounded-sm min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
+                        className="rounded-md min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
                         placeholder={t(
                           currentLanguage,
                           "purchaseModal.placeholders.name",
@@ -544,7 +544,7 @@ export default function PurchaseFormModal({
                         autoComplete="email"
                         enterKeyHint="next"
                         inputMode="email"
-                        className="rounded-sm min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
+                        className="rounded-md min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
                         placeholder={t(
                           currentLanguage,
                           "purchaseModal.placeholders.email",
@@ -563,7 +563,7 @@ export default function PurchaseFormModal({
                       <PhoneNumberInput
                         value={userPhone}
                         onChange={(value) => setUserPhone(value || "")}
-                        className="rounded-sm h-9 text-sm mt-2"
+                        className="rounded-md h-9 text-sm mt-2"
                         placeholder={t(
                           currentLanguage,
                           "purchaseModal.placeholders.phone",
@@ -582,7 +582,7 @@ export default function PurchaseFormModal({
                           size="sm"
                           onClick={handleQuantityDecrement}
                           disabled={quantity <= 1}
-                          className="rounded-sm min-h-11 min-w-11 h-11 w-11 shrink-0 p-0 mt-2 md:h-9 md:min-h-0 md:min-w-0 md:w-9"
+                          className="rounded-md min-h-11 min-w-11 h-11 w-11 shrink-0 p-0 mt-2 md:h-9 md:min-h-0 md:min-w-0 md:w-9"
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
@@ -596,7 +596,7 @@ export default function PurchaseFormModal({
                           onBlur={handleQuantityBlur}
                           onFocus={scrollActiveFieldIntoView}
                           enterKeyHint="done"
-                          className="rounded-sm min-h-11 text-base text-center flex-1 md:h-9 md:min-h-0 md:text-sm mt-2"
+                          className="rounded-md min-h-11 text-base text-center flex-1 md:h-9 md:min-h-0 md:text-sm mt-2"
                           required
                         />
                         <Button
@@ -605,7 +605,7 @@ export default function PurchaseFormModal({
                           size="sm"
                           onClick={handleQuantityIncrement}
                           disabled={quantity >= maxQuantity}
-                          className="rounded-sm min-h-11 min-w-11 h-11 w-11 shrink-0 p-0 mt-2 md:h-9 md:min-h-0 md:min-w-0 md:w-9"
+                          className="rounded-md min-h-11 min-w-11 h-11 w-11 shrink-0 p-0 mt-2 md:h-9 md:min-h-0 md:min-w-0 md:w-9"
                         >
                           <Plus className="h-3 w-3" />
                         </Button>
@@ -613,7 +613,7 @@ export default function PurchaseFormModal({
                     </div>
 
                     {error && (
-                      <div className="text-xs text-red-400 text-center px-3 py-2 bg-red-900/20 rounded-sm border border-red-700/50 mt-2">
+                      <div className="text-xs text-red-400 text-center px-3 py-2 bg-red-900/20 rounded-md border border-red-700/50 mt-2">
                         {error}
                       </div>
                     )}
@@ -653,7 +653,7 @@ export default function PurchaseFormModal({
                     type="submit"
                     form="purchase-checkout-form"
                     disabled={isLoading || !isFormValid()}
-                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-sm text-sm w-full font-medium min-h-11 h-11 md:h-10 md:min-h-0"
+                    className="bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm w-full font-medium min-h-11 h-11 md:h-10 md:min-h-0"
                   >
                     {isLoading ? (
                       <>

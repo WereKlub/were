@@ -259,7 +259,7 @@ Deno.serve(async (req: Request) => {
       from: `Wêrê Klub <${fromEmail}>`,
       to: purchaseData.customer_email,
       reply_to: "contact@wereklub.com",
-      subject: `Finalisez votre réservation — ${eventName}`,
+      subject: `Finalisez votre réservation : ${eventName}`,
       html: emailHtmlBody,
     });
 

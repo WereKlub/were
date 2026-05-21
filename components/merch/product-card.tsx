@@ -35,7 +35,7 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
   };
 
   return (
-    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 rounded-sm border-border/40 bg-card p-0 mb-6">
+    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 rounded-md border-border/40 bg-card p-0 h-full flex flex-col">
       <div className="relative rounded-t-sm overflow-hidden">
         <Link
           href={`/merch/${slug}`}
@@ -93,7 +93,7 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
               <Button
                 size="sm"
                 disabled
-                className={`rounded-sm px-4 py-2 text-xs font-medium ${button.primary}`}
+                className={`rounded-md px-4 py-2 text-xs font-medium ${button.primary}`}
               >
                 ...
               </Button>
@@ -101,7 +101,7 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
           >
             <Button
               size="sm"
-              className={`rounded-sm px-4 py-2 text-xs font-medium transition-colors ${button.primary}`}
+              className={`rounded-md px-4 py-2 text-xs font-medium transition-colors ${button.primary}`}
               onClick={handleAddToCart}
             >
               {t(currentLanguage, "merchPage.productDetail.addToCart")}
