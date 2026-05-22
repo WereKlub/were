@@ -1,4 +1,6 @@
 import {defineType, defineField} from 'sanity'
+import {panelColorField} from './shared/colors'
+import {imageArrayFieldOptions, imageArrayMember, imageAssetOptions} from './shared/image'
 
 export default defineType({
   name: 'aboutPage',
@@ -17,34 +19,21 @@ export default defineType({
       type: 'text',
       rows: 2,
     }),
-    defineField({
-      name: 'panelColor',
-      title: 'Panel color',
-      type: 'string',
-      initialValue: '#7cb342',
-      validation: (Rule) =>
-        Rule.regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, {
-          name: 'hex color',
-          invert: false,
-        }).error('Use a valid hex color like #7cb342'),
-    }),
+    panelColorField({initialValue: 'lime-500'}),
     defineField({
       name: 'carouselImages',
       title: 'Carousel images',
       type: 'array',
+      options: imageArrayFieldOptions,
       of: [
-        {
-          type: 'image',
-          options: {hotspot: true},
-          fields: [
-            defineField({
-              name: 'alt',
-              type: 'string',
-              title: 'Alt text',
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
-        },
+        imageArrayMember([
+          {
+            name: 'alt',
+            type: 'string',
+            title: 'Alt text',
+            validation: (rule) => rule.required(),
+          },
+        ]),
       ],
       validation: (Rule) => Rule.required().min(2),
       description: 'At least 2 images.',
@@ -95,6 +84,7 @@ export default defineType({
       name: 'team',
       title: 'Team members',
       type: 'array',
+      options: imageArrayFieldOptions,
       of: [
         {
           type: 'object',
@@ -105,7 +95,7 @@ export default defineType({
             {
               name: 'image',
               type: 'image',
-              options: {hotspot: true},
+              options: imageAssetOptions,
               fields: [{name: 'alt', type: 'string', title: 'Alt'}],
             },
           ],

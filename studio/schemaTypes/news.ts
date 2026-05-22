@@ -1,4 +1,5 @@
 import {Rule} from 'sanity'
+import {imageAssetOptions} from './shared/image'
 
 export default {
   name: 'news',
@@ -31,9 +32,7 @@ export default {
       name: 'mainImage',
       title: 'Cover image',
       type: 'image',
-      options: {
-        hotspot: true,
-      },
+      options: imageAssetOptions,
       fields: [
         {
           name: 'alt',
@@ -49,12 +48,6 @@ export default {
           options: {isHighlighted: true},
         },
       ],
-    },
-    {
-      name: 'categories',
-      title: 'Categories',
-      type: 'array',
-      of: [{type: 'reference', to: {type: 'category'}}],
     },
     {
       name: 'publishedAt',
@@ -90,7 +83,7 @@ export default {
         },
         {
           type: 'image',
-          options: {hotspot: true},
+          options: imageAssetOptions,
           fields: [
             {
               name: 'alt',

@@ -2,7 +2,7 @@ import {Rule} from 'sanity'
 
 export default {
   name: 'category',
-  title: 'Category',
+  title: 'Product category',
   type: 'document',
   fields: [
     {

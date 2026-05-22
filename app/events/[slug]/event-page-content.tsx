@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { CalendarDays, Clock, MapPin, Users, Check, ArrowLeft } from "lucide-react";
+import { CalendarDays, Clock, MapPin, Users, Check } from "lucide-react";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { Separator } from "@/components/ui/separator";
@@ -258,19 +257,14 @@ export default function EventPageContent({ event }: EventPageContentProps) {
       <PageIntro
         title={event.title}
         subtitle={event.subtitle}
+        compact
+        backHref="/events"
+        backLabel={t(currentLanguage, "eventsPage.backToEvents")}
         bodyClassName="max-w-2xl md:max-w-3xl"
       />
 
-      <PageContentBelowIntro>
-        <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
-          <Link
-            href="/events"
-            className="mb-8 inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {t(currentLanguage, "eventsPage.backToEvents")}
-          </Link>
-
+      <PageContentBelowIntro className="border-t-0">
+        <AppPageContainer className="pb-16 pt-2 md:pb-20 md:pt-4">
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-6 lg:gap-12">
             <div className="relative aspect-2/3 overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:sticky lg:top-28">
               <Image

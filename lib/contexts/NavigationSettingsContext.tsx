@@ -4,12 +4,14 @@ import React, { createContext, useContext } from "react";
 
 export interface NavigationSettings {
   showBlogInNavigation: boolean;
+  showBoutiqueInNavigation: boolean;
   showAboutInNavigation: boolean;
   showAgencyInNavigation: boolean;
 }
 
 const defaultSettings: NavigationSettings = {
   showBlogInNavigation: true,
+  showBoutiqueInNavigation: true,
   showAboutInNavigation: false,
   showAgencyInNavigation: false,
 };
@@ -20,16 +22,19 @@ const NavigationSettingsContext =
 export function NavigationSettingsProvider({
   children,
   showBlogInNavigation = true,
+  showBoutiqueInNavigation = true,
   showAboutInNavigation = false,
   showAgencyInNavigation = false,
 }: {
   children: React.ReactNode;
   showBlogInNavigation?: boolean;
+  showBoutiqueInNavigation?: boolean;
   showAboutInNavigation?: boolean;
   showAgencyInNavigation?: boolean;
 }) {
   const value: NavigationSettings = {
     showBlogInNavigation,
+    showBoutiqueInNavigation,
     showAboutInNavigation,
     showAgencyInNavigation,
   };

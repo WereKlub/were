@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {imageAssetOptions} from './shared/image'
 
 export default defineType({
   name: 'artist',
@@ -30,7 +31,7 @@ export default defineType({
       name: 'image',
       title: 'Image',
       type: 'image',
-      options: {hotspot: true},
+      options: imageAssetOptions,
     }),
     defineField({
       name: 'socialLink',

@@ -59,9 +59,10 @@ export function mapSanityEventToWereCard(
   const venue = raw.location?.venueName?.trim() || "";
   const address = raw.location?.address?.trim() || "";
 
-  const lineup = raw.lineup
-    ?.map((a) => a.name?.trim())
-    .filter(Boolean) as string[];
+  const lineup =
+    raw.lineup
+      ?.map((a) => a.name?.trim())
+      .filter((name): name is string => Boolean(name)) ?? [];
 
   const { bgColor, textColor } = resolveEventCardColors(raw, listIndex);
 

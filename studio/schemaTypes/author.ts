@@ -1,4 +1,5 @@
 import {Rule} from 'sanity'
+import {imageAssetOptions} from './shared/image'
 
 export default {
   name: 'author',
@@ -24,9 +25,7 @@ export default {
       name: 'image',
       title: 'Image',
       type: 'image',
-      options: {
-        hotspot: true,
-      },
+      options: imageAssetOptions,
     },
     {
       name: 'bio',

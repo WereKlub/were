@@ -1,5 +1,5 @@
 import { client } from "../sanity/client";
-import type { NewsPost, NewsCategory, NewsAuthor } from "../types/news";
+import type { NewsPost, NewsAuthor } from "../types/news";
 
 /** Shared GROQ projection for news documents */
 const newsFields = `
@@ -12,10 +12,6 @@ const newsFields = `
     asset->,
     alt,
     caption
-  },
-  "categories": categories[]->{
-    _id,
-    title
   },
   "author": author->{
     _id,
@@ -39,10 +35,6 @@ const newsListFields = `
     asset->,
     alt,
     caption
-  },
-  "categories": categories[]->{
-    _id,
-    title
   }
 `;
 
@@ -88,21 +80,6 @@ export async function getFeaturedNewsPosts(limit = 3): Promise<NewsPost[]> {
     return result || [];
   } catch (error) {
     console.error("Error in getFeaturedNewsPosts:", error);
-    return [];
-  }
-}
-
-export async function getAllNewsCategories(): Promise<NewsCategory[]> {
-  try {
-    const query = `*[_type == "category"] | order(title asc) {
-      _id,
-      title,
-      description
-    }`;
-    const result = await client.fetch(query);
-    return result || [];
-  } catch (error) {
-    console.error("Error in getAllNewsCategories:", error);
     return [];
   }
 }

@@ -1,4 +1,5 @@
 import {Rule} from 'sanity'
+import {imageArrayFieldOptions, imageArrayMember, imageAssetOptions} from './shared/image'
 
 export default {
   name: 'product',
@@ -39,7 +40,7 @@ export default {
         {type: 'block'},
         {
           type: 'image',
-          options: {hotspot: true},
+          options: imageAssetOptions,
           fields: [{name: 'caption', title: 'Caption', type: 'string'}],
         },
       ],
@@ -49,14 +50,9 @@ export default {
       title: 'Images',
       type: 'array',
       group: 'media',
-      options: {
-        layout: 'grid',
-      },
+      options: imageArrayFieldOptions,
       of: [
-        {
-          type: 'image',
-          options: {hotspot: true},
-          fields: [
+        imageArrayMember([
             {
               name: 'alt',
               title: 'Alt',
@@ -70,8 +66,7 @@ export default {
               type: 'string',
               options: {isHighlighted: true},
             },
-          ],
-        },
+        ]),
       ],
       validation: (Rule: Rule) => Rule.min(1).error('At least one image is required.'),
     },
@@ -106,9 +101,7 @@ export default {
               name: 'image',
               title: 'Color image',
               type: 'image',
-              options: {
-                hotspot: true,
-              },
+              options: imageAssetOptions,
             },
             {
               name: 'available',

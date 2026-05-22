@@ -429,7 +429,7 @@ export default function PurchaseFormModal({
               className={`fixed z-70 will-change-transform pointer-events-auto overscroll-contain flex flex-col ${
                 isMobile
                   ? "inset-x-0 bottom-0 w-full max-h-dvh"
-                  : "top-0 bottom-0 right-0 w-full md:w-[500px] md:p-4"
+                  : "top-0 bottom-0 right-0 w-full md:w-[720px] md:p-4"
               }`}
               style={
                 isMobile

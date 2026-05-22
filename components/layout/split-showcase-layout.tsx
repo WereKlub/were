@@ -32,7 +32,7 @@ export function SplitShowcaseLayout({
 
       <div
         className="flex flex-col justify-between px-6 py-10 md:px-10 md:py-14 lg:px-14 lg:py-16"
-        style={{ backgroundColor: panelColor }}
+        style={{ background: panelColor }}
       >
         {children}
       </div>

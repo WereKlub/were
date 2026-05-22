@@ -12,10 +12,8 @@ import { FacebookPixel } from "@/components/ui/FacebookPixel";
 import {
   getNavigationSettings,
   getHomepageThemeSettings,
-  getFooterStripImageUrls,
 } from "@/lib/sanity/queries";
 import { ButtonThemeProvider } from "@/lib/contexts/ThemeContext";
-import { FooterStripProvider } from "@/lib/contexts/FooterStripContext";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -43,10 +41,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [navSettings, themeSettings, footerStripUrls] = await Promise.all([
+  const [navSettings, themeSettings] = await Promise.all([
     getNavigationSettings(),
     getHomepageThemeSettings(),
-    getFooterStripImageUrls(),
   ]);
   return (
     <html
@@ -62,6 +59,7 @@ export default async function RootLayout({
           >
             <NavigationSettingsProvider
               showBlogInNavigation={navSettings.showBlogInNavigation}
+              showBoutiqueInNavigation={navSettings.showBoutiqueInNavigation}
               showAboutInNavigation={navSettings.showAboutInNavigation ?? false}
               showAgencyInNavigation={
                 navSettings.showAgencyInNavigation ?? false
@@ -69,9 +67,7 @@ export default async function RootLayout({
             >
               <TranslationProvider>
                 <CartProvider>
-                  <FooterStripProvider urls={footerStripUrls}>
-                    <main className="grow">{children}</main>
-                  </FooterStripProvider>
+                  <main className="grow">{children}</main>
                 </CartProvider>
               </TranslationProvider>
             </NavigationSettingsProvider>

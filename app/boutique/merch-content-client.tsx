@@ -53,7 +53,7 @@ export default function MerchContentClient({
                 <Suspense
                   fallback={
                     <ProductGrid>
-                      {Array.from({ length: 12 }).map((_, index) => (
+                      {Array.from({ length: 6 }).map((_, index) => (
                         <ProductCardSkeleton key={index} />
                       ))}
                     </ProductGrid>

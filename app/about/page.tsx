@@ -2,6 +2,7 @@ import Header from "@/components/landing/header";
 import { buildPageMetadata } from "@/lib/site-metadata";
 import Footer from "@/components/landing/footer";
 import { getAboutPage } from "@/lib/sanity/queries";
+import { resolvePanelColorCss } from "@/lib/theme/colorPresets";
 import { AppPageShell } from "@/components/layout/app-page-shell";
 import { SplitShowcaseLayout } from "@/components/layout/split-showcase-layout";
 import { AboutShowcasePanel } from "@/components/about/about-showcase-panel";
@@ -25,7 +26,7 @@ function isPortableBlocks(value: unknown): value is unknown[] {
 export default async function AboutPage() {
   const data = await getAboutPage();
 
-  const panelColor = data?.panelColor?.trim() || "#7cb342";
+  const panelColor = resolvePanelColorCss(data?.panelColor, "lime-500");
   const carouselImages = (data?.carouselImages ?? []).filter((img) =>
     Boolean(img.url),
   );

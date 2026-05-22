@@ -478,7 +478,7 @@ export default function CartModal() {
                     "fixed z-70 will-change-transform overscroll-contain flex flex-col w-full",
                     isMobile
                       ? "inset-x-0 bottom-0 max-h-dvh"
-                      : "top-0 bottom-0 right-0 md:w-[500px] md:p-4",
+                      : "top-0 bottom-0 right-0 md:w-[720px] md:p-4",
                   )}
                   style={
                     isMobile

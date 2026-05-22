@@ -1,4 +1,5 @@
 import {defineType, defineField} from 'sanity'
+import {imageArrayFieldOptions, imageAssetOptions} from './shared/image'
 
 export default defineType({
   name: 'homepage',
@@ -23,6 +24,12 @@ export default defineType({
     defineField({
       name: 'showBlogInNavigation',
       title: 'Show blog in menu',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
+      name: 'showBoutiqueInNavigation',
+      title: 'Show boutique in menu',
       type: 'boolean',
       initialValue: true,
     }),
@@ -62,8 +69,10 @@ export default defineType({
     }),
     defineField({
       name: 'heroContent',
-      title: 'Hero',
+      title: 'Hero carousel',
       type: 'array',
+      description: 'Images and videos shown above upcoming events. Mark slides inactive to hide them.',
+      options: imageArrayFieldOptions,
       of: [
         {
           type: 'object',
@@ -97,8 +106,16 @@ export default defineType({
               name: 'image',
               title: 'Image',
               type: 'image',
-              options: {hotspot: true},
+              options: imageAssetOptions,
               hidden: ({parent}) => parent?.type !== 'image',
+              validation: (Rule) =>
+                Rule.custom((value, context) => {
+                  const parent = context.parent as {type?: string} | undefined
+                  if (parent?.type === 'image' && !value?.asset) {
+                    return 'Upload an image for image slides.'
+                  }
+                  return true
+                }),
               fields: [
                 {
                   name: 'alt',
@@ -115,7 +132,7 @@ export default defineType({
             }),
             defineField({
               name: 'video',
-              title: 'Video',
+              title: 'Video file',
               type: 'file',
               options: {accept: 'video/*'},
               hidden: ({parent}) => parent?.type !== 'video',
@@ -124,7 +141,23 @@ export default defineType({
               name: 'videoUrl',
               title: 'Video URL',
               type: 'url',
+              description: 'Optional YouTube/Vimeo/direct URL. Used if no video file is uploaded.',
               hidden: ({parent}) => parent?.type !== 'video',
+              validation: (Rule) =>
+                Rule.custom((value, context) => {
+                  const parent = context.parent as {
+                    type?: string
+                    video?: {asset?: {_ref?: string}}
+                  } | undefined
+                  if (
+                    parent?.type === 'video' &&
+                    !value &&
+                    !parent?.video?.asset?._ref
+                  ) {
+                    return 'Upload a video file or add a video URL.'
+                  }
+                  return true
+                }),
             }),
             defineField({
               name: 'isActive',
@@ -142,7 +175,7 @@ export default defineType({
             },
             prepare({title, type, image, isActive}) {
               return {
-                title: title || 'Untitled',
+                title: title || 'Untitled slide',
                 subtitle: `${type} • ${isActive ? 'Active' : 'Inactive'}`,
                 media: image,
               }

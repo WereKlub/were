@@ -33,7 +33,7 @@ export function VerticalImageCarousel({
     );
   }
 
-  const durationSeconds = Math.max(images.length * 6, 18);
+  const durationSeconds = Math.max(images.length * 12, 36);
 
   return (
     <div

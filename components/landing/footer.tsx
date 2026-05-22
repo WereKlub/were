@@ -5,26 +5,25 @@ import Image from "next/image";
 import { IG } from "@/components/icons/IG";
 import { WhatsappIcon } from "@/components/icons/WhatsappIcon";
 import { FacebookIcon } from "@/components/icons/FacebookIcon";
-import { Soundcloud } from "@/components/icons/Soundcloud";
+import { TikTok } from "@/components/icons/TikTok";
 import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
 import { ThemeModeSwitch } from "@/components/landing/theme-mode-switch";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
-import { useFooterStripUrls } from "@/lib/contexts/FooterStripContext";
 import { useNavigationSettings } from "@/lib/contexts/NavigationSettingsContext";
 
 const SOCIAL_LINKS = [
   {
-    href: "https://chat.whatsapp.com/BxTiBjirPMzFbCTAZ4eJqC?fbclid=PAZXh0bgNhZW0CMTEAAadv_FFXVz71jmu9zE5cSsaFB9b5cvqGivmL3cFD8hKPD_OtuwKXffahUqI3sw_aem_KaHbiZrZBfI2Yzzn-ozjKw",
+    href: "https://chat.whatsapp.com/DA8aiGYyLaJGJs8fYjvxPl?mode=gi_t",
     labelKey: "footer.social.whatsapp" as const,
     Icon: WhatsappIcon,
     hoverClass: "hover:text-[#25D366] dark:hover:text-[#25D366]",
   },
   {
-    href: "https://soundcloud.com/wereklub",
-    labelKey: "footer.social.soundcloud" as const,
-    Icon: Soundcloud,
-    hoverClass: "hover:text-[#ff5500] dark:hover:text-[#ff5500]",
+    href: "https://www.tiktok.com/@were.klub?_r=1&_t=ZS-96ZhaS462KO",
+    labelKey: "footer.social.tiktok" as const,
+    Icon: TikTok,
+    hoverClass: "hover:text-[#25F4EE] dark:hover:text-[#25F4EE]",
   },
   {
     href: "https://www.facebook.com/wereklub",
@@ -42,16 +41,18 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   const { currentLanguage } = useTranslation();
-  const stripUrls = useFooterStripUrls();
   const {
     showBlogInNavigation,
+    showBoutiqueInNavigation,
     showAboutInNavigation,
     showAgencyInNavigation,
   } = useNavigationSettings();
 
   const footerNav: { href: string; labelKey: string }[] = [
     { href: "/events", labelKey: "header.nav.events" },
-    { href: "/boutique", labelKey: "header.nav.shop" },
+    ...(showBoutiqueInNavigation
+      ? [{ href: "/boutique", labelKey: "header.nav.shop" as const }]
+      : []),
     ...(showBlogInNavigation
       ? [{ href: "/blog", labelKey: "header.nav.blog" as const }]
       : []),
@@ -68,31 +69,8 @@ export default function Footer() {
   const footerNavCol1 = footerNav.slice(0, mid);
   const footerNavCol2 = footerNav.slice(mid);
 
-  const displayStrip =
-    stripUrls.length >= 4
-      ? stripUrls
-      : stripUrls.length > 0
-        ? [...stripUrls, ...stripUrls].slice(0, 6)
-        : [];
-
   return (
     <footer className="bg-muted/80 text-foreground border-t border-border dark:bg-[#1a1a1a] dark:text-white">
-      {displayStrip.length > 0 ? (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6">
-          {displayStrip.slice(0, 6).map((src, i) => (
-            <div key={`${src}-${i}`} className="relative aspect-square">
-              <Image
-                src={src}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 33vw, 16vw"
-              />
-            </div>
-          ))}
-        </div>
-      ) : null}
-
       <div className="px-6 py-16 md:px-12 md:py-20">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
@@ -186,7 +164,7 @@ export default function Footer() {
                 year: new Date().getFullYear(),
               })}
             </p>
-            <div className="flex flex-row items-center gap-3 shrink-0 *:leading-none">
+            <div className="flex w-full flex-row items-center justify-between gap-3 shrink-0 sm:w-auto sm:justify-end *:leading-none">
               <LanguageSwitcher className="text-muted-foreground! hover:text-foreground! dark:text-white/50! dark:hover:text-white/90!" />
               <ThemeModeSwitch className="dark:border-white/15" />
             </div>

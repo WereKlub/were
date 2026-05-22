@@ -33,11 +33,6 @@ export interface NewsPost {
     alt?: string;
     caption?: string;
   };
-  category?: string;
-  categories?: {
-    _id: string;
-    title: string;
-  }[];
   author?: {
     _id: string;
     name: string;
@@ -56,13 +51,6 @@ export interface NewsPost {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body_fr?: any;
   isFeatured?: boolean;
-}
-
-// News Category Types
-export interface NewsCategory {
-  _id: string;
-  title: string;
-  description?: string;
 }
 
 // News Author Types

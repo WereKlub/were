@@ -7,7 +7,7 @@
     "socialHeading": "Suivez-nous",
     "social": {
       "whatsapp": "WhatsApp",
-      "soundcloud": "SoundCloud",
+      "tiktok": "TikTok",
       "facebook": "Facebook",
       "instagram": "Instagram"
     }
@@ -432,11 +432,7 @@
     "checkedInLabel": "Enregistré :"
   },
   "homePage": {
-    "tagline": "Amour et boucan ✨",
     "heroSubtitle": "Un espace pour s'amuser, se libérer, créer et rencontrer, entre soirées brûlantes et moments chill.",
-    "byline": "par Soumia & Lucie",
-    "latestEvents": "Derniers événements",
-    "shopMerch": "Boutique",
-    "viewAll": "Tout voir"
+    "latestEvents": "Derniers événements"
   }
 }

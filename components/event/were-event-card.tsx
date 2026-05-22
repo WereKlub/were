@@ -80,7 +80,7 @@ export function WereEventCard({
 
       <div
         className="flex min-h-[min(100vw,420px)] md:min-h-[min(100vw,520px)] lg:min-h-[600px] flex-col justify-between p-8 md:p-12 lg:p-16"
-        style={{ backgroundColor: event.bgColor, color: event.textColor }}
+        style={{ background: event.bgColor, color: event.textColor }}
       >
         <Link href={href} className="space-y-6 outline-none group">
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-balance uppercase group-hover:opacity-90 transition-opacity">

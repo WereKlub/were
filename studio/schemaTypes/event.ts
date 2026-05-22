@@ -1,4 +1,6 @@
 import {Rule} from 'sanity'
+import {optionalPanelColorField, textColorField} from './shared/colors'
+import {imageArrayFieldOptions, imageArrayMember, imageAssetOptions} from './shared/image'
 
 export default {
   name: 'event',
@@ -172,9 +174,7 @@ export default {
       title: 'Flyer',
       type: 'image',
       group: 'media',
-      options: {
-        hotspot: true,
-      },
+      options: imageAssetOptions,
       fields: [
         {
           name: 'caption',
@@ -185,34 +185,12 @@ export default {
       ],
     },
     {
-      name: 'cardBackgroundColor',
-      title: 'List card panel color',
-      type: 'string',
+      ...optionalPanelColorField(),
       group: 'media',
-      description:
-        'Hex color for the text panel beside the flyer on the home and events pages (e.g. #e8f547). Pick a tone from the flyer. Leave empty for automatic alternating colors.',
-      validation: (Rule: Rule) =>
-        Rule.custom((value: string | undefined) => {
-          if (!value) return true
-          return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)
-            ? true
-            : 'Use a valid hex color like #e8f547'
-        }),
     },
     {
-      name: 'cardTextColor',
-      title: 'List card text color',
-      type: 'string',
+      ...textColorField(),
       group: 'media',
-      description:
-        'Optional hex text color on the panel. If empty, light or dark text is chosen automatically from the panel color.',
-      validation: (Rule: Rule) =>
-        Rule.custom((value: string | undefined) => {
-          if (!value) return true
-          return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)
-            ? true
-            : 'Use a valid hex color like #1a1a1a'
-        }),
     },
     {
       name: 'lineup',
@@ -240,14 +218,11 @@ export default {
       type: 'array',
       group: 'media',
       description: 'Photos shown on the event page.',
+      options: imageArrayFieldOptions,
       of: [
-        {
-          type: 'image',
-          options: {hotspot: true},
-          fields: [
-            {name: 'caption', title: 'Caption', type: 'string', options: {isHighlighted: true}},
-          ],
-        },
+        imageArrayMember([
+          {name: 'caption', title: 'Caption', type: 'string', options: {isHighlighted: true}},
+        ]),
       ],
     },
     {

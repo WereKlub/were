@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { Button } from "@/components/ui/button";
-import { PlusIcon, MinusIcon, ArrowLeft } from "lucide-react";
+import { PlusIcon, MinusIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useCart } from "./cart/cart-context";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
@@ -270,29 +269,19 @@ function ProductDetail({ product }: ProductDetailContentProps) {
 
   const productName =
     typeof product.name === "string" ? product.name : "Product";
-  const formattedPrice =
-    typeof product.price === "number"
-      ? product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
-      : "0";
 
   return (
     <>
-      <PageIntro title={productName} bodyClassName="max-w-2xl md:max-w-3xl" />
+      <PageIntro
+        title={productName}
+        compact
+        backHref="/boutique"
+        backLabel={t(currentLanguage, "merchPage.productDetail.backToMerch")}
+        bodyClassName="max-w-2xl md:max-w-3xl"
+      />
 
-      <PageContentBelowIntro>
-        <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
-          <Link
-            href="/boutique"
-            className="mb-8 inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {t(currentLanguage, "merchPage.productDetail.backToMerch")}
-          </Link>
-
-          <p className="mb-8 text-2xl font-bold text-primary md:text-3xl">
-            {formattedPrice} F CFA
-          </p>
-
+      <PageContentBelowIntro className="border-t-0">
+        <AppPageContainer className="pb-16 pt-2 md:pb-20 md:pt-4">
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-12">
           <motion.div
             className="flex h-full flex-col space-y-4"

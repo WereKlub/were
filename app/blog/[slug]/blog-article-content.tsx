@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
-import { ArrowLeft, Tag, User } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
 
 import type { NewsPost } from "@/lib/types/news";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
@@ -52,13 +52,6 @@ export function BlogArticleContent({ post }: BlogArticleContentProps) {
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <User className="h-4 w-4 shrink-0" />
                 <span>{post.author.name}</span>
-              </div>
-            ) : null}
-
-            {post.categories && post.categories.length > 0 ? (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Tag className="h-4 w-4 shrink-0" />
-                <span>{post.categories.map((cat) => cat.title).join(", ")}</span>
               </div>
             ) : null}
           </div>

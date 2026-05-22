@@ -2,7 +2,6 @@ import React, { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { useCart } from "./cart/cart-context";
 import { SanityProduct } from "./types";
 import { useTheme } from "@/lib/contexts/ThemeContext";
@@ -26,90 +25,77 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem(product); // Now synchronous, no need for await
+    addItem(product);
   };
 
-  // Format price with non-breaking space instead of comma
   const formatPrice = (price: number): string => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "\u00A0");
   };
 
   return (
-    <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 rounded-md border-border/40 bg-card p-0 h-full flex flex-col">
-      <div className="relative rounded-t-sm overflow-hidden">
-        <Link
-          href={`/boutique/${slug}`}
-          className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-          aria-label={`View details for ${product.name}, price ${product.price} F CFA`}
-          prefetch
-        >
-          {hasValidImage ? (
-            <div className="aspect-square relative bg-muted overflow-hidden">
-              <Image
-                src={mainImage}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                quality={100}
-                placeholder={
-                  product.images?.[0]?.metadata?.lqip ? "blur" : undefined
-                }
-                blurDataURL={product.images?.[0]?.metadata?.lqip}
-              />
-            </div>
-          ) : (
-            <div className="aspect-square bg-muted flex items-center justify-center">
-              <span className="text-muted-foreground text-sm">No Image</span>
-            </div>
-          )}
-        </Link>
-      </div>
+    <article className="group flex h-full flex-col overflow-hidden border border-border/40 bg-background">
+      <Link
+        href={`/boutique/${slug}`}
+        className="relative block aspect-square overflow-hidden bg-muted outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+        aria-label={`View details for ${product.name}, price ${product.price} F CFA`}
+        prefetch
+      >
+        {hasValidImage ? (
+          <Image
+            src={mainImage}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 50vw, 33vw"
+            className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+            quality={100}
+            placeholder={
+              product.images?.[0]?.metadata?.lqip ? "blur" : undefined
+            }
+            blurDataURL={product.images?.[0]?.metadata?.lqip}
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <span className="text-xs tracking-[0.2em] uppercase text-muted-foreground">
+              No image
+            </span>
+          </div>
+        )}
+      </Link>
 
-      <CardContent className="pt-1 pb-4 px-4 flex flex-col min-h-[100px]">
-        <div className="flex-1 space-y-1">
-          <Link href={`/boutique/${slug}`} className="block">
-            <h3 className="font-medium text-base leading-tight hover:text-primary transition-colors line-clamp-2">
+      <div className="flex flex-1 flex-col gap-2.5 border-t border-border/40 p-3 md:p-4">
+        <div className="space-y-1">
+          <Link
+            href={`/boutique/${slug}`}
+            className="block outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <h3 className="font-display text-sm font-black uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary md:text-base line-clamp-2">
               {product.name}
             </h3>
           </Link>
-
-          {/* Description hidden - uncomment below if needed */}
-          {/* {product.description && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {typeof product.description === 'string'
-                ? product.description
-                : product.description?.[0]?.children?.[0]?.text || ''}
-            </p>
-          )} */}
-        </div>
-
-        <div className="flex items-center justify-between pt-2">
-          <span className="text-sm font-semibold">
+          <p className="text-[11px] tracking-[0.14em] uppercase text-muted-foreground md:text-xs">
             {formatPrice(product.price)} F CFA
-          </span>
-          <Suspense
-            fallback={
-              <Button
-                size="sm"
-                disabled
-                className={`rounded-md px-4 py-2 text-xs font-medium ${button.primary}`}
-              >
-                ...
-              </Button>
-            }
-          >
-            <Button
-              size="sm"
-              className={`min-h-11 rounded-md px-4 py-2 text-xs font-medium transition-colors ${button.primary}`}
-              onClick={handleAddToCart}
-            >
-              {t(currentLanguage, "merchPage.productDetail.addToCart")}
-            </Button>
-          </Suspense>
+          </p>
         </div>
-      </CardContent>
-    </Card>
+
+        <Suspense
+          fallback={
+            <Button
+              disabled
+              className={`min-h-9 w-full rounded-md text-[10px] font-medium tracking-[0.14em] uppercase md:text-xs ${button.primary}`}
+            >
+              ...
+            </Button>
+          }
+        >
+          <Button
+            className={`min-h-9 w-full rounded-md text-[10px] font-medium tracking-[0.14em] uppercase transition-colors md:text-xs ${button.primary}`}
+            onClick={handleAddToCart}
+          >
+            {t(currentLanguage, "merchPage.productDetail.addToCart")}
+          </Button>
+        </Suspense>
+      </div>
+    </article>
   );
 }
 

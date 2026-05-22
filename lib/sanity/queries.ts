@@ -391,6 +391,7 @@ export const getShippingSettings = async (): Promise<ShippingSettings> => {
 // ================================= Navigation Settings ================================
 export interface NavigationSettings {
   showBlogInNavigation?: boolean;
+  showBoutiqueInNavigation?: boolean;
   showAboutInNavigation?: boolean;
   showAgencyInNavigation?: boolean;
 }
@@ -399,13 +400,15 @@ export const getNavigationSettings = async (): Promise<NavigationSettings> => {
   try {
     const homeQuery = `*[_type == "homepage"] | order(_updatedAt desc) [0] {
       showBlogInNavigation,
+      showBoutiqueInNavigation,
     }`;
     const [result, aboutData, agencyData] = await Promise.all([
-      clientNoCdn.fetch<Pick<NavigationSettings, "showBlogInNavigation">>(
-        homeQuery,
-        {},
-        getCacheConfig(["homepage", "navigation"]),
-      ),
+      clientNoCdn.fetch<
+        Pick<
+          NavigationSettings,
+          "showBlogInNavigation" | "showBoutiqueInNavigation"
+        >
+      >(homeQuery, {}, getCacheConfig(["homepage", "navigation"])),
       getAboutPage(),
       getAgencyPage(),
     ]);
@@ -413,8 +416,13 @@ export const getNavigationSettings = async (): Promise<NavigationSettings> => {
       result?.showBlogInNavigation === undefined
         ? true
         : Boolean(result.showBlogInNavigation);
+    const showBoutique =
+      result?.showBoutiqueInNavigation === undefined
+        ? true
+        : Boolean(result.showBoutiqueInNavigation);
     return {
       showBlogInNavigation: showBlog,
+      showBoutiqueInNavigation: showBoutique,
       showAboutInNavigation: shouldShowAboutInNavigation(aboutData),
       showAgencyInNavigation: shouldShowAgencyInNavigation(agencyData),
     };
@@ -422,6 +430,7 @@ export const getNavigationSettings = async (): Promise<NavigationSettings> => {
     console.error("Error fetching navigation settings:", error);
     return {
       showBlogInNavigation: true,
+      showBoutiqueInNavigation: true,
       showAboutInNavigation: false,
       showAgencyInNavigation: false,
     };
@@ -453,94 +462,59 @@ export const getHomepageThemeSettings =
     }
   };
 
-// ================================= Homepage Content ================================
-
-// Interface for homepage data
-export interface HomepageData {
-  showBlogInNavigation?: boolean;
-  heroContent?: {
-    _key: string;
-    title?: string;
-    description?: string;
-    type: "image" | "video";
-    image?: {
-      asset: { url: string };
-      alt?: string;
-      caption?: string;
-    };
-    video?: {
-      asset: { url: string };
-    };
-    videoUrl?: string;
-    isActive: boolean;
-  }[];
-  featuredEvents?: {
-    _id: string;
-    title: string;
-    slug: {
-      current: string;
-    };
-    date: string;
-    time?: string;
-    location?:
-      | string
-      | {
-          venueName?: string;
-          address?: string;
-        };
-    description?: {
-      en?: string;
-      fr?: string;
-    };
-    flyer?: {
-      url: string;
-    };
-    ticketsAvailable?: boolean;
-  }[];
+export interface HomepageHeroItem {
+  _key: string;
+  title?: string;
+  description?: string;
+  type: "image" | "video";
+  image?: {
+    asset?: { url?: string };
+    alt?: string;
+  };
+  video?: {
+    asset?: { url?: string };
+  };
+  videoUrl?: string;
+  isActive?: boolean;
 }
 
-export const getHomepageContent = async (): Promise<HomepageData | null> => {
-  const query = `*[_type == "homepage"][0] {
-    showBlogInNavigation,
-    heroContent[]{
-      _key,
-      title,
-      description,
-      type,
-      image{
-        asset->{url},
-        alt,
-        caption
-      },
-      video{
-        asset->{url}
-      },
-      videoUrl,
-      isActive
-    },
-    featuredEvents[]->{
-      _id,
-      title,
-      slug,
-      date,
-      time,
-      location,
-      description,
-      "flyer": {
-        "url": flyer.asset->url
-      },
-      ticketsAvailable
-    }
-  }`;
+export async function getHomepageHeroContent(): Promise<HomepageHeroItem[]> {
+  try {
+    const query = `*[_type == "homepage"] | order(_updatedAt desc) [0] {
+      "heroContent": heroContent[
+        isActive != false && (
+          (coalesce(type, "image") == "image" && defined(image.asset)) ||
+          (type == "video" && (defined(video.asset) || defined(videoUrl)))
+        )
+      ]{
+        _key,
+        title,
+        description,
+        type,
+        image{
+          asset->{url},
+          alt
+        },
+        video{
+          asset->{url}
+        },
+        videoUrl,
+        isActive
+      }
+    }`;
 
-  const result = await client.fetch<HomepageData | null>(
-    query,
-    {},
-    getCacheConfig(["homepage"]),
-  );
+    const result = await client.fetch<{ heroContent?: HomepageHeroItem[] }>(
+      query,
+      {},
+      getCacheConfig(["homepage"]),
+    );
 
-  return result;
-};
+    return result?.heroContent ?? [];
+  } catch (error) {
+    console.error("Error fetching homepage hero content:", error);
+    return [];
+  }
+}
 
 export interface SanityEventCardSource {
   _id: string;
@@ -587,26 +561,6 @@ export async function getAllEventsForWereCards(): Promise<
   );
 }
 
-export async function getFooterStripImageUrls(): Promise<string[]> {
-  try {
-    const eventGalleryQuery = `*[_type == "event" && count(gallery) > 0] | order(date desc) [0]{
-      "urls": gallery[].asset->url
-    }`;
-    const eventGallery = await client.fetch<{
-      urls?: (string | null)[];
-    } | null>(eventGalleryQuery, {}, getCacheConfig(["events", "footer"]));
-    const fromEventGallery =
-      eventGallery?.urls?.filter((u): u is string => Boolean(u)).slice(0, 6) ??
-      [];
-    if (fromEventGallery.length > 0) {
-      return fromEventGallery;
-    }
-  } catch (e) {
-    console.error("getFooterStripImageUrls:", e);
-  }
-  return [];
-}
-
 // Define interface for the data returned by getEventsForScroller
 interface EventScrollerData {
   _id: string;
@@ -637,28 +591,6 @@ export const getEventsForScroller = async (
   }`;
   // Use the specific interface in the fetch call as well for better type safety
   return await client.fetch<EventScrollerData[]>(query, { limit });
-};
-
-// ================================= Homepage ================================
-
-// Fetch the URLs of up to 5 background videos from the singleton homepage document
-export const getHomepageVideoUrls = async (): Promise<string[]> => {
-  // Query the single document of type 'homepage'
-  // Select the URLs of the assets linked in the backgroundVideos array (up to 5)
-  const query = `*[_type == "homepage"][0] {
-    "videoUrls": backgroundVideos[].asset->url
-  }`;
-  const result = await client.fetch<{ videoUrls?: string[] }>(
-    query,
-    {},
-    {
-      next: {
-        revalidate: 7200, // Cache for 2 hours
-        tags: ["homepage", "videos"],
-      },
-    },
-  );
-  return result?.videoUrls?.filter(Boolean) ?? [];
 };
 
 // ================================= Homepage Promo Event ================================
