@@ -542,26 +542,32 @@ export interface SanityEventCardSource {
 export async function getAllEventsForWereCards(): Promise<
   SanityEventCardSource[]
 > {
-  const query = `*[_type == "event"] | order(date desc) {
-    _id,
-    "slug": slug.current,
-    title,
-    subtitle,
-    date,
-    location,
-    "flyerUrl": flyer.asset->url,
-    cardBackgroundColor,
-    cardTextColor,
-    "lineup": lineup[]->{name},
-    ticketTypes[]{name, price, active},
-    ticketsAvailable,
-    "galleryCount": count(gallery)
-  }`;
-  return client.fetch<SanityEventCardSource[]>(
-    query,
-    {},
-    getCacheConfig(["events"]),
-  );
+  try {
+    const query = `*[_type == "event"] | order(date desc) {
+      _id,
+      "slug": slug.current,
+      title,
+      subtitle,
+      date,
+      location,
+      "flyerUrl": flyer.asset->url,
+      cardBackgroundColor,
+      cardTextColor,
+      "lineup": lineup[]->{name},
+      ticketTypes[]{name, price, active},
+      ticketsAvailable,
+      "galleryCount": count(gallery)
+    }`;
+    const result = await client.fetch<SanityEventCardSource[] | null>(
+      query,
+      {},
+      getCacheConfig(["events"]),
+    );
+    return Array.isArray(result) ? result : [];
+  } catch (error) {
+    console.error("Error fetching events for cards:", error);
+    return [];
+  }
 }
 
 // Define interface for the data returned by getEventsForScroller

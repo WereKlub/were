@@ -8,15 +8,18 @@ function startOfTodayMs(): number {
   return d.getTime();
 }
 
-export function buildWereEventLists(raw: SanityEventCardSource[]): {
+export function buildWereEventLists(
+  raw: SanityEventCardSource[] | null | undefined,
+): {
   upcomingCards: WereEventCard[];
   pastCards: WereEventCard[];
 } {
+  const events = Array.isArray(raw) ? raw : [];
   const t0 = startOfTodayMs();
-  const upcomingRaw = raw
+  const upcomingRaw = events
     .filter((e) => new Date(e.date).getTime() >= t0)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  const pastRaw = raw
+  const pastRaw = events
     .filter((e) => new Date(e.date).getTime() < t0)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 

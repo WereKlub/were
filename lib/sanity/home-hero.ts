@@ -11,37 +11,39 @@ export function mapHomepageHeroItems(
 ): HomeHeroItem[] {
   if (!items?.length) return [];
 
-  return items
-    .filter((item) => item.isActive !== false)
-    .map((item) => {
-      const imageUrl = normalizeUrl(item.image?.asset?.url);
-      const videoUrl = normalizeUrl(item.video?.asset?.url || item.videoUrl);
-      const mediaType = item.type === "video" ? "video" : "image";
+  const slides: HomeHeroItem[] = [];
 
-      if (mediaType === "image" && imageUrl) {
-        return {
-          id: item._key,
-          type: "image" as const,
-          title: item.title?.trim() || undefined,
-          description: item.description?.trim() || undefined,
-          imageUrl,
-          imageAlt: item.image?.alt?.trim() || undefined,
-        };
-      }
+  for (const item of items) {
+    if (item.isActive === false) continue;
 
-      if (mediaType === "video" && videoUrl) {
-        return {
-          id: item._key,
-          type: "video" as const,
-          title: item.title?.trim() || undefined,
-          description: item.description?.trim() || undefined,
-          imageUrl,
-          imageAlt: item.image?.alt?.trim() || undefined,
-          videoUrl,
-        };
-      }
+    const imageUrl = normalizeUrl(item.image?.asset?.url);
+    const videoUrl = normalizeUrl(item.video?.asset?.url || item.videoUrl);
+    const mediaType = item.type === "video" ? "video" : "image";
 
-      return null;
-    })
-    .filter((item): item is HomeHeroItem => item !== null);
+    if (mediaType === "image" && imageUrl) {
+      slides.push({
+        id: item._key,
+        type: "image",
+        title: item.title?.trim() || undefined,
+        description: item.description?.trim() || undefined,
+        imageUrl,
+        imageAlt: item.image?.alt?.trim() || undefined,
+      });
+      continue;
+    }
+
+    if (mediaType === "video" && videoUrl) {
+      slides.push({
+        id: item._key,
+        type: "video",
+        title: item.title?.trim() || undefined,
+        description: item.description?.trim() || undefined,
+        imageUrl,
+        imageAlt: item.image?.alt?.trim() || undefined,
+        videoUrl,
+      });
+    }
+  }
+
+  return slides;
 }

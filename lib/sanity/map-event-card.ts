@@ -33,7 +33,7 @@ function formatPriceXof(n: number): string {
 function pickPrices(
   raw: SanityEventCardSource["ticketTypes"],
 ): { prevente: string; surplace: string } | undefined {
-  if (!raw?.length) return undefined;
+  if (!Array.isArray(raw) || raw.length === 0) return undefined;
   const active = raw.filter((t) => t.active !== false && t.price != null);
   const sorted = [...active].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
   if (sorted.length === 0) return undefined;
@@ -59,10 +59,9 @@ export function mapSanityEventToWereCard(
   const venue = raw.location?.venueName?.trim() || "";
   const address = raw.location?.address?.trim() || "";
 
-  const lineup =
-    raw.lineup
-      ?.map((a) => a.name?.trim())
-      .filter((name): name is string => Boolean(name)) ?? [];
+  const lineup = (raw.lineup ?? [])
+    .map((a) => a?.name?.trim())
+    .filter((name): name is string => Boolean(name));
 
   const { bgColor, textColor } = resolveEventCardColors(raw, listIndex);
 
