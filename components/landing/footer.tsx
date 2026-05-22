@@ -6,6 +6,7 @@ import { IG } from "@/components/icons/IG";
 import { WhatsappIcon } from "@/components/icons/WhatsappIcon";
 import { FacebookIcon } from "@/components/icons/FacebookIcon";
 import { TikTok } from "@/components/icons/TikTok";
+import { YouTubeIcon } from "@/components/icons/YouTubeIcon";
 import { LanguageSwitcher } from "@/components/landing/LanguageSwitcher";
 import { ThemeModeSwitch } from "@/components/landing/theme-mode-switch";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
@@ -36,6 +37,12 @@ const SOCIAL_LINKS = [
     labelKey: "footer.social.instagram" as const,
     Icon: IG,
     hoverClass: "hover:text-[#E4405F] dark:hover:text-[#E4405F]",
+  },
+  {
+    href: "https://www.youtube.com/@wereklub",
+    labelKey: "footer.social.youtube" as const,
+    Icon: YouTubeIcon,
+    hoverClass: "hover:text-[#FF0000] dark:hover:text-[#FF0000]",
   },
 ] as const;
 

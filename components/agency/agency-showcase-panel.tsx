@@ -25,6 +25,10 @@ interface AgencyShowcasePanelProps {
 const panelProseClass =
   "prose prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-p:mb-4 prose-headings:font-display prose-headings:uppercase prose-strong:font-bold prose-p:text-inherit prose-headings:text-inherit prose-strong:text-inherit opacity-90 [&_p:last-child]:mb-0";
 
+/** Light surface so partner logos (usually dark) read well on any panel color. */
+const partnerLogosBoxClass =
+  "rounded-2xl border border-[#1a1a1a]/10 bg-[#faf8f5] px-5 py-6 shadow-[0_2px_12px_rgba(26,26,26,0.06)] md:px-8 md:py-8 text-[#1a1a1a]";
+
 export function AgencyShowcasePanel({
   introLabel,
   heading,
@@ -80,7 +84,7 @@ export function AgencyShowcasePanel({
             </p>
           ) : null}
 
-          <div className="rounded-2xl border-2 border-current/80 bg-current/5 px-5 py-6 md:px-8 md:py-8">
+          <div className={partnerLogosBoxClass}>
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3">
               {partnerLogos.map((partner) => {
                 const logo = (
@@ -113,7 +117,7 @@ export function AgencyShowcasePanel({
             </div>
 
             {logoBoxLabel ? (
-              <p className="mt-8 text-center text-xs font-medium uppercase tracking-[0.35em] opacity-60">
+              <p className="mt-8 text-center text-xs font-medium uppercase tracking-[0.35em] text-[#1a1a1a]/55">
                 {logoBoxLabel}
               </p>
             ) : null}
