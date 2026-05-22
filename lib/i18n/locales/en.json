@@ -249,9 +249,9 @@
       "optional": "Optional"
     },
     "placeholders": {
-      "name": "Aissata Diop",
-      "email": "aissata@gmail.com",
-      "phone": "+221771234567"
+      "name": "Kouadio N'Guessan",
+      "email": "kouadio@yahoo.fr",
+      "phone": "+2250712345678"
     },
     "totalPrice": "Total",
     "buttons": {
@@ -298,9 +298,9 @@
       "phone": "Phone"
     },
     "placeholders": {
-      "name": "Enter your full name",
-      "email": "Enter your email",
-      "phone": "Enter your phone number"
+      "name": "Kouadio N'Guessan",
+      "email": "kouadio@yahoo.fr",
+      "phone": "+2250712345678"
     },
     "shipping": "Shipping",
     "shippingCalculated": "Calculated at checkout",

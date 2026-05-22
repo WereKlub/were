@@ -249,9 +249,9 @@
       "optional": "Optionnel"
     },
     "placeholders": {
-      "name": "Aïssata Lam",
-      "email": "aissata@gmail.com",
-      "phone": "+2250771234567"
+      "name": "Adjoua Kouamé",
+      "email": "adjoua@yahoo.fr",
+      "phone": "+2250712345678"
     },
     "totalPrice": "Prix total",
     "buttons": {
@@ -298,9 +298,9 @@
       "phone": "Téléphone"
     },
     "placeholders": {
-      "name": "Entrez votre nom complet",
-      "email": "Entrez votre email",
-      "phone": "Entrez votre numéro de téléphone"
+      "name": "Adjoua Kouamé",
+      "email": "adjoua@yahoo.fr",
+      "phone": "+2250712345678"
     },
     "shipping": "Livraison",
     "shippingCalculated": "Calculée à la caisse",
