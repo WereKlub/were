@@ -96,7 +96,6 @@ export async function getEventBySlug(slug: string, locale: string) {
       bundles[]{
         _key,
         name,
-        bundleId,
         price,
         description,
         details,
@@ -135,6 +134,7 @@ export interface AboutPageData {
   metaTitle?: string;
   metaDescription?: string;
   panelColor?: string;
+  panelTextColor?: string;
   carouselImages: { url: string; alt: string }[];
   introLabel?: string;
   heading: string;
@@ -154,6 +154,7 @@ export async function getAboutPage(): Promise<AboutPageData | null> {
     metaTitle,
     metaDescription,
     panelColor,
+    panelTextColor,
     "carouselImages": carouselImages[]{
       "url": asset->url,
       "alt": coalesce(alt, "")
@@ -181,6 +182,7 @@ export interface AgencyPageData {
   metaTitle?: string;
   metaDescription?: string;
   panelColor?: string;
+  panelTextColor?: string;
   carouselImages: { url: string; alt: string }[];
   introLabel?: string;
   heading: string;
@@ -204,6 +206,7 @@ export async function getAgencyPage(): Promise<AgencyPageData | null> {
     metaTitle,
     metaDescription,
     panelColor,
+    panelTextColor,
     "carouselImages": carouselImages[]{
       "url": asset->url,
       "alt": coalesce(alt, "")

@@ -24,7 +24,6 @@ interface TicketTypeData {
 interface BundleData {
   _key: string;
   name: string;
-  bundleId: { current: string };
   price: number;
   description?: string;
   details?: string;

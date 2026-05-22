@@ -41,7 +41,6 @@ interface TicketTypeData {
 interface BundleData {
   _key: string;
   name: string;
-  bundleId: { current: string };
   price: number;
   description?: string;
   details?: string;
@@ -507,7 +506,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                         </p>
                         {event.bundles?.map((bundle) => (
                           <Card
-                            key={bundle.bundleId.current}
+                            key={bundle._key}
                             className="border-border bg-background shadow-lg rounded-md overflow-hidden flex flex-col"
                           >
                             <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
@@ -605,7 +604,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                   <div className="shrink-0 w-full sm:w-auto mt-3 sm:mt-0 flex justify-end">
                                     <CheckoutButton
                                       item={{
-                                        id: bundle.bundleId.current, // Use bundleId.current for bundles
+                                        id: bundle._key,
                                         name: bundle.name,
                                         price: bundle.price,
                                         isBundle: true,

@@ -8,6 +8,7 @@ import {
 interface SplitShowcaseLayoutProps {
   images: CarouselImage[];
   panelColor: string;
+  panelTextColor: string;
   children: ReactNode;
   className?: string;
 }
@@ -15,6 +16,7 @@ interface SplitShowcaseLayoutProps {
 export function SplitShowcaseLayout({
   images,
   panelColor,
+  panelTextColor,
   children,
   className,
 }: SplitShowcaseLayoutProps) {
@@ -32,7 +34,7 @@ export function SplitShowcaseLayout({
 
       <div
         className="flex flex-col justify-between px-6 py-10 md:px-10 md:py-14 lg:px-14 lg:py-16"
-        style={{ background: panelColor }}
+        style={{ background: panelColor, color: panelTextColor }}
       >
         {children}
       </div>

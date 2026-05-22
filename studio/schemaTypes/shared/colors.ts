@@ -56,6 +56,21 @@ export function optionalPanelColorField(overrides: {
   })
 }
 
+export function panelTextColorField(overrides: {
+  name?: string
+  title?: string
+  description?: string
+} = {}): FieldDefinition {
+  const {
+    name = 'panelTextColor',
+    title = 'Panel text color',
+    description =
+      'Text on the colored panel. Leave empty to pick automatically from the background (or preset default for gradients).',
+  } = overrides
+
+  return textColorField({name, title, description})
+}
+
 export function textColorField(overrides: {
   name?: string
   title?: string

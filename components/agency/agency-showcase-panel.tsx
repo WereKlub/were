@@ -23,7 +23,7 @@ interface AgencyShowcasePanelProps {
 }
 
 const panelProseClass =
-  "prose prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-p:mb-4 prose-headings:font-display prose-headings:uppercase prose-strong:font-bold text-foreground/90 [&_p:last-child]:mb-0";
+  "prose prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-p:mb-4 prose-headings:font-display prose-headings:uppercase prose-strong:font-bold prose-p:text-inherit prose-headings:text-inherit prose-strong:text-inherit opacity-90 [&_p:last-child]:mb-0";
 
 export function AgencyShowcasePanel({
   introLabel,
@@ -41,12 +41,12 @@ export function AgencyShowcasePanel({
     <div className="flex min-h-full flex-col gap-10 md:gap-12">
       <div className="space-y-6 md:space-y-8">
         {introLabel ? (
-          <p className="text-sm leading-relaxed text-foreground/75 md:text-base">
+          <p className="text-sm leading-relaxed opacity-75 md:text-base">
             {introLabel}
           </p>
         ) : null}
 
-        <h1 className="font-display text-3xl font-black uppercase leading-[0.95] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem]">
+        <h1 className="font-display text-3xl font-black uppercase leading-[0.95] tracking-tight md:text-4xl lg:text-[2.75rem]">
           {heading}
         </h1>
 
@@ -59,12 +59,12 @@ export function AgencyShowcasePanel({
         {missionHeading || missionBody ? (
           <div className="space-y-3 pt-2">
             {missionHeading ? (
-              <h2 className="font-display text-sm font-black uppercase tracking-[0.15em] text-foreground md:text-base">
+              <h2 className="font-display text-sm font-black uppercase tracking-[0.15em] md:text-base">
                 {missionHeading}
               </h2>
             ) : null}
             {missionBody ? (
-              <p className="text-sm leading-relaxed text-foreground/85 md:text-base whitespace-pre-line">
+              <p className="text-sm leading-relaxed opacity-80 md:text-base whitespace-pre-line">
                 {missionBody}
               </p>
             ) : null}
@@ -75,12 +75,12 @@ export function AgencyShowcasePanel({
       {partnerLogos.length > 0 ? (
         <div className="mt-auto space-y-4">
           {logosIntro ? (
-            <p className="text-sm leading-relaxed text-foreground/75 md:text-base">
+            <p className="text-sm leading-relaxed opacity-75 md:text-base">
               {logosIntro}
             </p>
           ) : null}
 
-          <div className="rounded-2xl border-2 border-foreground/80 bg-background/70 px-5 py-6 md:px-8 md:py-8">
+          <div className="rounded-2xl border-2 border-current/80 bg-current/5 px-5 py-6 md:px-8 md:py-8">
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3">
               {partnerLogos.map((partner) => {
                 const logo = (
@@ -113,7 +113,7 @@ export function AgencyShowcasePanel({
             </div>
 
             {logoBoxLabel ? (
-              <p className="mt-8 text-center text-xs font-medium uppercase tracking-[0.35em] text-foreground/60">
+              <p className="mt-8 text-center text-xs font-medium uppercase tracking-[0.35em] opacity-60">
                 {logoBoxLabel}
               </p>
             ) : null}
@@ -122,13 +122,13 @@ export function AgencyShowcasePanel({
       ) : null}
 
       {contactEmail || bookingEmail ? (
-        <div className="flex flex-wrap gap-x-8 gap-y-2 border-t border-foreground/15 pt-6 text-sm">
+        <div className="flex flex-wrap gap-x-8 gap-y-2 border-t border-current/15 pt-6 text-sm">
           {contactEmail ? (
             <p>
-              <span className="mr-2 text-foreground/50">Email</span>
+              <span className="mr-2 opacity-50">Email</span>
               <a
                 href={`mailto:${contactEmail}`}
-                className="font-medium text-foreground underline-offset-4 hover:underline"
+                className="font-medium underline-offset-4 hover:underline"
               >
                 {contactEmail}
               </a>
@@ -136,10 +136,10 @@ export function AgencyShowcasePanel({
           ) : null}
           {bookingEmail ? (
             <p>
-              <span className="mr-2 text-foreground/50">Booking</span>
+              <span className="mr-2 opacity-50">Booking</span>
               <a
                 href={`mailto:${bookingEmail}`}
-                className="font-medium text-foreground underline-offset-4 hover:underline"
+                className="font-medium underline-offset-4 hover:underline"
               >
                 {bookingEmail}
               </a>

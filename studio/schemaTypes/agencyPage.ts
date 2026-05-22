@@ -1,5 +1,5 @@
 import {defineType, defineField} from 'sanity'
-import {panelColorField} from './shared/colors'
+import {panelColorField, panelTextColorField} from './shared/colors'
 import {imageArrayFieldOptions, imageArrayMember, imageAssetOptions} from './shared/image'
 
 export default defineType({
@@ -20,6 +20,7 @@ export default defineType({
       rows: 2,
     }),
     panelColorField({initialValue: 'sage'}),
+    panelTextColorField(),
     defineField({
       name: 'carouselImages',
       title: 'Carousel images',

@@ -353,13 +353,6 @@ export default {
               validation: (Rule: Rule) => Rule.required(),
             },
             {
-              name: 'bundleId',
-              title: 'Bundle ID',
-              type: 'slug',
-              options: {source: 'name', maxLength: 50},
-              validation: (Rule: Rule) => Rule.required(),
-            },
-            {
               name: 'price',
               title: 'Price (XOF)',
               type: 'number',

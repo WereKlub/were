@@ -18,7 +18,7 @@ interface AboutShowcasePanelProps {
 }
 
 const panelProseClass =
-  "prose prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-p:mb-4 prose-headings:font-display prose-headings:uppercase prose-strong:font-bold text-foreground/90 [&_p:last-child]:mb-0";
+  "prose prose-sm md:prose-base max-w-none prose-p:leading-relaxed prose-p:mb-4 prose-headings:font-display prose-headings:uppercase prose-strong:font-bold prose-p:text-inherit prose-headings:text-inherit prose-strong:text-inherit opacity-90 [&_p:last-child]:mb-0";
 
 export function AboutShowcasePanel({
   introLabel,
@@ -32,12 +32,12 @@ export function AboutShowcasePanel({
     <div className="flex min-h-full flex-col gap-10 md:gap-12">
       <div className="space-y-6 md:space-y-8">
         {introLabel ? (
-          <p className="text-sm leading-relaxed text-foreground/75 md:text-base">
+          <p className="text-sm leading-relaxed opacity-75 md:text-base">
             {introLabel}
           </p>
         ) : null}
 
-        <h1 className="font-display text-3xl font-black uppercase leading-[0.95] tracking-tight text-foreground md:text-4xl lg:text-[2.75rem]">
+        <h1 className="font-display text-3xl font-black uppercase leading-[0.95] tracking-tight md:text-4xl lg:text-[2.75rem]">
           {heading}
         </h1>
 
@@ -49,16 +49,16 @@ export function AboutShowcasePanel({
       </div>
 
       {stats.length > 0 ? (
-        <div className="grid grid-cols-2 gap-6 border-y border-foreground/15 py-8 md:grid-cols-4 md:gap-8">
+        <div className="grid grid-cols-2 gap-6 border-y border-current/15 py-8 md:grid-cols-4 md:gap-8">
           {stats.map((stat, index) => (
             <div
               key={`${stat.value}-${stat.label}-${index}`}
               className="text-center md:text-left"
             >
-              <p className="font-display text-3xl font-black text-foreground md:text-4xl">
+              <p className="font-display text-3xl font-black md:text-4xl">
                 {stat.value}
               </p>
-              <p className="mt-1 text-xs uppercase tracking-[0.2em] text-foreground/60">
+              <p className="mt-1 text-xs uppercase tracking-[0.2em] opacity-60">
                 {stat.label}
               </p>
             </div>
@@ -69,21 +69,21 @@ export function AboutShowcasePanel({
       {team.length > 0 ? (
         <div className="mt-auto space-y-5">
           {teamHeading ? (
-            <h2 className="font-display text-sm font-black uppercase tracking-[0.15em] text-foreground md:text-base">
+            <h2 className="font-display text-sm font-black uppercase tracking-[0.15em] md:text-base">
               {teamHeading}
             </h2>
           ) : null}
 
-          <div className="rounded-2xl border-2 border-foreground/80 bg-background/70 px-5 py-5 md:px-6 md:py-6">
+          <div className="rounded-2xl border-2 border-current/80 bg-current/5 px-5 py-5 md:px-6 md:py-6">
             <div className="space-y-4">
               {team.map((member, index) => (
                 <div
                   key={`${member.name}-${index}`}
-                  className="flex items-center justify-between gap-4 border-b border-foreground/10 pb-4 last:border-b-0 last:pb-0"
+                  className="flex items-center justify-between gap-4 border-b border-current/10 pb-4 last:border-b-0 last:pb-0"
                 >
                   <div className="flex min-w-0 items-center gap-3">
                     {member.imageUrl ? (
-                      <div className="relative size-10 shrink-0 overflow-hidden rounded-full border border-foreground/20">
+                      <div className="relative size-10 shrink-0 overflow-hidden rounded-full border border-current/20">
                         <Image
                           src={member.imageUrl}
                           alt={member.imageAlt || member.name}
@@ -93,11 +93,11 @@ export function AboutShowcasePanel({
                         />
                       </div>
                     ) : null}
-                    <span className="truncate font-display font-bold text-foreground">
+                    <span className="truncate font-display font-bold">
                       {member.name}
                     </span>
                   </div>
-                  <span className="shrink-0 text-right text-sm text-foreground/70">
+                  <span className="shrink-0 text-right text-sm opacity-70">
                     {member.role}
                   </span>
                 </div>
