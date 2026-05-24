@@ -13,6 +13,7 @@ import { PageIntro } from "@/components/layout/page-intro";
 import { PageContentBelowIntro } from "@/components/layout/page-content-below-intro";
 import { PageEmptyState } from "@/components/layout/page-empty-state";
 import { AppPageContainer } from "@/components/layout/app-page-shell";
+import { ProductGrid } from "@/components/merch/product-grid";
 
 interface NewsContentProps {
   posts: NewsPost[];
@@ -44,30 +45,30 @@ export default function NewsContent({ posts }: NewsContentProps) {
               title={t(currentLanguage, "newsPage.articlesSection")}
             />
             <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 md:gap-6 xl:grid-cols-5">
+              <ProductGrid>
                 {posts.map((post) => (
                   <Link
                     key={post._id}
                     href={`/blog/${post.slug.current}`}
-                    className="group flex h-full flex-col overflow-hidden rounded-md border border-border bg-card text-card-foreground shadow-sm transition-colors hover:border-foreground/25"
+                    className="group flex h-full flex-col overflow-hidden border border-border/40 bg-background transition-colors hover:border-foreground/25"
                   >
-                    <div className="relative aspect-4/5 w-full shrink-0 overflow-hidden bg-muted">
+                    <div className="relative aspect-square w-full shrink-0 overflow-hidden bg-muted">
                       <Image
                         src={post.mainImage?.asset?.url || "/placeholder.webp"}
                         alt={post.mainImage?.alt || post.title}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                        className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                        sizes="(max-width: 768px) 50vw, 33vw"
                         quality={90}
                       />
                     </div>
-                    <div className="flex min-h-0 grow flex-col gap-2 border-t border-border p-3 md:p-4">
+                    <div className="flex min-h-0 grow flex-col gap-2.5 border-t border-border/40 p-3 md:p-4">
                       <p className="text-xs tracking-[0.22em] uppercase text-muted-foreground">
                         {format(new Date(post.publishedAt), "MMM d, yyyy", {
                           locale: dateLocale,
                         })}
                       </p>
-                      <h3 className="line-clamp-3 font-display text-base font-bold uppercase leading-snug tracking-tight text-balance group-hover:text-foreground/90 md:text-lg">
+                      <h3 className="line-clamp-2 font-display text-sm font-black uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary md:text-base">
                         {post.title}
                       </h3>
                       {post.excerpt ? (
@@ -78,7 +79,7 @@ export default function NewsContent({ posts }: NewsContentProps) {
                     </div>
                   </Link>
                 ))}
-              </div>
+              </ProductGrid>
             </AppPageContainer>
           </>
         )}

@@ -30,20 +30,74 @@ function formatPriceXof(n: number): string {
   return Math.round(n).toLocaleString("fr-FR");
 }
 
-function pickPrices(
+function cheapestTicketPrice(
   raw: SanityEventCardSource["ticketTypes"],
-): { prevente: string; surplace: string } | undefined {
+): number | undefined {
   if (!Array.isArray(raw) || raw.length === 0) return undefined;
   const active = raw.filter((t) => t.active !== false && t.price != null);
-  const sorted = [...active].sort((a, b) => (a.price ?? 0) - (b.price ?? 0));
-  if (sorted.length === 0) return undefined;
-  if (sorted.length === 1) {
-    const p = formatPriceXof(sorted[0].price!);
-    return { prevente: p, surplace: p };
-  }
+  if (active.length === 0) return undefined;
+  return Math.min(...active.map((t) => t.price!));
+}
+
+function highestTicketPrice(
+  raw: SanityEventCardSource["ticketTypes"],
+): number | undefined {
+  if (!Array.isArray(raw) || raw.length === 0) return undefined;
+  const active = raw.filter((t) => t.active !== false && t.price != null);
+  if (active.length === 0) return undefined;
+  return Math.max(...active.map((t) => t.price!));
+}
+
+function hasExplicitSurPlace(
+  cardPricing: SanityEventCardSource["cardPricing"],
+): boolean {
+  return Boolean(
+    cardPricing?.surPlaceLabel?.trim() ||
+    cardPricing?.surPlaceAmount != null ||
+    (cardPricing?.surPlaceConsos != null && cardPricing.surPlaceConsos > 0),
+  );
+}
+
+function formatSurPlaceLabel(
+  cardPricing: SanityEventCardSource["cardPricing"],
+  fallbackPrice?: number,
+): string | undefined {
+  const custom = cardPricing?.surPlaceLabel?.trim();
+  if (custom) return custom;
+
+  const amount = cardPricing?.surPlaceAmount ?? fallbackPrice;
+  if (amount == null) return undefined;
+
+  const formatted = `${formatPriceXof(amount)} F`;
+  const consos = cardPricing?.surPlaceConsos;
+  if (consos == null || consos <= 0) return formatted;
+
+  const drinkLabel = consos === 1 ? "1 conso" : `${consos} consos`;
+  return `${formatted} + ${drinkLabel}`;
+}
+
+function pickPrices(
+  raw: SanityEventCardSource,
+): { prevente: string; surplace?: string } | undefined {
+  const cardPricing = raw.cardPricing;
+  const ticketTypes = raw.ticketTypes;
+
+  const cheapest = cheapestTicketPrice(ticketTypes);
+  const highest = highestTicketPrice(ticketTypes);
+  const preventeAmount = cardPricing?.preventeAmount ?? cheapest;
+
+  const surplaceFallback =
+    hasExplicitSurPlace(cardPricing) || highest == null || highest === cheapest
+      ? undefined
+      : highest;
+
+  const surplaceDisplay = formatSurPlaceLabel(cardPricing, surplaceFallback);
+
+  if (preventeAmount == null && !surplaceDisplay) return undefined;
+
   return {
-    prevente: formatPriceXof(sorted[0].price!),
-    surplace: formatPriceXof(sorted[sorted.length - 1].price!),
+    prevente: preventeAmount != null ? formatPriceXof(preventeAmount) : "—",
+    surplace: surplaceDisplay,
   };
 }
 
@@ -84,7 +138,7 @@ export function mapSanityEventToWereCard(
     address: address || "—",
     lineup: lineup.length ? lineup : ["—"],
     features: undefined,
-    prices: isPast ? undefined : pickPrices(raw.ticketTypes),
+    prices: isPast ? undefined : pickPrices(raw),
     hasGallery: galleryCount > 0,
     isPast,
     ticketsAvailable: raw.ticketsAvailable !== false,

@@ -58,11 +58,7 @@ export default function EventsPageContent({
           ) : null}
 
           {upcomingCards.length > 0 && pastCards.length > 0 ? (
-            <div
-              className="h-px bg-border/60"
-              role="separator"
-              aria-hidden
-            />
+            <div className="h-px bg-border/60" role="separator" aria-hidden />
           ) : null}
 
           {pastCards.length > 0 ? (

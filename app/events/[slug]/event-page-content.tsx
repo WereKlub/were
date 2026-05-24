@@ -333,431 +333,455 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                 ) : null}
               </div>
 
-            {/* Tickets/Bundles Section */}
-            <div className="py-2">
-              {isPastEvent ? (
-                <div className="mb-6 rounded-md border border-border bg-muted/50 p-4 text-foreground">
-                  <p className="font-medium leading-relaxed">
-                    {t(currentLanguage, "eventSlugPage.tickets.eventPassed")}
-                  </p>
-                </div>
-              ) : !globallyTicketsOnSale ? (
-                <div className="mb-6 rounded-md bg-secondary p-4 text-secondary-foreground">
-                  <p className="font-medium">
-                    {t(
-                      currentLanguage,
-                      "eventSlugPage.tickets.salesClosedGlobal",
-                    )}
-                  </p>
-                </div>
-              ) : !hasAnyDefinedItems ? (
-                <div className="rounded-md bg-secondary p-4 text-secondary-foreground">
-                  <p className="font-medium">
-                    {t(currentLanguage, "eventSlugPage.tickets.noItemsListed")}
-                  </p>
-                </div>
-              ) : (
-                <>
+              {/* Tickets/Bundles Section */}
+              <div className="py-2">
+                {isPastEvent ? (
+                  <div className="mb-6 rounded-md border border-border bg-muted/50 p-4 text-foreground">
+                    <p className="font-medium leading-relaxed">
+                      {t(currentLanguage, "eventSlugPage.tickets.eventPassed")}
+                    </p>
+                  </div>
+                ) : !globallyTicketsOnSale ? (
+                  <div className="mb-6 rounded-md bg-secondary p-4 text-secondary-foreground">
+                    <p className="font-medium">
+                      {t(
+                        currentLanguage,
+                        "eventSlugPage.tickets.salesClosedGlobal",
+                      )}
+                    </p>
+                  </div>
+                ) : !hasAnyDefinedItems ? (
+                  <div className="rounded-md bg-secondary p-4 text-secondary-foreground">
+                    <p className="font-medium">
+                      {t(
+                        currentLanguage,
+                        "eventSlugPage.tickets.noItemsListed",
+                      )}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <DetailSectionHeader
+                      title={t(currentLanguage, "eventSlugPage.tickets.title")}
+                    />
+                    <div className="mt-2 space-y-6">
+                      {/* List Ticket Types */}
+                      {hasDefinedTickets && (
+                        <div className="space-y-3">
+                          {event.ticketTypes?.map((ticket) => (
+                            <Card
+                              key={ticket._key}
+                              className="border-border bg-background shadow-lg rounded-md overflow-hidden flex flex-col"
+                            >
+                              <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
+                                <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-md pt-1 pb-1 px-3 flex flex-col grow">
+                                  <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
+                                    <div className="grow">
+                                      <div className="flex flex-wrap items-baseline mb-3">
+                                        <h4 className="text-foreground font-bold text-lg uppercase leading-tight">
+                                          {ticket.name.replace(
+                                            /\s*\(\d+(\s*\w+)?\)$/,
+                                            "",
+                                          )}
+                                        </h4>
+                                        <span className="mx-2 text-muted-foreground text-lg">
+                                          |
+                                        </span>
+                                        <p className="text-primary font-semibold text-xl whitespace-nowrap">
+                                          {formatPrice(ticket.price)}
+                                          {t(
+                                            currentLanguage,
+                                            "eventSlugPage.tickets.currencySuffix",
+                                          )}
+                                        </p>
+                                      </div>
+                                      {ticket.description && (
+                                        <div className="text-sm mb-1 space-y-1">
+                                          {ticket.description
+                                            .split("\n")
+                                            .map((line, index) => {
+                                              const trimmedLine = line.trim();
+                                              if (trimmedLine === "") {
+                                                return <br key={index} />;
+                                              }
+                                              if (
+                                                trimmedLine.startsWith("⚠️")
+                                              ) {
+                                                return (
+                                                  <p
+                                                    key={index}
+                                                    className="text-amber-400 font-medium"
+                                                  >
+                                                    {trimmedLine}
+                                                  </p>
+                                                );
+                                              }
+                                              return (
+                                                <p
+                                                  key={index}
+                                                  className="text-muted-foreground leading-relaxed"
+                                                >
+                                                  {trimmedLine}
+                                                </p>
+                                              );
+                                            })}
+                                        </div>
+                                      )}
+                                      {ticket.details && (
+                                        <div className="text-xs text-muted-foreground/80 my-2 space-y-1">
+                                          {ticket.details
+                                            .split("\n")
+                                            .map((line, idx) => {
+                                              const trimmedLine = line.trim();
+                                              if (trimmedLine === "") {
+                                                return <br key={idx} />;
+                                              }
+                                              const match =
+                                                trimmedLine.match(
+                                                  /^(✅|✔|•|-|\*)\s*(.*)/,
+                                                );
+                                              if (match && match[2]) {
+                                                return (
+                                                  <div
+                                                    key={idx}
+                                                    className="flex items-start pl-5"
+                                                  >
+                                                    <Check className="mr-1.5 h-3.5 w-3.5 text-green-500 shrink-0 mt-px" />
+                                                    <span className="leading-snug">
+                                                      {match[2]}
+                                                    </span>
+                                                  </div>
+                                                );
+                                              }
+                                              return (
+                                                <p
+                                                  key={idx}
+                                                  className="leading-snug ml-5"
+                                                >
+                                                  {" "}
+                                                  {/* Indent non-list items slightly if preferred or remove ml for full width */}
+                                                  {trimmedLine}
+                                                </p>
+                                              );
+                                            })}
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="shrink-0 w-full sm:w-auto mt-3 sm:mt-0 flex justify-end">
+                                      <CheckoutButton
+                                        item={{
+                                          id: ticket._key,
+                                          name: ticket.name,
+                                          price: ticket.price,
+                                          isBundle: false,
+                                          maxPerOrder: ticket.maxPerOrder,
+                                          stock: ticket.stock,
+                                          paymentLink: ticket.paymentLink,
+                                          active: ticket.active,
+                                          salesStart: ticket.salesStart,
+                                          salesEnd: ticket.salesEnd,
+                                          productId: ticket.productId,
+                                        }}
+                                        eventDetails={{
+                                          id: event._id,
+                                          title: event.title,
+                                          dateText: formattedDate,
+                                          timeText: formattedTime,
+                                          venueName: event.location?.venueName,
+                                        }}
+                                        globallyTicketsOnSale={
+                                          globallyTicketsOnSale
+                                        }
+                                        currentLanguage={currentLanguage}
+                                      />
+                                    </div>
+                                  </CardContent>
+                                </div>
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* List Bundles */}
+                      {hasDefinedBundles && (
+                        <div className="space-y-3">
+                          <p className="text-xs tracking-[0.25em] uppercase text-muted-foreground">
+                            {t(currentLanguage, "eventSlugPage.bundles.title")}
+                          </p>
+                          {event.bundles?.map((bundle) => (
+                            <Card
+                              key={bundle._key}
+                              className="border-border bg-background shadow-lg rounded-md overflow-hidden flex flex-col"
+                            >
+                              <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
+                                <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-md pt-1 pb-1 px-3 flex flex-col grow">
+                                  <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
+                                    <div className="grow">
+                                      <div className="flex flex-wrap items-baseline mb-3">
+                                        <h4 className="text-foreground font-bold text-lg uppercase leading-tight">
+                                          {bundle.name.replace(
+                                            /\s*\(\d+(\s*\w+)?\)$/,
+                                            "",
+                                          )}
+                                        </h4>
+                                        <span className="mx-2 text-muted-foreground text-lg">
+                                          |
+                                        </span>
+                                        <p className="text-primary font-semibold text-xl whitespace-nowrap">
+                                          {formatPrice(bundle.price)}
+                                          {t(
+                                            currentLanguage,
+                                            "eventSlugPage.tickets.currencySuffix",
+                                          )}
+                                        </p>
+                                      </div>
+                                      {bundle.description && (
+                                        <div className="text-sm mb-1 space-y-1">
+                                          {bundle.description
+                                            .split("\n")
+                                            .map((line, index) => {
+                                              const trimmedLine = line.trim();
+                                              if (trimmedLine === "") {
+                                                return <br key={index} />;
+                                              }
+                                              if (
+                                                trimmedLine.startsWith("⚠️")
+                                              ) {
+                                                return (
+                                                  <p
+                                                    key={index}
+                                                    className="text-amber-400 font-medium"
+                                                  >
+                                                    {trimmedLine}
+                                                  </p>
+                                                );
+                                              }
+                                              return (
+                                                <p
+                                                  key={index}
+                                                  className="text-muted-foreground leading-relaxed"
+                                                >
+                                                  {trimmedLine}
+                                                </p>
+                                              );
+                                            })}
+                                        </div>
+                                      )}
+                                      {bundle.details && (
+                                        <div className="text-xs text-muted-foreground/80 my-2 space-y-1">
+                                          {bundle.details
+                                            .split("\n")
+                                            .map((line, idx) => {
+                                              const trimmedLine = line.trim();
+                                              if (trimmedLine === "") {
+                                                return <br key={idx} />;
+                                              }
+                                              const match =
+                                                trimmedLine.match(
+                                                  /^(✅|✔|•|-|\*)\s*(.*)/,
+                                                );
+                                              if (match && match[2]) {
+                                                return (
+                                                  <div
+                                                    key={idx}
+                                                    className="flex items-start pl-5"
+                                                  >
+                                                    <Check className="mr-1.5 h-3.5 w-3.5 text-green-500 shrink-0 mt-px" />
+                                                    <span className="leading-snug">
+                                                      {match[2]}
+                                                    </span>
+                                                  </div>
+                                                );
+                                              }
+                                              return (
+                                                <p
+                                                  key={idx}
+                                                  className="leading-snug ml-5"
+                                                >
+                                                  {" "}
+                                                  {/* Indent non-list items slightly */}
+                                                  {trimmedLine}
+                                                </p>
+                                              );
+                                            })}
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="shrink-0 w-full sm:w-auto mt-3 sm:mt-0 flex justify-end">
+                                      <CheckoutButton
+                                        item={{
+                                          id: bundle._key,
+                                          name: bundle.name,
+                                          price: bundle.price,
+                                          isBundle: true,
+                                          maxPerOrder: bundle.maxPerOrder,
+                                          stock: bundle.stock,
+                                          paymentLink: bundle.paymentLink,
+                                          active: bundle.active,
+                                          salesStart: bundle.salesStart,
+                                          salesEnd: bundle.salesEnd,
+                                          productId: bundle.productId,
+                                          ticketsIncluded:
+                                            bundle.ticketsIncluded,
+                                        }}
+                                        eventDetails={{
+                                          id: event._id,
+                                          title: event.title,
+                                          dateText: formattedDate,
+                                          timeText: formattedTime,
+                                          venueName: event.location?.venueName,
+                                        }}
+                                        globallyTicketsOnSale={
+                                          globallyTicketsOnSale
+                                        }
+                                        currentLanguage={currentLanguage}
+                                      />
+                                    </div>
+                                  </CardContent>
+                                </div>
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <Separator className="my-10" />
+
+              {event.description ? (
+                <div className="mb-10">
                   <DetailSectionHeader
-                    title={t(currentLanguage, "eventSlugPage.tickets.title")}
+                    title={t(
+                      currentLanguage,
+                      "eventSlugPage.detailsSection.title",
+                    )}
                   />
-                  <div className="mt-2 space-y-6">
-                    {/* List Ticket Types */}
-                    {hasDefinedTickets && (
-                      <div className="space-y-3">
-                        {event.ticketTypes?.map((ticket) => (
-                          <Card
-                            key={ticket._key}
-                            className="border-border bg-background shadow-lg rounded-md overflow-hidden flex flex-col"
-                          >
-                            <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
-                              <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-md pt-1 pb-1 px-3 flex flex-col grow">
-                                <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
-                                  <div className="grow">
-                                    <div className="flex flex-wrap items-baseline mb-3">
-                                      <h4 className="text-foreground font-bold text-lg uppercase leading-tight">
-                                        {ticket.name.replace(
-                                          /\s*\(\d+(\s*\w+)?\)$/,
-                                          "",
-                                        )}
-                                      </h4>
-                                      <span className="mx-2 text-muted-foreground text-lg">
-                                        |
-                                      </span>
-                                      <p className="text-primary font-semibold text-xl whitespace-nowrap">
-                                        {formatPrice(ticket.price)}
-                                        {t(
-                                          currentLanguage,
-                                          "eventSlugPage.tickets.currencySuffix",
-                                        )}
-                                      </p>
-                                    </div>
-                                    {ticket.description && (
-                                      <div className="text-sm mb-1 space-y-1">
-                                        {ticket.description
-                                          .split("\n")
-                                          .map((line, index) => {
-                                            const trimmedLine = line.trim();
-                                            if (trimmedLine === "") {
-                                              return <br key={index} />;
-                                            }
-                                            if (trimmedLine.startsWith("⚠️")) {
-                                              return (
-                                                <p
-                                                  key={index}
-                                                  className="text-amber-400 font-medium"
-                                                >
-                                                  {trimmedLine}
-                                                </p>
-                                              );
-                                            }
-                                            return (
-                                              <p
-                                                key={index}
-                                                className="text-muted-foreground leading-relaxed"
-                                              >
-                                                {trimmedLine}
-                                              </p>
-                                            );
-                                          })}
-                                      </div>
-                                    )}
-                                    {ticket.details && (
-                                      <div className="text-xs text-muted-foreground/80 my-2 space-y-1">
-                                        {ticket.details
-                                          .split("\n")
-                                          .map((line, idx) => {
-                                            const trimmedLine = line.trim();
-                                            if (trimmedLine === "") {
-                                              return <br key={idx} />;
-                                            }
-                                            const match =
-                                              trimmedLine.match(
-                                                /^(✅|✔|•|-|\*)\s*(.*)/,
-                                              );
-                                            if (match && match[2]) {
-                                              return (
-                                                <div
-                                                  key={idx}
-                                                  className="flex items-start pl-5"
-                                                >
-                                                  <Check className="mr-1.5 h-3.5 w-3.5 text-green-500 shrink-0 mt-px" />
-                                                  <span className="leading-snug">
-                                                    {match[2]}
-                                                  </span>
-                                                </div>
-                                              );
-                                            }
-                                            return (
-                                              <p
-                                                key={idx}
-                                                className="leading-snug ml-5"
-                                              >
-                                                {" "}
-                                                {/* Indent non-list items slightly if preferred or remove ml for full width */}
-                                                {trimmedLine}
-                                              </p>
-                                            );
-                                          })}
-                                      </div>
-                                    )}
-                                  </div>
-                                  <div className="shrink-0 w-full sm:w-auto mt-3 sm:mt-0 flex justify-end">
-                                    <CheckoutButton
-                                      item={{
-                                        id: ticket._key,
-                                        name: ticket.name,
-                                        price: ticket.price,
-                                        isBundle: false,
-                                        maxPerOrder: ticket.maxPerOrder,
-                                        stock: ticket.stock,
-                                        paymentLink: ticket.paymentLink,
-                                        active: ticket.active,
-                                        salesStart: ticket.salesStart,
-                                        salesEnd: ticket.salesEnd,
-                                        productId: ticket.productId,
-                                      }}
-                                      eventDetails={{
-                                        id: event._id,
-                                        title: event.title,
-                                        dateText: formattedDate,
-                                        timeText: formattedTime,
-                                        venueName: event.location?.venueName,
-                                      }}
-                                      globallyTicketsOnSale={
-                                        globallyTicketsOnSale
-                                      }
-                                      currentLanguage={currentLanguage}
-                                    />
-                                  </div>
-                                </CardContent>
-                              </div>
-                            </div>
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* List Bundles */}
-                    {hasDefinedBundles && (
-                      <div className="space-y-3">
-                        <p className="text-xs tracking-[0.25em] uppercase text-muted-foreground">
-                          {t(currentLanguage, "eventSlugPage.bundles.title")}
-                        </p>
-                        {event.bundles?.map((bundle) => (
-                          <Card
-                            key={bundle._key}
-                            className="border-border bg-background shadow-lg rounded-md overflow-hidden flex flex-col"
-                          >
-                            <div className="size-full bg-repeat p-1 bg-size-[20px_20px]">
-                              <div className="size-full bg-linear-to-br from-background/95 via-background/85 to-background/70 rounded-md pt-1 pb-1 px-3 flex flex-col grow">
-                                <CardContent className="p-0 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 grow w-full">
-                                  <div className="grow">
-                                    <div className="flex flex-wrap items-baseline mb-3">
-                                      <h4 className="text-foreground font-bold text-lg uppercase leading-tight">
-                                        {bundle.name.replace(
-                                          /\s*\(\d+(\s*\w+)?\)$/,
-                                          "",
-                                        )}
-                                      </h4>
-                                      <span className="mx-2 text-muted-foreground text-lg">
-                                        |
-                                      </span>
-                                      <p className="text-primary font-semibold text-xl whitespace-nowrap">
-                                        {formatPrice(bundle.price)}
-                                        {t(
-                                          currentLanguage,
-                                          "eventSlugPage.tickets.currencySuffix",
-                                        )}
-                                      </p>
-                                    </div>
-                                    {bundle.description && (
-                                      <div className="text-sm mb-1 space-y-1">
-                                        {bundle.description
-                                          .split("\n")
-                                          .map((line, index) => {
-                                            const trimmedLine = line.trim();
-                                            if (trimmedLine === "") {
-                                              return <br key={index} />;
-                                            }
-                                            if (trimmedLine.startsWith("⚠️")) {
-                                              return (
-                                                <p
-                                                  key={index}
-                                                  className="text-amber-400 font-medium"
-                                                >
-                                                  {trimmedLine}
-                                                </p>
-                                              );
-                                            }
-                                            return (
-                                              <p
-                                                key={index}
-                                                className="text-muted-foreground leading-relaxed"
-                                              >
-                                                {trimmedLine}
-                                              </p>
-                                            );
-                                          })}
-                                      </div>
-                                    )}
-                                    {bundle.details && (
-                                      <div className="text-xs text-muted-foreground/80 my-2 space-y-1">
-                                        {bundle.details
-                                          .split("\n")
-                                          .map((line, idx) => {
-                                            const trimmedLine = line.trim();
-                                            if (trimmedLine === "") {
-                                              return <br key={idx} />;
-                                            }
-                                            const match =
-                                              trimmedLine.match(
-                                                /^(✅|✔|•|-|\*)\s*(.*)/,
-                                              );
-                                            if (match && match[2]) {
-                                              return (
-                                                <div
-                                                  key={idx}
-                                                  className="flex items-start pl-5"
-                                                >
-                                                  <Check className="mr-1.5 h-3.5 w-3.5 text-green-500 shrink-0 mt-px" />
-                                                  <span className="leading-snug">
-                                                    {match[2]}
-                                                  </span>
-                                                </div>
-                                              );
-                                            }
-                                            return (
-                                              <p
-                                                key={idx}
-                                                className="leading-snug ml-5"
-                                              >
-                                                {" "}
-                                                {/* Indent non-list items slightly */}
-                                                {trimmedLine}
-                                              </p>
-                                            );
-                                          })}
-                                      </div>
-                                    )}
-                                  </div>
-                                  <div className="shrink-0 w-full sm:w-auto mt-3 sm:mt-0 flex justify-end">
-                                    <CheckoutButton
-                                      item={{
-                                        id: bundle._key,
-                                        name: bundle.name,
-                                        price: bundle.price,
-                                        isBundle: true,
-                                        maxPerOrder: bundle.maxPerOrder,
-                                        stock: bundle.stock,
-                                        paymentLink: bundle.paymentLink,
-                                        active: bundle.active,
-                                        salesStart: bundle.salesStart,
-                                        salesEnd: bundle.salesEnd,
-                                        productId: bundle.productId,
-                                        ticketsIncluded: bundle.ticketsIncluded,
-                                      }}
-                                      eventDetails={{
-                                        id: event._id,
-                                        title: event.title,
-                                        dateText: formattedDate,
-                                        timeText: formattedTime,
-                                        venueName: event.location?.venueName,
-                                      }}
-                                      globallyTicketsOnSale={
-                                        globallyTicketsOnSale
-                                      }
-                                      currentLanguage={currentLanguage}
-                                    />
-                                  </div>
-                                </CardContent>
-                              </div>
-                            </div>
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
-
-            <Separator className="my-10" />
-
-            {event.description ? (
-              <div className="mb-10">
-                <DetailSectionHeader
-                  title={t(currentLanguage, "eventSlugPage.detailsSection.title")}
-                />
-                <div className="prose prose-sm sm:prose dark:prose-invert max-w-none leading-relaxed text-muted-foreground">
-                  {renderFormattedText(event.description)}
-                </div>
-              </div>
-            ) : null}
-
-            {event.lineup && event.lineup.length > 0 ? (
-              <div className="mb-10">
-                <DetailSectionHeader
-                  title={t(currentLanguage, "eventSlugPage.lineupSection.title")}
-                />
-                <div className="relative">
-                  <div className="scrollbar-none flex space-x-4 overflow-x-auto pb-4">
-                    {event.lineup.map((artist) => (
-                      <div key={artist._id} className="shrink-0">
-                        <ArtistCard
-                          artist={artist}
-                          currentLanguage={currentLanguage}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ) : null}
-
-            {event.gallery && event.gallery.length > 0 ? (
-              <div id="event-gallery" className="mb-10 scroll-mt-28">
-                <DetailSectionHeader
-                  title={t(currentLanguage, "eventSlugPage.gallerySection.title")}
-                  description={t(
-                    currentLanguage,
-                    "eventSlugPage.gallerySection.description",
-                  )}
-                />
-                <EventGallery images={event.gallery} eventTitle={event.title} />
-              </div>
-            ) : null}
-
-            {(event.location?.venueName ||
-              event.location?.address ||
-              event.venueDetails) ? (
-              <div className="mb-10">
-                <DetailSectionHeader
-                  title={t(currentLanguage, "eventSlugPage.venueSection.title")}
-                />
-                {event.location?.venueName && (
-                  <p className="font-semibold text-foreground text-lg mt-2 mb-1">
-                    {event.location.venueName}
-                  </p>
-                )}
-                {event.location?.address && (
-                  <p className="text-muted-foreground mb-4">
-                    {event.location.address}
-                  </p>
-                )}
-                {/* Embedded Map ADDED HERE */}
-                {mapEmbedSrc ? (
-                  <div className="relative my-6 h-[300px] w-full overflow-hidden rounded-md border border-border bg-muted shadow-lg">
-                    <iframe
-                      src={mapEmbedSrc}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen={false}
-                      loading="lazy"
-                      referrerPolicy="no-referrer-when-downgrade"
-                      title={(() => {
-                        const locationNameForMap =
-                          event.location?.venueName || event.location?.address;
-                        return locationNameForMap
-                          ? t(
-                              currentLanguage,
-                              "eventSlugPage.venueSection.mapTitleNamed",
-                              { locationName: locationNameForMap },
-                            )
-                          : t(
-                              currentLanguage,
-                              "eventSlugPage.venueSection.mapTitleDefault",
-                            );
-                      })()}
-                      className="absolute top-0 left-0 w-full h-full"
-                    ></iframe>
-                  </div>
-                ) : null}
-                {event.venueDetails ? (
                   <div className="prose prose-sm sm:prose dark:prose-invert max-w-none leading-relaxed text-muted-foreground">
-                    {renderFormattedText(event.venueDetails)}
+                    {renderFormattedText(event.description)}
                   </div>
-                ) : null}
-              </div>
-            ) : null}
+                </div>
+              ) : null}
 
-            {(event.description ||
+              {event.lineup && event.lineup.length > 0 ? (
+                <div className="mb-10">
+                  <DetailSectionHeader
+                    title={t(
+                      currentLanguage,
+                      "eventSlugPage.lineupSection.title",
+                    )}
+                  />
+                  <div className="relative">
+                    <div className="scrollbar-none flex space-x-4 overflow-x-auto pb-4">
+                      {event.lineup.map((artist) => (
+                        <div key={artist._id} className="shrink-0">
+                          <ArtistCard
+                            artist={artist}
+                            currentLanguage={currentLanguage}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {event.gallery && event.gallery.length > 0 ? (
+                <div id="event-gallery" className="mb-10 scroll-mt-28">
+                  <DetailSectionHeader
+                    title={t(
+                      currentLanguage,
+                      "eventSlugPage.gallerySection.title",
+                    )}
+                    description={t(
+                      currentLanguage,
+                      "eventSlugPage.gallerySection.description",
+                    )}
+                  />
+                  <EventGallery
+                    images={event.gallery}
+                    eventTitle={event.title}
+                  />
+                </div>
+              ) : null}
+
+              {event.location?.venueName ||
+              event.location?.address ||
+              event.venueDetails ? (
+                <div className="mb-10">
+                  <DetailSectionHeader
+                    title={t(
+                      currentLanguage,
+                      "eventSlugPage.venueSection.title",
+                    )}
+                  />
+                  {event.location?.venueName && (
+                    <p className="font-semibold text-foreground text-lg mt-2 mb-1">
+                      {event.location.venueName}
+                    </p>
+                  )}
+                  {event.location?.address && (
+                    <p className="text-muted-foreground mb-4">
+                      {event.location.address}
+                    </p>
+                  )}
+                  {/* Embedded Map ADDED HERE */}
+                  {mapEmbedSrc ? (
+                    <div className="relative my-6 h-[300px] w-full overflow-hidden rounded-md border border-border bg-muted shadow-lg">
+                      <iframe
+                        src={mapEmbedSrc}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen={false}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title={(() => {
+                          const locationNameForMap =
+                            event.location?.venueName ||
+                            event.location?.address;
+                          return locationNameForMap
+                            ? t(
+                                currentLanguage,
+                                "eventSlugPage.venueSection.mapTitleNamed",
+                                { locationName: locationNameForMap },
+                              )
+                            : t(
+                                currentLanguage,
+                                "eventSlugPage.venueSection.mapTitleDefault",
+                              );
+                        })()}
+                        className="absolute top-0 left-0 w-full h-full"
+                      ></iframe>
+                    </div>
+                  ) : null}
+                  {event.venueDetails ? (
+                    <div className="prose prose-sm sm:prose dark:prose-invert max-w-none leading-relaxed text-muted-foreground">
+                      {renderFormattedText(event.venueDetails)}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
+
+              {event.description ||
               (event.lineup && event.lineup.length > 0) ||
               (event.gallery && event.gallery.length > 0) ||
               event.location?.venueName ||
               event.location?.address ||
-              event.venueDetails) ? (
-              <Separator className="my-10" />
-            ) : null}
-            <div className="flex items-center justify-end pt-2">
-              <EventShareButton
-                eventTitle={event.title}
-                eventSlug={event.slug.current}
-              />
+              event.venueDetails ? (
+                <Separator className="my-10" />
+              ) : null}
+              <div className="flex items-center justify-end pt-2">
+                <EventShareButton
+                  eventTitle={event.title}
+                  eventSlug={event.slug.current}
+                />
+              </div>
             </div>
           </div>
-        </div>
         </AppPageContainer>
       </PageContentBelowIntro>
       <Footer />

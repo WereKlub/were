@@ -1,8 +1,5 @@
 import Image from "next/image";
-import {
-  PortableText,
-  type PortableTextComponents,
-} from "@portabletext/react";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
 
 function getEmbedUrl(url: string): string | null {
   try {
@@ -30,44 +27,68 @@ function getEmbedUrl(url: string): string | null {
   return null;
 }
 
+const blogPortableTextClass = "min-w-0 break-words [overflow-wrap:anywhere]";
+
 const blogPortableTextComponents: PortableTextComponents = {
   block: {
     h2: ({ children }) => (
-      <h2 className="mt-10 mb-4 font-display text-2xl font-bold uppercase tracking-tight text-foreground first:mt-0 md:text-3xl">
+      <h2
+        className={`${blogPortableTextClass} mt-10 mb-4 font-display text-2xl font-bold uppercase tracking-tight text-foreground first:mt-0 md:text-3xl`}
+      >
         {children}
       </h2>
     ),
     h3: ({ children }) => (
-      <h3 className="mt-8 mb-3 font-display text-xl font-bold uppercase tracking-tight text-foreground md:text-2xl">
+      <h3
+        className={`${blogPortableTextClass} mt-8 mb-3 font-display text-xl font-bold uppercase tracking-tight text-foreground md:text-2xl`}
+      >
         {children}
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="mt-6 mb-2 text-lg font-semibold text-foreground">
+      <h4
+        className={`${blogPortableTextClass} mt-6 mb-2 text-lg font-semibold text-foreground`}
+      >
         {children}
       </h4>
     ),
     normal: ({ children }) => (
-      <p className="mb-4 leading-relaxed text-muted-foreground last:mb-0">
+      <p
+        className={`${blogPortableTextClass} mb-4 leading-relaxed text-muted-foreground last:mb-0`}
+      >
         {children}
       </p>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-6 border-l-4 border-primary pl-4 italic text-foreground">
+      <blockquote
+        className={`${blogPortableTextClass} my-6 border-l-4 border-primary pl-4 italic text-foreground`}
+      >
         {children}
       </blockquote>
     ),
   },
   list: {
     bullet: ({ children }) => (
-      <ul className="mb-4 list-disc space-y-2 pl-6 text-muted-foreground">
+      <ul
+        className={`${blogPortableTextClass} mb-4 list-disc space-y-2 pl-6 text-muted-foreground`}
+      >
         {children}
       </ul>
     ),
     number: ({ children }) => (
-      <ol className="mb-4 list-decimal space-y-2 pl-6 text-muted-foreground">
+      <ol
+        className={`${blogPortableTextClass} mb-4 list-decimal space-y-2 pl-6 text-muted-foreground`}
+      >
         {children}
       </ol>
+    ),
+  },
+  listItem: {
+    bullet: ({ children }) => (
+      <li className={blogPortableTextClass}>{children}</li>
+    ),
+    number: ({ children }) => (
+      <li className={blogPortableTextClass}>{children}</li>
     ),
   },
   marks: {
@@ -82,7 +103,7 @@ const blogPortableTextComponents: PortableTextComponents = {
           href={href}
           target="_blank"
           rel="noreferrer"
-          className="font-medium text-primary underline-offset-4 hover:underline"
+          className={`${blogPortableTextClass} font-medium text-primary underline-offset-4 hover:underline`}
         >
           {children}
         </a>
@@ -111,7 +132,9 @@ const blogPortableTextComponents: PortableTextComponents = {
             />
           </div>
           {image.caption ? (
-            <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+            <figcaption
+              className={`${blogPortableTextClass} mt-2 text-center text-sm text-muted-foreground`}
+            >
               {image.caption}
             </figcaption>
           ) : null}
@@ -125,12 +148,14 @@ const blogPortableTextComponents: PortableTextComponents = {
       const embedUrl = getEmbedUrl(embed.url);
       if (!embedUrl) {
         return (
-          <p className="my-6 text-sm text-muted-foreground">
+          <p
+            className={`${blogPortableTextClass} my-6 text-sm text-muted-foreground`}
+          >
             <a
               href={embed.url}
               target="_blank"
               rel="noreferrer"
-              className="text-primary hover:underline"
+              className={`${blogPortableTextClass} text-primary hover:underline`}
             >
               {embed.url}
             </a>
@@ -150,7 +175,9 @@ const blogPortableTextComponents: PortableTextComponents = {
             />
           </div>
           {embed.caption ? (
-            <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+            <figcaption
+              className={`${blogPortableTextClass} mt-2 text-center text-sm text-muted-foreground`}
+            >
               {embed.caption}
             </figcaption>
           ) : null}
@@ -168,6 +195,8 @@ interface BlogPortableTextProps {
 export function BlogPortableText({ value }: BlogPortableTextProps) {
   if (!value) return null;
   return (
-    <PortableText value={value} components={blogPortableTextComponents} />
+    <div className={`${blogPortableTextClass} w-full max-w-full`}>
+      <PortableText value={value} components={blogPortableTextComponents} />
+    </div>
   );
 }

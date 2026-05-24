@@ -16,9 +16,7 @@ export function resolveEventCardColors(
   listIndex: number,
 ): { bgColor: string; textColor: string } {
   const bgToken = raw.cardBackgroundColor?.trim() || "";
-  const customBg = bgToken
-    ? resolvePanelColorCss(bgToken, "cream")
-    : null;
+  const customBg = bgToken ? resolvePanelColorCss(bgToken, "cream") : null;
   const hasCustomBg = Boolean(bgToken);
 
   const customText = resolveTextColorCss(raw.cardTextColor);
@@ -26,8 +24,7 @@ export function resolveEventCardColors(
   if (hasCustomBg && customBg) {
     return {
       bgColor: customBg,
-      textColor:
-        customText ?? contrastTextForPanel(bgToken),
+      textColor: customText ?? contrastTextForPanel(bgToken),
     };
   }
 

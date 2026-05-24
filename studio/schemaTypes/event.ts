@@ -233,6 +233,44 @@ export default {
       initialValue: true,
     },
     {
+      name: 'cardPricing',
+      title: 'Event card pricing',
+      description:
+        'Shown on the events list cards only. Sur place is indicative (not sold online). Leave prévente empty to use the lowest active ticket price.',
+      type: 'object',
+      group: 'tickets',
+      options: {collapsible: true, collapsed: false},
+      fields: [
+        {
+          name: 'preventeAmount',
+          title: 'Prévente (XOF)',
+          type: 'number',
+          description: 'Online / prévente price. Empty = lowest active ticket.',
+          validation: (Rule: Rule) => Rule.min(0),
+        },
+        {
+          name: 'surPlaceAmount',
+          title: 'Sur place — price (XOF)',
+          type: 'number',
+          validation: (Rule: Rule) => Rule.min(0),
+        },
+        {
+          name: 'surPlaceConsos',
+          title: 'Sur place — drinks included',
+          type: 'number',
+          description: 'Shows as "+ 1 conso", "+ 2 consos", etc.',
+          validation: (Rule: Rule) => Rule.integer().min(0),
+        },
+        {
+          name: 'surPlaceLabel',
+          title: 'Sur place — custom label',
+          type: 'string',
+          description:
+            'Optional full override (e.g. "10 000 + 1 conso + accès VIP"). Takes precedence over price and drinks.',
+        },
+      ],
+    },
+    {
       name: 'ticketTypes',
       title: 'Tickets',
       type: 'array',

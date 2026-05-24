@@ -283,306 +283,315 @@ function ProductDetail({ product }: ProductDetailContentProps) {
       <PageContentBelowIntro className="border-t-0">
         <AppPageContainer className="pb-16 pt-2 md:pb-20 md:pt-4">
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-2 lg:gap-12">
-          <motion.div
-            className="flex h-full flex-col space-y-4"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            {carouselImages.length > 0 ? (
-              <ProductImageCarousel
-                images={carouselImages}
-                productName={product.name}
-              />
-            ) : mainImage ? (
-              <div className="flex-1 min-h-[420px] md:min-h-[520px] relative overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg">
-                <Image
-                  src={mainImage}
-                  alt={
-                    typeof product.name === "string" ? product.name : "Product"
-                  }
-                  fill
-                  className="object-cover"
-                  quality={100}
+            <motion.div
+              className="flex h-full flex-col space-y-4"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              {carouselImages.length > 0 ? (
+                <ProductImageCarousel
+                  images={carouselImages}
+                  productName={product.name}
                 />
-                <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
-              </div>
-            ) : (
-              <div className="relative flex min-h-[420px] flex-1 items-center justify-center overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:min-h-[520px]">
-                <span className="text-muted-foreground">
-                  {t(currentLanguage, "merchPage.productDetail.noImage")}
-                </span>
-              </div>
-            )}
-          </motion.div>
+              ) : mainImage ? (
+                <div className="flex-1 min-h-[420px] md:min-h-[520px] relative overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg">
+                  <Image
+                    src={mainImage}
+                    alt={
+                      typeof product.name === "string"
+                        ? product.name
+                        : "Product"
+                    }
+                    fill
+                    className="object-cover"
+                    quality={100}
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
+                </div>
+              ) : (
+                <div className="relative flex min-h-[420px] flex-1 items-center justify-center overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:min-h-[520px]">
+                  <span className="text-muted-foreground">
+                    {t(currentLanguage, "merchPage.productDetail.noImage")}
+                  </span>
+                </div>
+              )}
+            </motion.div>
 
-          <motion.div
-            className="mt-0 flex min-h-0 flex-col space-y-8"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            {product.colors && product.colors.length >= 1 && (
-              <motion.div
-                className="mb-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-              >
-                <p className="mb-3 text-xs tracking-[0.25em] uppercase text-muted-foreground">
-                  {t(currentLanguage, "merchPage.productDetail.color")}
-                </p>
-                <div className="mb-3 flex flex-wrap gap-2">
-                  {product.colors.map((color, index) => {
-                    const normalizedColor = normalizeColorName(color.name);
-                    const isMix = normalizedColor === "mix";
-                    const isWhite =
-                      normalizedColor === "white" ||
-                      color.name.toLowerCase() === "blanc";
+            <motion.div
+              className="mt-0 flex min-h-0 flex-col space-y-8"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {product.colors && product.colors.length >= 1 && (
+                <motion.div
+                  className="mb-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <p className="mb-3 text-xs tracking-[0.25em] uppercase text-muted-foreground">
+                    {t(currentLanguage, "merchPage.productDetail.color")}
+                  </p>
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {product.colors.map((color, index) => {
+                      const normalizedColor = normalizeColorName(color.name);
+                      const isMix = normalizedColor === "mix";
+                      const isWhite =
+                        normalizedColor === "white" ||
+                        color.name.toLowerCase() === "blanc";
 
-                    return (
+                      return (
+                        <button
+                          key={`${color.name}-${index}`}
+                          onClick={() => handleColorChange(color.name)}
+                          disabled={!color.available}
+                          className={cn(
+                            "relative h-10 w-10 rounded-full border-2 transition-all duration-200 overflow-hidden",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                            "hover:ring-2 hover:ring-primary/60 hover:ring-offset-2 hover:ring-offset-background",
+                            selectedColor === color.name
+                              ? "border-primary ring-2 ring-primary/50 ring-offset-2 ring-offset-background"
+                              : isWhite
+                                ? "border-neutral-300 dark:border-neutral-500"
+                                : "border-border dark:border-neutral-600",
+                            !color.available &&
+                              "opacity-40 cursor-not-allowed hover:ring-0 focus-visible:ring-0",
+                            isMix && "bg-white",
+                          )}
+                          style={
+                            !isMix
+                              ? { backgroundColor: normalizedColor }
+                              : undefined
+                          }
+                          aria-label={color.name}
+                        >
+                          {isMix && (
+                            <>
+                              <div className="absolute inset-0 bg-white" />
+                              <div
+                                className="absolute inset-0 bg-black"
+                                style={{
+                                  clipPath:
+                                    "polygon(0 0, 50% 0, 50% 100%, 0 100%)",
+                                }}
+                              />
+                            </>
+                          )}
+                          {!color.available && (
+                            <span className="absolute inset-0 flex items-center justify-center z-10">
+                              <span className="h-px w-8 rotate-45 bg-muted-foreground/70" />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <span>
+                      {capitalizeColorName(
+                        selectedColor || product.colors[0]?.name || "",
+                      )}
+                    </span>
+                  </div>
+                </motion.div>
+              )}
+
+              {product.sizes && product.sizes.length > 0 && (
+                <motion.div
+                  className="mb-6"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <p className="mb-3 text-xs tracking-[0.25em] uppercase text-muted-foreground">
+                    {t(currentLanguage, "merchPage.productDetail.size") ||
+                      "Size"}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {product.sizes.map((size, index) => (
                       <button
-                        key={`${color.name}-${index}`}
-                        onClick={() => handleColorChange(color.name)}
-                        disabled={!color.available}
-                        className={cn(
-                          "relative h-10 w-10 rounded-full border-2 transition-all duration-200 overflow-hidden",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                          "hover:ring-2 hover:ring-primary/60 hover:ring-offset-2 hover:ring-offset-background",
-                          selectedColor === color.name
-                            ? "border-primary ring-2 ring-primary/50 ring-offset-2 ring-offset-background"
-                            : isWhite
-                              ? "border-neutral-300 dark:border-neutral-500"
-                              : "border-border dark:border-neutral-600",
-                          !color.available &&
-                            "opacity-40 cursor-not-allowed hover:ring-0 focus-visible:ring-0",
-                          isMix && "bg-white",
-                        )}
-                        style={
-                          !isMix
-                            ? { backgroundColor: normalizedColor }
-                            : undefined
+                        key={`${size.name}-${index}`}
+                        onClick={() =>
+                          size.available && setSelectedSize(size.name)
                         }
-                        aria-label={color.name}
-                      >
-                        {isMix && (
-                          <>
-                            <div className="absolute inset-0 bg-white" />
-                            <div
-                              className="absolute inset-0 bg-black"
-                              style={{
-                                clipPath:
-                                  "polygon(0 0, 50% 0, 50% 100%, 0 100%)",
-                              }}
-                            />
-                          </>
+                        disabled={!size.available}
+                        className={cn(
+                          "relative flex h-10 min-w-[48px] items-center justify-center rounded-md border px-4 text-sm font-medium transition-colors",
+                          selectedSize === size.name
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-card text-foreground hover:border-primary",
+                          !size.available &&
+                            "cursor-not-allowed border-border text-muted-foreground opacity-50",
                         )}
-                        {!color.available && (
-                          <span className="absolute inset-0 flex items-center justify-center z-10">
-                            <span className="h-px w-8 rotate-45 bg-muted-foreground/70" />
+                      >
+                        {size.name}
+                        {!size.available && (
+                          <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <span className="h-px w-full rotate-45 bg-muted-foreground/70" />
                           </span>
                         )}
                       </button>
-                    );
-                  })}
-                </div>
-                <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                  <span>
-                    {capitalizeColorName(
-                      selectedColor || product.colors[0]?.name || "",
-                    )}
-                  </span>
-                </div>
-              </motion.div>
-            )}
+                    ))}
+                  </div>
+                </motion.div>
+              )}
 
-            {product.sizes && product.sizes.length > 0 && (
-              <motion.div
-                className="mb-6"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-              >
-                <p className="mb-3 text-xs tracking-[0.25em] uppercase text-muted-foreground">
-                  {t(currentLanguage, "merchPage.productDetail.size") || "Size"}
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {product.sizes.map((size, index) => (
-                    <button
-                      key={`${size.name}-${index}`}
-                      onClick={() =>
-                        size.available && setSelectedSize(size.name)
-                      }
-                      disabled={!size.available}
-                      className={cn(
-                        "relative flex h-10 min-w-[48px] items-center justify-center rounded-md border px-4 text-sm font-medium transition-colors",
-                        selectedSize === size.name
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border bg-card text-foreground hover:border-primary",
-                        !size.available &&
-                          "cursor-not-allowed border-border text-muted-foreground opacity-50",
-                      )}
-                    >
-                      {size.name}
-                      {!size.available && (
-                        <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <span className="h-px w-full rotate-45 bg-muted-foreground/70" />
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
-
-            {product.description && (
-              <motion.div
-                className="rounded-md border border-border/50 bg-card/50 p-6 shadow-lg backdrop-blur-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.5 }}
-              >
-                <div className="mb-4 flex items-center justify-between gap-4">
-                  <DetailSectionHeader
-                    title={t(
-                      currentLanguage,
-                      "merchPage.productDetail.description",
-                    )}
-                    className="mb-0 border-0 pb-0"
-                  />
-                  {product.stock !== undefined && (
-                    <div
-                      className={cn(
-                        "shrink-0 rounded-md px-4 py-2 text-sm font-medium",
-                        typeof product.stock === "number" &&
-                          product.stock > 0 &&
-                          !isOutOfStock
-                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                          : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-                      )}
-                    >
-                      {typeof product.stock === "number" &&
-                      product.stock > 0 &&
-                      !isOutOfStock
-                        ? `${product.stock} ${t(currentLanguage, "merchPage.productDetail.inStock")}`
-                        : t(currentLanguage, "merchPage.productDetail.outOfStock")}
-                    </div>
-                  )}
-                </div>
-                <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none text-muted-foreground leading-relaxed whitespace-pre-line prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-ul:list-disc prose-ol:list-decimal prose-li:marker:text-muted-foreground/70">
-                  {typeof product.description === "string" ? (
-                    <p>{product.description}</p>
-                  ) : Array.isArray(product.description) ? (
-                    <PortableText
-                      value={product.description}
-                      components={descriptionComponents}
-                    />
-                  ) : (
-                    <p>No description available</p>
-                  )}
-                </div>
-              </motion.div>
-            )}
-
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-            >
-              {!isOutOfStock && (
-                <>
-                  <div className="rounded-md border border-border/50 bg-card/50 p-6 shadow-lg backdrop-blur-sm">
+              {product.description && (
+                <motion.div
+                  className="rounded-md border border-border/50 bg-card/50 p-6 shadow-lg backdrop-blur-sm"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                >
+                  <div className="mb-4 flex items-center justify-between gap-4">
                     <DetailSectionHeader
                       title={t(
                         currentLanguage,
-                        "merchPage.productDetail.quantity",
+                        "merchPage.productDetail.description",
                       )}
-                      className="mb-4 border-0 pb-0"
+                      className="mb-0 border-0 pb-0"
                     />
-                    <div className="flex items-center justify-end gap-3">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={decrementQuantity}
-                        disabled={quantity <= 1}
-                        className="h-10 w-10 rounded-md"
+                    {product.stock !== undefined && (
+                      <div
+                        className={cn(
+                          "shrink-0 rounded-md px-4 py-2 text-sm font-medium",
+                          typeof product.stock === "number" &&
+                            product.stock > 0 &&
+                            !isOutOfStock
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                            : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+                        )}
                       >
-                        <MinusIcon className="h-4 w-4" />
-                      </Button>
-                      <motion.span
-                        key={quantity}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="w-12 text-center text-lg font-semibold"
-                      >
-                        {quantity}
-                      </motion.span>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={incrementQuantity}
-                        className="h-10 w-10 rounded-md"
-                      >
-                        <PlusIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="mt-4 border-t border-border/20 pt-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          {t(currentLanguage, "merchPage.productDetail.total")}
-                        </span>
-                        <span className="text-xl font-bold text-primary">
-                          {(
-                            (typeof product.price === "number"
-                              ? product.price
-                              : 0) * quantity
-                          )
-                            .toString()
-                            .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
-                          F CFA
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <Button
-                      className={`w-full ${button.secondaryBorder} h-14 text-lg font-semibold rounded-md`}
-                      size="lg"
-                      onClick={handleAddToCart}
-                      disabled={isAddToCartDisabled}
-                    >
-                      {isOutOfStock
-                        ? t(
-                            currentLanguage,
-                            "merchPage.productDetail.outOfStock",
-                          ) || "Out of Stock"
-                        : !hasAvailableSizes || !hasValidSizeSelection
-                          ? t(
-                              currentLanguage,
-                              "merchPage.productDetail.noSizeAvailable",
-                            ) || "No size available"
+                        {typeof product.stock === "number" &&
+                        product.stock > 0 &&
+                        !isOutOfStock
+                          ? `${product.stock} ${t(currentLanguage, "merchPage.productDetail.inStock")}`
                           : t(
                               currentLanguage,
-                              "merchPage.productDetail.addToCart",
+                              "merchPage.productDetail.outOfStock",
                             )}
-                    </Button>
-                    <Button
-                      className="w-full h-14 text-lg font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white"
-                      size="lg"
-                      onClick={handleBuyNow}
-                      disabled={isAddToCartDisabled}
-                    >
-                      {t(currentLanguage, "merchPage.productDetail.buyNow") ||
-                        "Buy now"}
-                    </Button>
+                      </div>
+                    )}
                   </div>
-                </>
+                  <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none text-muted-foreground leading-relaxed whitespace-pre-line prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-ul:list-disc prose-ol:list-decimal prose-li:marker:text-muted-foreground/70">
+                    {typeof product.description === "string" ? (
+                      <p>{product.description}</p>
+                    ) : Array.isArray(product.description) ? (
+                      <PortableText
+                        value={product.description}
+                        components={descriptionComponents}
+                      />
+                    ) : (
+                      <p>No description available</p>
+                    )}
+                  </div>
+                </motion.div>
               )}
+
+              <motion.div
+                className="space-y-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                {!isOutOfStock && (
+                  <>
+                    <div className="rounded-md border border-border/50 bg-card/50 p-6 shadow-lg backdrop-blur-sm">
+                      <DetailSectionHeader
+                        title={t(
+                          currentLanguage,
+                          "merchPage.productDetail.quantity",
+                        )}
+                        className="mb-4 border-0 pb-0"
+                      />
+                      <div className="flex items-center justify-end gap-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={decrementQuantity}
+                          disabled={quantity <= 1}
+                          className="h-10 w-10 rounded-md"
+                        >
+                          <MinusIcon className="h-4 w-4" />
+                        </Button>
+                        <motion.span
+                          key={quantity}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          className="w-12 text-center text-lg font-semibold"
+                        >
+                          {quantity}
+                        </motion.span>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={incrementQuantity}
+                          className="h-10 w-10 rounded-md"
+                        >
+                          <PlusIcon className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      <div className="mt-4 border-t border-border/20 pt-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-muted-foreground">
+                            {t(
+                              currentLanguage,
+                              "merchPage.productDetail.total",
+                            )}
+                          </span>
+                          <span className="text-xl font-bold text-primary">
+                            {(
+                              (typeof product.price === "number"
+                                ? product.price
+                                : 0) * quantity
+                            )
+                              .toString()
+                              .replace(/\B(?=(\d{3})+(?!\d))/g, " ")}{" "}
+                            F CFA
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Button
+                        className={`w-full ${button.secondaryBorder} h-14 text-lg font-semibold rounded-md`}
+                        size="lg"
+                        onClick={handleAddToCart}
+                        disabled={isAddToCartDisabled}
+                      >
+                        {isOutOfStock
+                          ? t(
+                              currentLanguage,
+                              "merchPage.productDetail.outOfStock",
+                            ) || "Out of Stock"
+                          : !hasAvailableSizes || !hasValidSizeSelection
+                            ? t(
+                                currentLanguage,
+                                "merchPage.productDetail.noSizeAvailable",
+                              ) || "No size available"
+                            : t(
+                                currentLanguage,
+                                "merchPage.productDetail.addToCart",
+                              )}
+                      </Button>
+                      <Button
+                        className="w-full h-14 text-lg font-semibold rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+                        size="lg"
+                        onClick={handleBuyNow}
+                        disabled={isAddToCartDisabled}
+                      >
+                        {t(currentLanguage, "merchPage.productDetail.buyNow") ||
+                          "Buy now"}
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </div>
+          </div>
         </AppPageContainer>
       </PageContentBelowIntro>
     </>

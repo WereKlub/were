@@ -76,9 +76,7 @@ function buildSocialMetadata({
 }
 
 /** Default Open Graph + Twitter image tags merged into every page. */
-export function buildPageMetadata(
-  options: BuildPageMetadataOptions,
-): Metadata {
+export function buildPageMetadata(options: BuildPageMetadataOptions): Metadata {
   const { title, description } = options;
   const desc = description ?? siteConfig.description;
 

@@ -534,6 +534,12 @@ export interface SanityEventCardSource {
   cardTextColor?: string | null;
   lineup?: { name?: string }[];
   ticketTypes?: { name?: string; price?: number; active?: boolean }[];
+  cardPricing?: {
+    preventeAmount?: number;
+    surPlaceAmount?: number;
+    surPlaceConsos?: number;
+    surPlaceLabel?: string;
+  };
   ticketsAvailable?: boolean;
   /** From `count(gallery)` — used for past-event links to on-page gallery */
   galleryCount?: number;
@@ -555,6 +561,7 @@ export async function getAllEventsForWereCards(): Promise<
       cardTextColor,
       "lineup": lineup[]->{name},
       ticketTypes[]{name, price, active},
+      cardPricing,
       ticketsAvailable,
       "galleryCount": count(gallery)
     }`;

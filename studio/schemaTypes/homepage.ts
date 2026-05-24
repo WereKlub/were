@@ -71,7 +71,8 @@ export default defineType({
       name: 'heroContent',
       title: 'Hero carousel',
       type: 'array',
-      description: 'Images and videos shown above upcoming events. Mark slides inactive to hide them.',
+      description:
+        'Images and videos shown above upcoming events. Mark slides inactive to hide them.',
       options: imageArrayFieldOptions,
       of: [
         {
@@ -145,15 +146,13 @@ export default defineType({
               hidden: ({parent}) => parent?.type !== 'video',
               validation: (Rule) =>
                 Rule.custom((value, context) => {
-                  const parent = context.parent as {
-                    type?: string
-                    video?: {asset?: {_ref?: string}}
-                  } | undefined
-                  if (
-                    parent?.type === 'video' &&
-                    !value &&
-                    !parent?.video?.asset?._ref
-                  ) {
+                  const parent = context.parent as
+                    | {
+                        type?: string
+                        video?: {asset?: {_ref?: string}}
+                      }
+                    | undefined
+                  if (parent?.type === 'video' && !value && !parent?.video?.asset?._ref) {
                     return 'Upload a video file or add a video URL.'
                   }
                   return true

@@ -63,19 +63,14 @@ export function PaymentSuccessClient({
               />
               <ul className="mb-8 space-y-2 text-sm text-muted-foreground">
                 <li>
-                  •{" "}
-                  {t(currentLanguage, "paymentSuccess.whatsNext.checkEmail")}
+                  • {t(currentLanguage, "paymentSuccess.whatsNext.checkEmail")}
                 </li>
                 <li>
                   •{" "}
-                  {t(
-                    currentLanguage,
-                    "paymentSuccess.whatsNext.presentTicket",
-                  )}
+                  {t(currentLanguage, "paymentSuccess.whatsNext.presentTicket")}
                 </li>
                 <li>
-                  •{" "}
-                  {t(currentLanguage, "paymentSuccess.whatsNext.arriveEarly")}
+                  • {t(currentLanguage, "paymentSuccess.whatsNext.arriveEarly")}
                 </li>
               </ul>
 

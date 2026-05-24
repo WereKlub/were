@@ -14,7 +14,11 @@ export interface WereEventCard {
   address: string;
   lineup: string[];
   features?: string[];
-  prices?: { prevente: string; surplace: string };
+  prices?: {
+    prevente: string;
+    /** Full sur-place line (may include "+ N conso"); currency not appended in UI */
+    surplace?: string;
+  };
   /** True when Sanity `gallery` has at least one image */
   hasGallery?: boolean;
   /** Split upcoming vs past — affects pricing and optional gallery hash link */
@@ -140,17 +144,16 @@ export function WereEventCard({
                   F
                 </p>
               </div>
-              <div>
-                <p className="text-xs tracking-[0.25em] uppercase opacity-70">
-                  Sur place
-                </p>
-                <p>
-                  <span className="text-lg md:text-xl font-bold">
+              {event.prices.surplace ? (
+                <div>
+                  <p className="text-xs tracking-[0.25em] uppercase opacity-70">
+                    Sur place
+                  </p>
+                  <p className="text-lg md:text-xl font-bold">
                     {event.prices.surplace}
-                  </span>{" "}
-                  F
-                </p>
-              </div>
+                  </p>
+                </div>
+              ) : null}
             </div>
           ) : null}
 

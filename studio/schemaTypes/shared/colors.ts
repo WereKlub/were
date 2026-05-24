@@ -3,13 +3,15 @@ import {panelColorOptions, textColorOptions} from '../../../lib/theme/colorPrese
 
 const dropdownLayout = {layout: 'dropdown' as const}
 
-export function panelColorField(overrides: {
-  name?: string
-  title?: string
-  description?: string
-  initialValue?: string
-  required?: boolean
-} = {}): FieldDefinition {
+export function panelColorField(
+  overrides: {
+    name?: string
+    title?: string
+    description?: string
+    initialValue?: string
+    required?: boolean
+  } = {},
+): FieldDefinition {
   const {
     name = 'panelColor',
     title = 'Panel color',
@@ -32,16 +34,17 @@ export function panelColorField(overrides: {
   })
 }
 
-export function optionalPanelColorField(overrides: {
-  name?: string
-  title?: string
-  description?: string
-} = {}): FieldDefinition {
+export function optionalPanelColorField(
+  overrides: {
+    name?: string
+    title?: string
+    description?: string
+  } = {},
+): FieldDefinition {
   const {
     name = 'cardBackgroundColor',
     title = 'List card panel color',
-    description =
-      'Color beside the flyer on home and events pages. Leave empty for automatic cream / ink alternation.',
+    description = 'Color beside the flyer on home and events pages. Leave empty for automatic cream / ink alternation.',
   } = overrides
 
   return defineField({
@@ -56,31 +59,33 @@ export function optionalPanelColorField(overrides: {
   })
 }
 
-export function panelTextColorField(overrides: {
-  name?: string
-  title?: string
-  description?: string
-} = {}): FieldDefinition {
+export function panelTextColorField(
+  overrides: {
+    name?: string
+    title?: string
+    description?: string
+  } = {},
+): FieldDefinition {
   const {
     name = 'panelTextColor',
     title = 'Panel text color',
-    description =
-      'Text on the colored panel. Leave empty to pick automatically from the background (or preset default for gradients).',
+    description = 'Text on the colored panel. Leave empty to pick automatically from the background (or preset default for gradients).',
   } = overrides
 
   return textColorField({name, title, description})
 }
 
-export function textColorField(overrides: {
-  name?: string
-  title?: string
-  description?: string
-} = {}): FieldDefinition {
+export function textColorField(
+  overrides: {
+    name?: string
+    title?: string
+    description?: string
+  } = {},
+): FieldDefinition {
   const {
     name = 'cardTextColor',
     title = 'List card text color',
-    description =
-      'Text on the panel. Leave empty to pick automatically from the background (or preset default for gradients).',
+    description = 'Text on the panel. Leave empty to pick automatically from the background (or preset default for gradients).',
   } = overrides
 
   return defineField({

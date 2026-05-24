@@ -52,7 +52,11 @@ export const SOLID_COLOR_PRESETS = {
   "violet-500": { label: "Violet 500", css: "#8b5cf6", contrastText: "white" },
   "purple-500": { label: "Purple 500", css: "#a855f7", contrastText: "white" },
   "purple-600": { label: "Purple 600", css: "#9333ea", contrastText: "white" },
-  "fuchsia-500": { label: "Fuchsia 500", css: "#d946ef", contrastText: "white" },
+  "fuchsia-500": {
+    label: "Fuchsia 500",
+    css: "#d946ef",
+    contrastText: "white",
+  },
   "pink-400": { label: "Pink 400", css: "#f472b6", contrastText: "ink" },
   "pink-500": { label: "Pink 500", css: "#ec4899", contrastText: "white" },
   "rose-500": { label: "Rose 500", css: "#f43f5e", contrastText: "white" },
@@ -167,10 +171,12 @@ export function panelColorOptions(): { title: string; value: string }[] {
     title: def.label,
     value,
   }));
-  const gradients = Object.entries(GRADIENT_COLOR_PRESETS).map(([value, def]) => ({
-    title: def.label,
-    value,
-  }));
+  const gradients = Object.entries(GRADIENT_COLOR_PRESETS).map(
+    ([value, def]) => ({
+      title: def.label,
+      value,
+    }),
+  );
   return [...solids, ...gradients];
 }
 
@@ -205,7 +211,8 @@ export function resolveTextColorCss(
 export function contrastTextForPanel(token: string | null | undefined): string {
   const trimmed = token?.trim();
   if (trimmed && isPanelPreset(trimmed)) {
-    const preset = TEXT_COLOR_PRESETS[PANEL_COLOR_PRESETS[trimmed].contrastText];
+    const preset =
+      TEXT_COLOR_PRESETS[PANEL_COLOR_PRESETS[trimmed].contrastText];
     return preset.css;
   }
   const css = trimmed

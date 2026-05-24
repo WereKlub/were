@@ -34,7 +34,7 @@ export function BlogArticleContent({ post }: BlogArticleContentProps) {
       />
 
       <PageContentBelowIntro>
-        <AppPageContainer className="pb-16 pt-10 md:pb-20 md:pt-12">
+        <AppPageContainer className="min-w-0 pb-16 pt-10 md:pb-20 md:pt-12">
           <Link
             href="/blog"
             className="mb-8 inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-muted-foreground transition-colors hover:text-foreground"
@@ -70,15 +70,15 @@ export function BlogArticleContent({ post }: BlogArticleContentProps) {
             </div>
           ) : null}
 
-          <div className="rounded-md border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm md:p-12">
-            <div className="max-w-none">
-              <BlogPortableText value={post.body} />
-            </div>
+          <div className="min-w-0 w-full overflow-x-clip rounded-md border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm md:p-12">
+            <BlogPortableText value={post.body} />
           </div>
 
           <footer className="mt-12 border-t border-border/50 pt-8 md:mt-16">
             <p className="text-center text-sm text-muted-foreground">
-              {t(currentLanguage, "newsPage.publishedOn", { date: formattedDate })}
+              {t(currentLanguage, "newsPage.publishedOn", {
+                date: formattedDate,
+              })}
             </p>
           </footer>
         </AppPageContainer>

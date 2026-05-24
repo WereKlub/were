@@ -15,10 +15,7 @@ export function DetailSectionHeader({
   id,
 }: DetailSectionHeaderProps) {
   return (
-    <div
-      id={id}
-      className={cn("mb-6 border-b border-border pb-4", className)}
-    >
+    <div id={id} className={cn("mb-6 border-b border-border pb-4", className)}>
       <h2 className="text-sm md:text-base tracking-[0.3em] uppercase text-foreground">
         {title}
       </h2>

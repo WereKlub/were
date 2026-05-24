@@ -796,10 +796,7 @@ export function VerifyClient({
     return (
       <VerifyPageFrame
         title={t(currentLanguage, "ticketVerification.staffVerification")}
-        subtitle={t(
-          currentLanguage,
-          "ticketVerification.pinEntry.description",
-        )}
+        subtitle={t(currentLanguage, "ticketVerification.pinEntry.description")}
       >
         <div className="rounded-md border border-border/50 bg-card/50 p-8 shadow-lg backdrop-blur-sm">
           <div className="flex flex-col items-center space-y-6 text-center">
@@ -863,10 +860,7 @@ export function VerifyClient({
                     )}
                   </>
                 ) : (
-                  t(
-                    currentLanguage,
-                    "ticketVerification.pinEntry.verifyButton",
-                  )
+                  t(currentLanguage, "ticketVerification.pinEntry.verifyButton")
                 )}
               </Button>
             </form>

@@ -53,19 +53,19 @@ export default {
       options: imageArrayFieldOptions,
       of: [
         imageArrayMember([
-            {
-              name: 'alt',
-              title: 'Alt',
-              type: 'string',
-              options: {isHighlighted: true},
-              validation: (Rule: Rule) => Rule.required(),
-            },
-            {
-              name: 'caption',
-              title: 'Caption',
-              type: 'string',
-              options: {isHighlighted: true},
-            },
+          {
+            name: 'alt',
+            title: 'Alt',
+            type: 'string',
+            options: {isHighlighted: true},
+            validation: (Rule: Rule) => Rule.required(),
+          },
+          {
+            name: 'caption',
+            title: 'Caption',
+            type: 'string',
+            options: {isHighlighted: true},
+          },
         ]),
       ],
       validation: (Rule: Rule) => Rule.min(1).error('At least one image is required.'),
