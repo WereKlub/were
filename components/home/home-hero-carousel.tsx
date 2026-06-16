@@ -154,6 +154,7 @@ export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
             fill
             className="object-cover"
             priority={currentIndex === 0}
+            loading={currentIndex === 0 ? "eager" : "lazy"}
             sizes="100vw"
           />
         ) : null}

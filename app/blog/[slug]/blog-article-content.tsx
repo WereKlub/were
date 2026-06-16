@@ -57,12 +57,13 @@ export function BlogArticleContent({ post }: BlogArticleContentProps) {
           </div>
 
           {post.mainImage ? (
-            <div className="relative mb-10 aspect-video overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:mb-12">
+            <div className="relative mb-8 aspect-square w-full overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg sm:aspect-video md:mb-12">
               <Image
                 src={post.mainImage.asset?.url || "/placeholder.webp"}
                 alt={post.mainImage.alt || post.title}
                 fill
                 priority
+                loading="eager"
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 896px"
               />

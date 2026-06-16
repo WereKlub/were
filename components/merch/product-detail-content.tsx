@@ -44,7 +44,7 @@ function ProductImageCarousel({
         <CarouselContent>
           {images.map((image, index) => (
             <CarouselItem key={index}>
-              <div className="flex-1 min-h-[420px] md:min-h-[520px] relative overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg">
+              <div className="relative aspect-square w-full overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:aspect-auto md:min-h-[520px]">
                 <Image
                   src={image.url}
                   alt={
@@ -52,6 +52,7 @@ function ProductImageCarousel({
                   }
                   fill
                   className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   quality={100}
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
@@ -295,7 +296,7 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                   productName={product.name}
                 />
               ) : mainImage ? (
-                <div className="flex-1 min-h-[420px] md:min-h-[520px] relative overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg">
+                <div className="relative aspect-square w-full overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:aspect-auto md:min-h-[520px]">
                   <Image
                     src={mainImage}
                     alt={
@@ -305,12 +306,13 @@ function ProductDetail({ product }: ProductDetailContentProps) {
                     }
                     fill
                     className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     quality={100}
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/10 via-transparent to-transparent"></div>
                 </div>
               ) : (
-                <div className="relative flex min-h-[420px] flex-1 items-center justify-center overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:min-h-[520px]">
+                <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg md:aspect-auto md:min-h-[520px]">
                   <span className="text-muted-foreground">
                     {t(currentLanguage, "merchPage.productDetail.noImage")}
                   </span>

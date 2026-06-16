@@ -45,7 +45,7 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
             src={mainImage}
             alt={product.name}
             fill
-            sizes="(max-width: 768px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
             className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
             quality={100}
             placeholder={
@@ -62,13 +62,13 @@ function ProductCardContent({ product }: { product: SanityProduct }) {
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col gap-2.5 border-t border-border/40 p-3 md:p-4">
+      <div className="flex flex-1 flex-col gap-2.5 border-t border-border/40 p-4 md:p-4">
         <div className="space-y-1">
           <Link
             href={`/boutique/${slug}`}
             className="block outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <h3 className="font-display text-sm font-black uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary md:text-base line-clamp-2">
+            <h3 className="font-display text-base font-black uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary md:text-base line-clamp-2">
               {product.name}
             </h3>
           </Link>

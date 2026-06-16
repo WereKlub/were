@@ -58,17 +58,17 @@ export default function NewsContent({ posts }: NewsContentProps) {
                         alt={post.mainImage?.alt || post.title}
                         fill
                         className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
-                        sizes="(max-width: 768px) 50vw, 33vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                         quality={90}
                       />
                     </div>
-                    <div className="flex min-h-0 grow flex-col gap-2.5 border-t border-border/40 p-3 md:p-4">
+                    <div className="flex min-h-0 grow flex-col gap-2.5 border-t border-border/40 p-4 md:p-4">
                       <p className="text-xs tracking-[0.22em] uppercase text-muted-foreground">
                         {format(new Date(post.publishedAt), "MMM d, yyyy", {
                           locale: dateLocale,
                         })}
                       </p>
-                      <h3 className="line-clamp-2 font-display text-sm font-black uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary md:text-base">
+                      <h3 className="line-clamp-2 font-display text-base font-black uppercase leading-snug tracking-tight text-foreground transition-colors group-hover:text-primary md:text-base">
                         {post.title}
                       </h3>
                       {post.excerpt ? (
