@@ -9,6 +9,7 @@ import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { trackPurchase } from "@/components/ui/FacebookPixel";
 import { useEffect } from "react";
+import { clearCheckoutContact } from "@/lib/utils/checkout-contact";
 import {
   AppPageContainer,
   AppPageShell,
@@ -28,6 +29,7 @@ export function PaymentSuccessClient({
 
   useEffect(() => {
     trackPurchase(0, "XOF");
+    clearCheckoutContact();
   }, []);
 
   return (

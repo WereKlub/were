@@ -14,6 +14,7 @@ import {
   getHomepageThemeSettings,
 } from "@/lib/sanity/queries";
 import { ButtonThemeProvider } from "@/lib/contexts/ThemeContext";
+import { getServerLocale } from "@/lib/i18n/server-locale";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -41,13 +42,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [navSettings, themeSettings] = await Promise.all([
+  const [navSettings, themeSettings, locale] = await Promise.all([
     getNavigationSettings(),
     getHomepageThemeSettings(),
+    getServerLocale(),
   ]);
   return (
     <html
-      lang="en"
+      lang={locale}
       suppressHydrationWarning
       className={`${spaceGrotesk.variable} ${inter.variable} bg-background`}
     >
@@ -65,7 +67,7 @@ export default async function RootLayout({
                 navSettings.showAgencyInNavigation ?? false
               }
             >
-              <TranslationProvider>
+              <TranslationProvider initialLanguage={locale}>
                 <CartProvider>
                   <main className="grow">{children}</main>
                 </CartProvider>

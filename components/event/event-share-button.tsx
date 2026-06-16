@@ -52,9 +52,7 @@ export function EventShareButton({
       .writeText(shareUrl)
       .then(() => {
         setCopied(true);
-        // Optional: Add a visual cue like a toast here if you re-introduce it
-        console.log("Link copied!");
-        setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+        setTimeout(() => setCopied(false), 2000);
       })
       .catch((err) => {
         console.error("Failed to copy: ", err);
@@ -106,13 +104,36 @@ export function EventShareButton({
     }
   }, [isOpen]);
 
+  const handleShareClick = async () => {
+    const url =
+      shareUrl ||
+      (typeof window !== "undefined"
+        ? `${window.location.origin}/events/${eventSlug}`
+        : "");
+
+    if (typeof navigator !== "undefined" && navigator.share && url) {
+      try {
+        await navigator.share({
+          title: eventTitle,
+          url,
+        });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+      }
+    }
+
+    setIsOpen(true);
+  };
+
   return (
     <>
-      {/* Button to trigger the modal */}
       <Button
         variant="outline"
         className="flex items-center gap-2"
-        onClick={() => setIsOpen(true)}
+        onClick={() => void handleShareClick()}
       >
         <Share2 className="h-4 w-4" />
         {t(currentLanguage, "eventShare.triggerButton")}

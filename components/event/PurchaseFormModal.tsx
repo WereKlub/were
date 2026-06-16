@@ -12,6 +12,11 @@ import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { SupabaseClient } from "@supabase/supabase-js";
 import PhoneNumberInput from "@/components/ui/phone-number-input";
 import { useIsMobile } from "@/lib/utils/use-is-mobile";
+import { DrawerModalHeader } from "@/components/ui/drawer-modal-header";
+import {
+  readCheckoutContact,
+  writeCheckoutContact,
+} from "@/lib/utils/checkout-contact";
 
 const PURCHASE_MODAL_PORTAL_ID = "purchase-modal-portal";
 
@@ -61,6 +66,7 @@ interface PurchaseFormModalProps {
   eventDetails: {
     id: string;
     title: string;
+    slug?: string;
     dateText?: string;
     timeText?: string;
     venueName?: string;
@@ -168,6 +174,23 @@ export default function PurchaseFormModal({
       }, 120);
     });
   }, [isMobile]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const saved = readCheckoutContact();
+    if (saved) {
+      setUserName(saved.name);
+      setUserEmail(saved.email);
+      setUserPhone(saved.phone);
+    }
+  }, [isOpen]);
+
+  const persistContact = useCallback(
+    (patch: { name?: string; email?: string; phone?: string }) => {
+      writeCheckoutContact(patch);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (item) {
@@ -289,6 +312,12 @@ export default function PurchaseFormModal({
 
     setIsLoading(true);
 
+    writeCheckoutContact({
+      name: userName.trim(),
+      email: userEmail.trim(),
+      phone: userPhone.trim(),
+    });
+
     const shouldAllowQuantity =
       (item.maxPerOrder && item.maxPerOrder > 1) ||
       item.stock === null ||
@@ -307,7 +336,9 @@ export default function PurchaseFormModal({
       userPhone: userPhone || undefined,
       currencyCode: "XOF",
       successUrlPath: "/payment/success",
-      cancelUrlPath: "/payment/cancel",
+      cancelUrlPath: eventDetails.slug
+        ? `/payment/cancel?flow=ticket&return_to=${encodeURIComponent(`/events/${eventDetails.slug}`)}`
+        : "/payment/cancel?flow=ticket",
       productId: item.productId,
       allowCouponCode: true,
       allowQuantity: shouldAllowQuantity,
@@ -447,17 +478,13 @@ export default function PurchaseFormModal({
                 }
               >
                 <div className="flex items-start py-3 md:py-6 shrink-0">
-                  <div>
-                    <h2
-                      id="purchase-modal-title"
-                      className="text-2xl md:text-3xl font-bold text-foreground"
-                    >
-                      {t(currentLanguage, "purchaseModal.title")}
-                    </h2>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {t(currentLanguage, "purchaseModal.description")}
-                    </p>
-                  </div>
+                  <DrawerModalHeader
+                    title={t(currentLanguage, "purchaseModal.title")}
+                    subtitle={t(currentLanguage, "purchaseModal.description")}
+                    titleId="purchase-modal-title"
+                    showControls={isMobile}
+                    onClose={onClose}
+                  />
                 </div>
 
                 <div className="flex-1 overflow-y-auto min-h-0 overscroll-y-contain [-webkit-overflow-scrolling:touch]">
@@ -517,6 +544,7 @@ export default function PurchaseFormModal({
                         name="name"
                         value={userName}
                         onChange={(e) => setUserName(e.target.value)}
+                        onBlur={() => persistContact({ name: userName })}
                         onFocus={scrollActiveFieldIntoView}
                         autoComplete="name"
                         enterKeyHint="next"
@@ -540,6 +568,7 @@ export default function PurchaseFormModal({
                         type="email"
                         value={userEmail}
                         onChange={(e) => setUserEmail(e.target.value)}
+                        onBlur={() => persistContact({ email: userEmail })}
                         onFocus={scrollActiveFieldIntoView}
                         autoComplete="email"
                         enterKeyHint="next"
@@ -562,8 +591,12 @@ export default function PurchaseFormModal({
                       </Label>
                       <PhoneNumberInput
                         value={userPhone}
-                        onChange={(value) => setUserPhone(value || "")}
-                        className="rounded-md h-9 text-sm mt-2"
+                        onChange={(value) => {
+                          const next = value || "";
+                          setUserPhone(next);
+                          persistContact({ phone: next });
+                        }}
+                        className="rounded-md min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
                         placeholder={t(
                           currentLanguage,
                           "purchaseModal.placeholders.phone",

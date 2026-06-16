@@ -1,4 +1,7 @@
 {
+  "common": {
+    "close": "Close"
+  },
   "footer": {
     "links": {
       "terms": "Terms"
@@ -283,7 +286,12 @@
     "freeShipping": "Free",
     "total": "Total",
     "cart": "Cart",
-    "proceedToCheckout": "Proceed to checkout"
+    "proceedToCheckout": "Proceed to checkout",
+    "backToCart": "Back to cart"
+  },
+  "eventMobileTicketBar": {
+    "label": "Tickets from {price} F CFA",
+    "cta": "Get tickets"
   },
   "cartItemCard": {
     "noImage": "No image"
@@ -350,7 +358,8 @@
     },
     "buttons": {
       "backToEvents": "Back to Events",
-      "browseGallery": "Browse Gallery"
+      "browseGallery": "Browse Gallery",
+      "tryAgain": "Try again"
     },
     "support": "Need help? Contact our support team"
   },
@@ -366,7 +375,9 @@
     },
     "buttons": {
       "backToEvents": "Back to Shop",
-      "browseGallery": "Browse Gallery"
+      "browseGallery": "Browse Gallery",
+      "viewCart": "View cart",
+      "tryAgain": "Try again"
     },
     "support": "Need help? Contact our support team"
   },

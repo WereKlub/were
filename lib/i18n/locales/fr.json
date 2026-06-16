@@ -1,4 +1,7 @@
 {
+  "common": {
+    "close": "Fermer"
+  },
   "footer": {
     "links": {
       "terms": "Conditions"
@@ -283,7 +286,12 @@
     "freeShipping": "Livraison gratuite",
     "total": "Total",
     "cart": "Panier",
-    "proceedToCheckout": "Procéder au paiement"
+    "proceedToCheckout": "Procéder au paiement",
+    "backToCart": "Retour au panier"
+  },
+  "eventMobileTicketBar": {
+    "label": "Billets à partir de {price} F CFA",
+    "cta": "Voir les billets"
   },
   "cartItemCard": {
     "noImage": "Aucune image"
@@ -350,7 +358,8 @@
     },
     "buttons": {
       "backToEvents": "Retour aux événements",
-      "browseGallery": "Parcourir la galerie"
+      "browseGallery": "Parcourir la galerie",
+      "tryAgain": "Réessayer"
     },
     "support": "Besoin d'aide ? Contactez notre équipe de support"
   },
@@ -366,7 +375,9 @@
     },
     "buttons": {
       "backToEvents": "Retour à la boutique",
-      "browseGallery": "Parcourir la galerie"
+      "browseGallery": "Parcourir la galerie",
+      "viewCart": "Voir le panier",
+      "tryAgain": "Réessayer"
     },
     "support": "Besoin d'aide ? Contactez notre équipe de support"
   },

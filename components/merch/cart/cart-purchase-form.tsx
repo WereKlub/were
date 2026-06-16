@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,10 @@ import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { useTheme } from "@/lib/contexts/ThemeContext";
 import { useIsMobile } from "@/lib/utils/use-is-mobile";
+import {
+  readCheckoutContact,
+  writeCheckoutContact,
+} from "@/lib/utils/checkout-contact";
 
 const CartContainer = ({
   children,
@@ -34,6 +38,15 @@ export default function CartPurchaseForm() {
   const [userPhone, setUserPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = readCheckoutContact();
+    if (saved) {
+      setUserName(saved.name);
+      setUserEmail(saved.email);
+      setUserPhone(saved.phone);
+    }
+  }, []);
 
   const scrollActiveFieldIntoView = useCallback(() => {
     if (!isMobile) return;
@@ -84,6 +97,12 @@ export default function CartPurchaseForm() {
 
     setIsLoading(true);
 
+    writeCheckoutContact({
+      name: userName.trim(),
+      email: userEmail.trim(),
+      phone: userPhone.trim(),
+    });
+
     try {
       const cartItems = cart.lines.map((line) => ({
         merchandiseId: line.id,
@@ -104,7 +123,7 @@ export default function CartPurchaseForm() {
         userPhone: userPhone.trim(),
         currencyCode: "XOF",
         successUrlPath: "/payment/success",
-        cancelUrlPath: "/payment/cancel",
+        cancelUrlPath: "/payment/cancel?flow=merch",
         allowCouponCode: true,
         allowQuantity: false,
       };
@@ -146,10 +165,7 @@ export default function CartPurchaseForm() {
 
   return (
     <div className="flex flex-col justify-between h-full overflow-hidden min-h-0">
-      <CartContainer className="flex justify-between items-center px-2 text-sm text-muted-foreground mb-4">
-        <span className="font-medium">
-          {t(currentLanguage, "cartPurchaseForm.title")}
-        </span>
+      <CartContainer className="flex justify-end items-center px-2 text-sm text-muted-foreground mb-4">
         <span className="bg-muted/50 px-2 py-1 rounded-md text-xs">
           {cart?.lines.length === 1
             ? t(currentLanguage, "cartPurchaseForm.itemCount", {
@@ -177,6 +193,7 @@ export default function CartPurchaseForm() {
                 name="name"
                 value={userName}
                 onChange={(e) => setUserName(e.target.value)}
+                onBlur={() => writeCheckoutContact({ name: userName })}
                 onFocus={scrollActiveFieldIntoView}
                 autoComplete="name"
                 enterKeyHint="next"
@@ -200,6 +217,7 @@ export default function CartPurchaseForm() {
                 type="email"
                 value={userEmail}
                 onChange={(e) => setUserEmail(e.target.value)}
+                onBlur={() => writeCheckoutContact({ email: userEmail })}
                 onFocus={scrollActiveFieldIntoView}
                 autoComplete="email"
                 enterKeyHint="next"
@@ -222,8 +240,12 @@ export default function CartPurchaseForm() {
               </Label>
               <PhoneNumberInput
                 value={userPhone}
-                onChange={(value) => setUserPhone(value || "")}
-                className="rounded-md h-9 text-sm mt-2"
+                onChange={(value) => {
+                  const next = value || "";
+                  setUserPhone(next);
+                  writeCheckoutContact({ phone: next });
+                }}
+                className="rounded-md min-h-11 md:h-9 md:min-h-0 text-sm mt-2"
                 placeholder={t(
                   currentLanguage,
                   "cartPurchaseForm.placeholders.phone",

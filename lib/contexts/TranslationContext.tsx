@@ -21,34 +21,47 @@ const TranslationContext = createContext<TranslationContextType>({
 // Main provider component
 export function TranslationProvider({
   children,
+  initialLanguage = "en",
 }: {
   children: React.ReactNode;
+  initialLanguage?: Language;
 }) {
-  const [currentLanguage, setCurrentLanguage] = useState<Language>("en");
+  const [currentLanguage, setCurrentLanguage] =
+    useState<Language>(initialLanguage);
 
   useEffect(() => {
-    // Try to get language from localStorage
     const savedLanguage = getLocalStorageItem("jumbo.language");
 
     if (
       savedLanguage &&
       languages.some((lang) => lang.code === savedLanguage)
     ) {
-      setCurrentLanguage(savedLanguage as Language);
+      if (savedLanguage !== currentLanguage) {
+        setCurrentLanguage(savedLanguage as Language);
+      }
       if (typeof document !== "undefined") {
         document.cookie = `${LOCALE_COOKIE_NAME}=${savedLanguage};path=/;max-age=31536000;SameSite=Lax`;
       }
-    } else {
-      // Try to detect browser language
-      if (typeof navigator !== "undefined") {
-        const browserLang = navigator.language.split("-")[0];
+      return;
+    }
 
-        if (languages.some((lang) => lang.code === browserLang)) {
-          setCurrentLanguage(browserLang as Language);
-        }
+    if (typeof navigator !== "undefined") {
+      const browserLang = navigator.language.split("-")[0];
+      if (
+        languages.some((lang) => lang.code === browserLang) &&
+        browserLang !== currentLanguage
+      ) {
+        setCurrentLanguage(browserLang as Language);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = currentLanguage;
+    }
+  }, [currentLanguage]);
 
   const setLanguage = (lang: Language) => {
     setCurrentLanguage(lang);

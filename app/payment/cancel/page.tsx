@@ -7,6 +7,7 @@ interface SearchParamsProps {
     purchase_ids?: string;
     status?: string;
     flow?: string;
+    return_to?: string;
   }>;
 }
 
@@ -14,6 +15,9 @@ export default async function PaymentCancelPage({
   searchParams,
 }: SearchParamsProps) {
   const params = await searchParams;
+  const returnTo = params.return_to
+    ? decodeURIComponent(params.return_to)
+    : undefined;
 
   return (
     <Suspense
@@ -28,6 +32,7 @@ export default async function PaymentCancelPage({
           params.purchase_id || params.purchase_ids?.split(",")[0]?.trim()
         }
         flow={params.flow}
+        returnTo={returnTo}
       />
     </Suspense>
   );

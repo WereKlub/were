@@ -49,6 +49,7 @@ export default async function Home() {
           imageUrl={promoEventData.flyerUrl}
           href={`/events/${promoEventData.slug}`}
           title={promoEventData.title || "View Event"}
+          dismissKey={promoEventData.slug}
         />
       )}
     </AppPageShell>

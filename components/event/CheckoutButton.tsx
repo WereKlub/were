@@ -42,6 +42,7 @@ interface CheckoutButtonProps {
   eventDetails: {
     id: string;
     title: string;
+    slug?: string;
     dateText?: string;
     timeText?: string;
     venueName?: string;
@@ -228,6 +229,7 @@ export default function CheckoutButton({
             eventDetails={{
               id: eventDetails.id,
               title: eventDetails.title,
+              slug: eventDetails.slug,
               dateText: eventDetails.dateText,
               timeText: eventDetails.timeText,
               venueName: eventDetails.venueName,

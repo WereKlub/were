@@ -16,6 +16,7 @@ import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { useTheme } from "@/lib/contexts/ThemeContext";
 import { t } from "@/lib/i18n/translations";
 import { useIsMobile } from "@/lib/utils/use-is-mobile";
+import { DrawerModalHeader } from "@/components/ui/drawer-modal-header";
 
 const CartContainer = ({
   children,
@@ -263,11 +264,14 @@ export default function CartModal() {
       const now = Date.now();
       const timeSinceLastOpen = now - lastCartOpenTime;
       const drawerAlreadyVisible = isCartDrawerVisible();
+      const isMobileViewport =
+        typeof window !== "undefined" && window.innerWidth < 768;
       const canOpen =
         timeSinceLastOpen > CART_OPEN_DEBOUNCE_MS &&
         (cartOpenLock === null || cartOpenLock === instanceId) &&
         !isOpen &&
-        !drawerAlreadyVisible;
+        !drawerAlreadyVisible &&
+        !isMobileViewport;
 
       if (canOpen) {
         cartOpenLock = instanceId;
@@ -495,15 +499,22 @@ export default function CartModal() {
                         : undefined
                     }
                   >
-                    <CartContainer className="flex justify-between items-center mb-6 md:mb-8">
-                      <div>
-                        <h2
-                          id="cart-modal-title"
-                          className="text-2xl md:text-3xl font-bold text-foreground"
-                        >
-                          {t(currentLanguage, "cartModal.cart")}
-                        </h2>
-                      </div>
+                    <CartContainer className="mb-6 md:mb-8">
+                      <DrawerModalHeader
+                        title={
+                          showPurchaseForm
+                            ? t(currentLanguage, "cartPurchaseForm.title")
+                            : t(currentLanguage, "cartModal.cart")
+                        }
+                        titleId="cart-modal-title"
+                        showControls={isMobile}
+                        onClose={closeCart}
+                        onBack={
+                          showPurchaseForm
+                            ? () => setShowPurchaseForm(false)
+                            : undefined
+                        }
+                      />
                     </CartContainer>
 
                     <div className="flex flex-col flex-1 min-h-0">

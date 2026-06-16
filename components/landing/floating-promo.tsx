@@ -8,6 +8,39 @@ import Link from "next/link";
 import { trackEvent } from "@/components/ui/FacebookPixel";
 import { useTheme } from "@/lib/contexts/ThemeContext";
 
+const PROMO_DISMISS_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function getDismissStorageKey(
+  dismissKey?: string,
+  href?: string,
+): string | null {
+  const id = dismissKey || href;
+  if (!id) return null;
+  return `wereklub.promo.dismissed.${id}`;
+}
+
+function isPromoDismissed(storageKey: string | null): boolean {
+  if (!storageKey || typeof window === "undefined") return false;
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) return false;
+    const dismissedAt = Number(raw);
+    if (!Number.isFinite(dismissedAt)) return false;
+    return Date.now() - dismissedAt < PROMO_DISMISS_TTL_MS;
+  } catch {
+    return false;
+  }
+}
+
+function persistPromoDismiss(storageKey: string | null): void {
+  if (!storageKey || typeof window === "undefined") return;
+  try {
+    localStorage.setItem(storageKey, String(Date.now()));
+  } catch {
+    // Ignore
+  }
+}
+
 interface FloatingPromoProps {
   imageUrl?: string;
   onClose?: () => void;
@@ -15,6 +48,7 @@ interface FloatingPromoProps {
   href?: string;
   title?: string;
   buttonText?: string;
+  dismissKey?: string;
 }
 
 export default function FloatingPromo({
@@ -24,22 +58,36 @@ export default function FloatingPromo({
   href,
   title = "Promotional event flyer",
   buttonText = "Get your ticket",
+  dismissKey,
 }: FloatingPromoProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(true);
   const { button } = useTheme();
+  const storageKey = getDismissStorageKey(dismissKey, href);
 
   useEffect(() => {
+    if (isPromoDismissed(storageKey)) {
+      setIsDismissed(true);
+      return;
+    }
+    setIsDismissed(false);
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [storageKey]);
 
   const handleClose = () => {
+    persistPromoDismiss(storageKey);
     setIsVisible(false);
+    setIsDismissed(true);
     setTimeout(onClose, 300);
   };
+
+  if (isDismissed) {
+    return null;
+  }
 
   return (
     <motion.div

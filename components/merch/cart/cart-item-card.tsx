@@ -76,7 +76,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
             size="sm"
             onClick={handleRemoveItem}
             disabled={isPending}
-            className="shrink-0 h-6 w-6 p-0"
+            className="shrink-0 h-11 w-11 min-h-11 min-w-11 p-0 md:h-8 md:w-8 md:min-h-0 md:min-w-0"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -90,7 +90,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
               size="sm"
               onClick={() => handleUpdateQuantity(Math.max(1, quantity - 1))}
               disabled={isPending || quantity <= 1}
-              className="h-8 w-8 p-0"
+              className="h-11 w-11 min-h-11 min-w-11 p-0 md:h-8 md:w-8 md:min-h-0 md:min-w-0"
             >
               <MinusIcon className="h-3 w-3" />
             </Button>
@@ -102,7 +102,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
               size="sm"
               onClick={() => handleUpdateQuantity(quantity + 1)}
               disabled={isPending}
-              className="h-8 w-8 p-0"
+              className="h-11 w-11 min-h-11 min-w-11 p-0 md:h-8 md:w-8 md:min-h-0 md:min-w-0"
             >
               <PlusIcon className="h-3 w-3" />
             </Button>

@@ -1,10 +1,13 @@
 "use client";
 
 import { XCircle } from "lucide-react";
+import Link from "next/link";
 import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
+import { openCartExternally } from "@/components/merch/cart/cart-modal";
 import {
   AppPageContainer,
   AppPageShell,
@@ -16,16 +19,22 @@ import { DetailSectionHeader } from "@/components/layout/detail-section-header";
 interface PaymentCancelClientProps {
   purchaseId?: string;
   flow?: string;
+  returnTo?: string;
+}
+
+function isSafeReturnPath(path: string | undefined): path is string {
+  return Boolean(path && path.startsWith("/") && !path.startsWith("//"));
 }
 
 export function PaymentCancelClient({
   purchaseId,
   flow,
+  returnTo,
 }: PaymentCancelClientProps) {
   const { currentLanguage } = useTranslation();
-
-  const translationBaseKey =
-    flow === "merch" ? "paymentCancelMerch" : "paymentCancel";
+  const isMerch = flow === "merch";
+  const translationBaseKey = isMerch ? "paymentCancelMerch" : "paymentCancel";
+  const safeReturnTo = isSafeReturnPath(returnTo) ? returnTo : null;
 
   return (
     <AppPageShell>
@@ -84,6 +93,63 @@ export function PaymentCancelClient({
                   )}
                 </li>
               </ul>
+
+              <div className="mb-6 flex flex-col gap-3">
+                {safeReturnTo ? (
+                  <Button
+                    variant="default"
+                    asChild
+                    className="w-full rounded-md"
+                  >
+                    <Link href={safeReturnTo}>
+                      {t(
+                        currentLanguage,
+                        `${translationBaseKey}.buttons.tryAgain`,
+                      )}
+                    </Link>
+                  </Button>
+                ) : null}
+                {isMerch ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      asChild
+                      className="w-full rounded-md"
+                    >
+                      <Link href="/boutique">
+                        {t(
+                          currentLanguage,
+                          `${translationBaseKey}.buttons.backToEvents`,
+                        )}
+                      </Link>
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full rounded-md"
+                      onClick={() => openCartExternally()}
+                    >
+                      {t(
+                        currentLanguage,
+                        `${translationBaseKey}.buttons.viewCart`,
+                      )}
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    variant="outline"
+                    asChild
+                    className="w-full rounded-md"
+                  >
+                    <Link href="/events">
+                      {t(
+                        currentLanguage,
+                        `${translationBaseKey}.buttons.backToEvents`,
+                      )}
+                    </Link>
+                  </Button>
+                )}
+              </div>
 
               <p className="text-center text-xs text-muted-foreground">
                 {t(currentLanguage, `${translationBaseKey}.support`)}

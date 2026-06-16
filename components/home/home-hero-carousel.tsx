@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import useEmblaCarousel from "embla-carousel-react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -10,12 +11,14 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
+import { useTranslation } from "@/lib/contexts/TranslationContext";
 
 export type HomeHeroItem = {
   id: string;
   type: "image" | "video";
   title?: string;
   description?: string;
+  date?: string;
   imageUrl?: string;
   imageAlt?: string;
   videoUrl?: string;
@@ -29,13 +32,27 @@ function hasDisplayableMedia(item: HomeHeroItem): boolean {
   return Boolean(item.imageUrl?.trim());
 }
 
+function formatHeroDate(date: string, locale: string): string {
+  return new Date(date).toLocaleDateString(
+    locale === "fr" ? "fr-FR" : "en-US",
+    {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    },
+  );
+}
+
 export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
+  const { currentLanguage } = useTranslation();
   const slides = items.filter(hasDisplayableMedia);
 
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const autoPlayIntervalRef = useRef<ReturnType<typeof setInterval> | null>(
     null,
@@ -43,6 +60,23 @@ export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
 
   const currentItem = slides[currentIndex];
   const hasMultiple = slides.length > 1;
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCurrentIndex(emblaApi.selectedScrollSnap());
+    setIsPlaying(false);
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("pointerDown", () => setIsDragging(true));
+    emblaApi.on("pointerUp", () => setIsDragging(false));
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   useEffect(() => {
     if (currentItem?.type !== "video" || !videoRef.current) return;
@@ -67,7 +101,7 @@ export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
   }, [isMuted, currentIndex]);
 
   useEffect(() => {
-    if (isHovered || !hasMultiple) {
+    if (isHovered || isDragging || !hasMultiple) {
       if (autoPlayIntervalRef.current) {
         clearInterval(autoPlayIntervalRef.current);
         autoPlayIntervalRef.current = null;
@@ -76,7 +110,7 @@ export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
     }
 
     autoPlayIntervalRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % slides.length);
+      emblaApi?.scrollNext();
       setIsPlaying(false);
     }, 6000);
 
@@ -85,22 +119,25 @@ export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
         clearInterval(autoPlayIntervalRef.current);
       }
     };
-  }, [hasMultiple, isHovered, slides.length]);
+  }, [emblaApi, hasMultiple, isDragging, isHovered, slides.length]);
 
   const goToNext = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % slides.length);
+    emblaApi?.scrollNext();
     setIsPlaying(false);
-  }, [slides.length]);
+  }, [emblaApi]);
 
   const goToPrev = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    emblaApi?.scrollPrev();
     setIsPlaying(false);
-  }, [slides.length]);
+  }, [emblaApi]);
 
-  const goToIndex = useCallback((index: number) => {
-    setCurrentIndex(index);
-    setIsPlaying(false);
-  }, []);
+  const goToIndex = useCallback(
+    (index: number) => {
+      emblaApi?.scrollTo(index);
+      setIsPlaying(false);
+    },
+    [emblaApi],
+  );
 
   if (
     slides.length === 0 ||
@@ -110,7 +147,9 @@ export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
     return null;
   }
 
-  const showOverlay = Boolean(currentItem.title || currentItem.description);
+  const showOverlay = Boolean(
+    currentItem.title || currentItem.description || currentItem.date,
+  );
   const isEmbedVideo =
     currentItem.videoUrl &&
     (currentItem.videoUrl.includes("youtube.com") ||
@@ -124,51 +163,73 @@ export function HomeHeroCarousel({ items }: { items: HomeHeroItem[] }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="absolute inset-0">
-        {currentItem.type === "video" && currentItem.videoUrl ? (
-          isEmbedVideo ? (
-            <iframe
-              src={currentItem.videoUrl}
-              className="absolute inset-0 h-full w-full"
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              title={currentItem.title || "Hero video"}
-            />
-          ) : (
-            <video
-              ref={videoRef}
-              key={currentItem.videoUrl}
-              autoPlay
-              loop
-              muted={isMuted}
-              playsInline
-              className="absolute inset-0 h-full w-full object-cover"
-              src={currentItem.videoUrl}
-              poster={currentItem.imageUrl}
-            />
-          )
-        ) : currentItem.imageUrl ? (
-          <Image
-            src={currentItem.imageUrl}
-            alt={currentItem.imageAlt || ""}
-            fill
-            className="object-cover"
-            priority={currentIndex === 0}
-            loading={currentIndex === 0 ? "eager" : "lazy"}
-            sizes="100vw"
-          />
-        ) : null}
+      <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
+        <div className="flex h-full">
+          {slides.map((slide) => {
+            const slideIsEmbedVideo =
+              slide.videoUrl &&
+              (slide.videoUrl.includes("youtube.com") ||
+                slide.videoUrl.includes("youtu.be") ||
+                slide.videoUrl.includes("vimeo.com"));
 
-        {showOverlay ? <div className="absolute inset-0 bg-black/35" /> : null}
+            return (
+              <div
+                key={slide.id}
+                className="relative min-w-0 flex-[0_0_100%] h-[55vh] md:h-[65vh]"
+              >
+                {slide.type === "video" && slide.videoUrl ? (
+                  slideIsEmbedVideo ? (
+                    <iframe
+                      src={slide.videoUrl}
+                      className="absolute inset-0 h-full w-full"
+                      allow="autoplay; encrypted-media"
+                      allowFullScreen
+                      title={slide.title || "Hero video"}
+                    />
+                  ) : (
+                    <video
+                      ref={slide.id === currentItem.id ? videoRef : undefined}
+                      key={slide.videoUrl}
+                      autoPlay={slide.id === currentItem.id}
+                      loop
+                      muted={isMuted}
+                      playsInline
+                      className="absolute inset-0 h-full w-full object-cover"
+                      src={slide.videoUrl}
+                      poster={slide.imageUrl}
+                    />
+                  )
+                ) : slide.imageUrl ? (
+                  <Image
+                    src={slide.imageUrl}
+                    alt={slide.imageAlt || ""}
+                    fill
+                    className="object-cover"
+                    priority={slide.id === slides[0]?.id}
+                    loading={slide.id === slides[0]?.id ? "eager" : "lazy"}
+                    sizes="100vw"
+                  />
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
+      {showOverlay ? <div className="absolute inset-0 bg-black/35" /> : null}
+
       {showOverlay ? (
-        <div className="relative z-10 flex min-h-[55vh] md:min-h-[65vh] items-end px-6 pb-10 md:px-12 md:pb-14">
+        <div className="pointer-events-none relative z-10 flex min-h-[55vh] md:min-h-[65vh] items-end px-6 pb-10 md:px-12 md:pb-14">
           <div className="max-w-2xl space-y-3">
             {currentItem.title ? (
               <h2 className="font-display text-3xl font-black uppercase tracking-tight text-white md:text-5xl">
                 {currentItem.title}
               </h2>
+            ) : null}
+            {currentItem.date ? (
+              <p className="text-sm text-white/80 md:hidden">
+                {formatHeroDate(currentItem.date, currentLanguage)}
+              </p>
             ) : null}
             {currentItem.description ? (
               <p className="max-w-xl text-sm leading-relaxed text-white/85 md:text-base">

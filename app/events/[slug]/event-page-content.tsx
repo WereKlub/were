@@ -6,6 +6,10 @@ import Header from "@/components/landing/header";
 import Footer from "@/components/landing/footer";
 import { Separator } from "@/components/ui/separator";
 import { EventShareButton } from "@/components/event/event-share-button";
+import {
+  EventMobileTicketBar,
+  getCheapestTicketPrice,
+} from "@/components/event/event-mobile-ticket-bar";
 import { YangoButton } from "@/components/event/YangoButton";
 import { Card, CardContent } from "@/components/ui/card";
 import { t } from "@/lib/i18n/translations";
@@ -248,6 +252,15 @@ export default function EventPageContent({ event }: EventPageContentProps) {
   const hasDefinedBundles = (event.bundles?.length ?? 0) > 0;
   const hasAnyDefinedItems = hasDefinedTickets || hasDefinedBundles;
   const isPastEvent = isEventPast(event.date);
+  const cheapestTicketPrice = getCheapestTicketPrice(
+    event.ticketTypes,
+    event.bundles,
+  );
+  const showMobileTicketBar =
+    !isPastEvent &&
+    globallyTicketsOnSale &&
+    hasAnyDefinedItems &&
+    cheapestTicketPrice != null;
 
   return (
     <AppPageShell>
@@ -263,7 +276,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
       />
 
       <PageContentBelowIntro className="border-t-0">
-        <AppPageContainer className="pb-16 pt-2 md:pb-20 md:pt-4">
+        <AppPageContainer className="pb-24 pt-2 md:pb-20 md:pt-4">
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-6 lg:gap-12">
             <div className="relative aspect-2/3 overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:sticky lg:top-28">
               <Image
@@ -334,7 +347,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
               </div>
 
               {/* Tickets/Bundles Section */}
-              <div className="py-2">
+              <div id="event-tickets" className="py-2 scroll-mt-24">
                 {isPastEvent ? (
                   <div className="mb-6 rounded-md border border-border bg-muted/50 p-4 text-foreground">
                     <p className="font-medium leading-relaxed">
@@ -485,6 +498,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                         eventDetails={{
                                           id: event._id,
                                           title: event.title,
+                                          slug: event.slug.current,
                                           dateText: formattedDate,
                                           timeText: formattedTime,
                                           venueName: event.location?.venueName,
@@ -628,6 +642,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                         eventDetails={{
                                           id: event._id,
                                           title: event.title,
+                                          slug: event.slug.current,
                                           dateText: formattedDate,
                                           timeText: formattedTime,
                                           venueName: event.location?.venueName,
@@ -784,6 +799,10 @@ export default function EventPageContent({ event }: EventPageContentProps) {
           </div>
         </AppPageContainer>
       </PageContentBelowIntro>
+      <EventMobileTicketBar
+        visible={showMobileTicketBar}
+        cheapestPrice={cheapestTicketPrice}
+      />
       <Footer />
     </AppPageShell>
   );
