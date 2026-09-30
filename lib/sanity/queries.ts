@@ -76,7 +76,8 @@ export async function getEventBySlug(slug: string, locale: string) {
         salesStart,
         salesEnd,
         active,
-        productId
+        productId,
+        priceId
       },
       lineup[]->{
         _id,
@@ -106,6 +107,7 @@ export async function getEventBySlug(slug: string, locale: string) {
         salesEnd,
         maxPerOrder,
         productId,
+        priceId,
         ticketsIncluded
       }
     }
