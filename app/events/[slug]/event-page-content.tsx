@@ -279,7 +279,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
 
       <PageContentBelowIntro className="border-t-0">
         <AppPageContainer className="pb-24 pt-2 md:pb-20 md:pt-4">
-          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-6 lg:gap-12">
+          <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-5 lg:gap-12">
             <div className="relative aspect-2/3 overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:sticky lg:top-28">
               <Image
                 src={event.flyer?.url || "/banner.webp"}
@@ -287,11 +287,11 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                 priority
                 fill
                 className="object-cover object-center"
-                sizes="(max-width: 1024px) 100vw, 320px"
+                sizes="(max-width: 1024px) 100vw, 420px"
               />
             </div>
 
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-3">
               <div className="mb-8 flex flex-col gap-4 border-b border-border pb-8">
                 <div className="flex items-start gap-3">
                   <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
