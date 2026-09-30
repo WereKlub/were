@@ -18,6 +18,7 @@ interface TicketTypeData {
   paymentLink?: string;
   active: boolean;
   productId?: string;
+  priceId?: string;
 }
 
 // Define specific type for Bundle
@@ -34,6 +35,7 @@ interface BundleData {
   salesEnd?: string | null;
   maxPerOrder?: number;
   productId?: string;
+  priceId?: string;
   ticketsIncluded?: number;
 }
 
