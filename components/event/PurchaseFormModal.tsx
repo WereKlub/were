@@ -33,6 +33,7 @@ interface PurchaseItem {
   maxPerOrder?: number;
   stock?: number | null;
   productId?: string;
+  priceId?: string;
   ticketsIncluded?: number;
 }
 
@@ -50,6 +51,7 @@ interface CreateCheckoutSessionPayload {
   successUrlPath?: string;
   cancelUrlPath?: string;
   productId?: string;
+  priceId?: string;
   allowCouponCode?: boolean;
   allowQuantity?: boolean;
   eventDateText?: string;
@@ -340,6 +342,7 @@ export default function PurchaseFormModal({
         ? `/payment/cancel?flow=ticket&return_to=${encodeURIComponent(`/events/${eventDetails.slug}`)}`
         : "/payment/cancel?flow=ticket",
       productId: item.productId,
+      priceId: item.priceId,
       allowCouponCode: true,
       allowQuantity: shouldAllowQuantity,
       eventDateText: eventDetails.dateText,
