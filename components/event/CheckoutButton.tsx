@@ -35,6 +35,7 @@ interface PurchaseItemForModal {
   maxPerOrder?: number;
   stock?: number | null;
   productId?: string;
+  priceId?: string;
   ticketsIncluded?: number;
 }
 
