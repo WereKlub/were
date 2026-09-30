@@ -192,7 +192,7 @@ export default function CheckoutButton({
           </Link>
         </Button>
       );
-    } else if (supabase) {
+    } else if (supabase && item.priceId) {
       const isBundle = item.isBundle;
       const buttonText = isBundle
         ? t(currentLanguage, "eventSlugPage.tickets.buyNow")

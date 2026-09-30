@@ -129,6 +129,19 @@ serve(async (req: Request) => {
       );
     }
 
+    const priceId = payload.priceId?.trim() || "";
+    if (!priceId) {
+      return new Response(
+        JSON.stringify({
+          error: "Checkout requires a Lomi price ID.",
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 400,
+        },
+      );
+    }
+
     // --- Upsert Customer using RPC ---
     console.log("Creating/updating customer using RPC function");
     const { data: customerId, error: customerError } = await supabase.rpc(
@@ -224,13 +237,9 @@ serve(async (req: Request) => {
     const successRedirectPath = payload.successUrlPath || "/payment/success";
     const cancelRedirectPath = payload.cancelUrlPath || "/payment/cancel";
 
-    // Determine if we're using price-based (product/price) or event-based checkout
-    const priceId = payload.priceId || payload.productId || null;
-    const isPriceBased = !!priceId;
-    console.log("Is price-based checkout:", isPriceBased);
     console.log("Price ID being used:", priceId);
 
-    const baseLomiPayload = {
+    const lomiPayload = {
       success_url: `${APP_BASE_URL}${successRedirectPath}?purchase_id=${purchaseId}&status=success`,
       cancel_url: `${APP_BASE_URL}${cancelRedirectPath}?purchase_id=${purchaseId}&status=cancelled&flow=ticket`,
       currency_code: currencyCode,
@@ -250,31 +259,12 @@ serve(async (req: Request) => {
         ticket_type_id: payload.ticketTypeId,
         customer_id: customerId,
         app_source: "wereklub_events_app",
-        is_product_based: isPriceBased,
       },
       require_billing_address: false,
+      price_id: priceId,
+      title: `${payload.eventTitle} Tickets (x${payload.quantity})`,
+      description: `Tickets for: ${payload.eventTitle}`,
     };
-
-    const lomiPayload = isPriceBased
-      ? {
-          ...baseLomiPayload,
-          price_id: priceId,
-          title: `${payload.eventTitle} Tickets (x${payload.quantity})`,
-          description: `Tickets for: ${payload.eventTitle}`,
-        }
-      : {
-          ...baseLomiPayload,
-          // Event-based checkout: Use unit price, let lomi. handle quantity multiplication
-          amount: payload.pricePerTicket, // Unit price - lomi. will multiply by quantity
-          title: `${payload.ticketName} - ${payload.eventTitle} (x${payload.quantity})`,
-          description: `Payment for ${payload.quantity} ticket(s) for the event: ${payload.eventTitle}. Ticket type: ${payload.ticketName}.`,
-        };
-
-    console.log(
-      "Using",
-      isPriceBased ? "price-based" : "event-based",
-      "checkout",
-    );
 
     console.log(
       "Calling lomi. API with URL:",

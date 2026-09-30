@@ -312,6 +312,11 @@ export default function PurchaseFormModal({
       return;
     }
 
+    if (!item.priceId?.trim()) {
+      setError(t(currentLanguage, "eventSlugPage.availability.misconfigured"));
+      return;
+    }
+
     setIsLoading(true);
 
     writeCheckoutContact({
