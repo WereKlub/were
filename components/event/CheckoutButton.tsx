@@ -22,7 +22,6 @@ export interface CheckoutItemData {
   active?: boolean;
   salesStart?: string | null;
   salesEnd?: string | null;
-  productId?: string;
   priceId?: string;
   ticketsIncluded?: number; // Number of tickets included per bundle
 }
@@ -34,7 +33,6 @@ interface PurchaseItemForModal {
   isBundle: boolean;
   maxPerOrder?: number;
   stock?: number | null;
-  productId?: string;
   priceId?: string;
   ticketsIncluded?: number;
 }
@@ -155,7 +153,6 @@ export default function CheckoutButton({
     isBundle: item.isBundle,
     maxPerOrder: item.maxPerOrder,
     stock: item.stock,
-    productId: item.productId,
     priceId: item.priceId,
     ticketsIncluded: item.ticketsIncluded,
   };
@@ -175,7 +172,7 @@ export default function CheckoutButton({
               // Track purchase initiation
               trackEvent("InitiateCheckout", {
                 content_name: item.name,
-                content_ids: [item.productId || item.id],
+                content_ids: [item.priceId || item.id],
                 content_type: item.isBundle ? "bundle" : "ticket",
                 value: item.price,
                 currency: "XOF",
@@ -207,7 +204,7 @@ export default function CheckoutButton({
               // Track purchase initiation
               trackEvent("InitiateCheckout", {
                 content_name: item.name,
-                content_ids: [item.productId || item.id],
+                content_ids: [item.priceId || item.id],
                 content_type: item.isBundle ? "bundle" : "ticket",
                 value: item.price,
                 currency: "XOF",

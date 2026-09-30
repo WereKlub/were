@@ -17,7 +17,6 @@ interface TicketTypeData {
   salesEnd?: string | null;
   paymentLink?: string;
   active: boolean;
-  productId?: string;
   priceId?: string;
 }
 
@@ -34,7 +33,6 @@ interface BundleData {
   salesStart?: string | null;
   salesEnd?: string | null;
   maxPerOrder?: number;
-  productId?: string;
   priceId?: string;
   ticketsIncluded?: number;
 }

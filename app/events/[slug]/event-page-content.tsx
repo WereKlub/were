@@ -39,7 +39,6 @@ interface TicketTypeData {
   salesEnd?: string | null;
   paymentLink?: string;
   active: boolean;
-  productId?: string;
   priceId?: string;
 }
 
@@ -55,7 +54,6 @@ interface BundleData {
   salesStart?: string | null;
   salesEnd?: string | null;
   maxPerOrder?: number;
-  productId?: string;
   priceId?: string;
   ticketsIncluded?: number;
 }
@@ -495,7 +493,6 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                           active: ticket.active,
                                           salesStart: ticket.salesStart,
                                           salesEnd: ticket.salesEnd,
-                                          productId: ticket.productId,
                                           priceId: ticket.priceId,
                                         }}
                                         eventDetails={{
@@ -638,7 +635,6 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                                           active: bundle.active,
                                           salesStart: bundle.salesStart,
                                           salesEnd: bundle.salesEnd,
-                                          productId: bundle.productId,
                                           priceId: bundle.priceId,
                                           ticketsIncluded:
                                             bundle.ticketsIncluded,

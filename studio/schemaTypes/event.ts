@@ -294,16 +294,10 @@ export default {
               validation: (Rule: Rule) => Rule.required().min(0),
             },
             {
-              name: 'productId',
-              title: 'lomi product ID',
-              type: 'string',
-              description: 'Optional. The Lomi product linked to this ticket type.',
-            },
-            {
               name: 'priceId',
               title: 'lomi price ID',
               type: 'string',
-              description: 'Optional. The exact Lomi price used at checkout.',
+              description: 'Required for checkout. Lomi charges this exact price.',
             },
             {
               name: 'description',
@@ -403,16 +397,10 @@ export default {
               validation: (Rule: Rule) => Rule.required().min(0),
             },
             {
-              name: 'productId',
-              title: 'lomi product ID',
-              type: 'string',
-              description: 'Optional. The Lomi product linked to this bundle.',
-            },
-            {
               name: 'priceId',
               title: 'lomi price ID',
               type: 'string',
-              description: 'Optional. The exact Lomi price used at checkout.',
+              description: 'Required for checkout. Lomi charges this exact price.',
             },
             {
               name: 'ticketsIncluded',
