@@ -297,7 +297,13 @@ export default {
               name: 'productId',
               title: 'lomi product ID',
               type: 'string',
-              description: 'Optional.',
+              description: 'Optional. The Lomi product linked to this ticket type.',
+            },
+            {
+              name: 'priceId',
+              title: 'lomi price ID',
+              type: 'string',
+              description: 'Optional. The exact Lomi price used at checkout.',
             },
             {
               name: 'description',
@@ -400,7 +406,13 @@ export default {
               name: 'productId',
               title: 'lomi product ID',
               type: 'string',
-              description: 'Optional.',
+              description: 'Optional. The Lomi product linked to this bundle.',
+            },
+            {
+              name: 'priceId',
+              title: 'lomi price ID',
+              type: 'string',
+              description: 'Optional. The exact Lomi price used at checkout.',
             },
             {
               name: 'ticketsIncluded',
