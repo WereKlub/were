@@ -23,6 +23,7 @@ export interface CheckoutItemData {
   salesStart?: string | null;
   salesEnd?: string | null;
   productId?: string;
+  priceId?: string;
   ticketsIncluded?: number; // Number of tickets included per bundle
 }
 
@@ -154,6 +155,7 @@ export default function CheckoutButton({
     maxPerOrder: item.maxPerOrder,
     stock: item.stock,
     productId: item.productId,
+    priceId: item.priceId,
     ticketsIncluded: item.ticketsIncluded,
   };
 
