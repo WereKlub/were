@@ -245,12 +245,21 @@ async function dispatchMerchReceiptEmail(
 export async function POST(request) {
   console.log("Lomi webhook: received at", new Date().toISOString());
 
-  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseUrl =
+    process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const lomiWebhookSecret = process.env.LOMI_WEBHOOK_SECRET;
+  const missingEnv = [
+    !supabaseUrl && "SUPABASE_URL",
+    !supabaseServiceKey && "SUPABASE_SERVICE_ROLE_KEY",
+    !lomiWebhookSecret && "LOMI_WEBHOOK_SECRET",
+  ].filter(Boolean);
 
-  if (!supabaseUrl || !supabaseServiceKey || !lomiWebhookSecret) {
-    console.error("Lomi webhook: missing environment variables.");
+  if (missingEnv.length > 0) {
+    console.error(
+      "Lomi webhook: missing environment variables:",
+      missingEnv.join(", "),
+    );
     return new Response(
       JSON.stringify({ error: "Missing required environment variables" }),
       { status: 500, headers: { "Content-Type": "application/json" } },
