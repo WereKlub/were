@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/actions/utils";
+import { appPageContainerClass } from "@/components/layout/app-page-shell";
 
 export function PageIntro({
   title,
@@ -25,12 +26,12 @@ export function PageIntro({
   return (
     <div
       className={cn(
-        "w-full px-4 py-16 md:px-8 md:py-20 lg:px-12",
+        "w-full py-16 md:py-20",
         compact && "py-8 md:py-10",
         className,
       )}
     >
-      <div className="mx-auto max-w-7xl">
+      <div className={appPageContainerClass}>
         <div className={cn("max-w-lg md:max-w-xl", bodyClassName)}>
           {backHref && backLabel ? (
             <Link

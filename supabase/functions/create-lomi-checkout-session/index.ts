@@ -20,7 +20,7 @@ const supabase = createClient(supabaseUrl || "", supabaseServiceRoleKey || "");
 const LOMI_SECRET_KEY = Deno.env.get("LOMI_SECRET_KEY");
 const LOMI_API_URL = Deno.env.get("LOMI_API_URL") || "https://api.lomi.africa";
 const APP_BASE_URL = (
-  Deno.env.get("APP_BASE_URL") || "http://localhost:3000"
+  Deno.env.get("APP_BASE_URL") || "https://wereklub.com"
 ).replace(/\/$/, ""); // Remove trailing slash
 const LOMI_CHECKOUT_BASE_URL = "https://checkout.lomi.africa/pay";
 
