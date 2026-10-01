@@ -278,7 +278,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
       <PageContentBelowIntro className="border-t-0">
         <AppPageContainer className="pb-24 pt-2 md:pb-20 md:pt-4">
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-5 lg:gap-12">
-            <div className="relative h-[min(64vh,28rem)] w-full overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:h-[min(34rem,calc(100svh-9rem))]">
+            <div className="relative h-[min(70vh,32rem)] w-full overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:h-[min(38rem,calc(100svh-8rem))]">
               <Image
                 src={event.flyer?.url || "/banner.webp"}
                 alt={event.title}

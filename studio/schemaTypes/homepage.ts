@@ -34,6 +34,18 @@ export default defineType({
       initialValue: true,
     }),
     defineField({
+      name: 'showAboutInNavigation',
+      title: 'Show about in menu',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
+      name: 'showAgencyInNavigation',
+      title: 'Show agency in menu',
+      type: 'boolean',
+      initialValue: false,
+    }),
+    defineField({
       name: 'primaryButtonColor',
       title: 'Primary button color',
       type: 'string',

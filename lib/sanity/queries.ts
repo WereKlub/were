@@ -234,31 +234,6 @@ export async function getAgencyPage(): Promise<AgencyPageData | null> {
   );
 }
 
-function isPortableBlocks(value: unknown): value is unknown[] {
-  return Array.isArray(value) && value.length > 0;
-}
-
-/** Matches /about: show nav link only when CMS has at least one visible block. */
-export function shouldShowAboutInNavigation(
-  data: AboutPageData | null,
-): boolean {
-  if (!data) return false;
-  const hasCarousel = (data.carouselImages?.length ?? 0) > 0;
-  const hasCopy = Boolean(data.heading?.trim()) && isPortableBlocks(data.body);
-  return hasCarousel || hasCopy;
-}
-
-/** Matches /agency: show nav link only when CMS has at least one visible block. */
-export function shouldShowAgencyInNavigation(
-  data: AgencyPageData | null,
-): boolean {
-  if (!data) return false;
-  const hasCarousel = (data.carouselImages?.length ?? 0) > 0;
-  const hasCopy = Boolean(data.heading?.trim()) && isPortableBlocks(data.body);
-  const hasLogos = (data.partnerLogos?.length ?? 0) > 0;
-  return hasCarousel || hasCopy || hasLogos;
-}
-
 // Products (Enhanced Section)
 export async function getAllProducts() {
   try {
@@ -404,17 +379,14 @@ export const getNavigationSettings = async (): Promise<NavigationSettings> => {
     const homeQuery = `*[_type == "homepage"] | order(_updatedAt desc) [0] {
       showBlogInNavigation,
       showBoutiqueInNavigation,
+      showAboutInNavigation,
+      showAgencyInNavigation,
     }`;
-    const [result, aboutData, agencyData] = await Promise.all([
-      clientNoCdn.fetch<
-        Pick<
-          NavigationSettings,
-          "showBlogInNavigation" | "showBoutiqueInNavigation"
-        >
-      >(homeQuery, {}, getCacheConfig(["homepage", "navigation"])),
-      getAboutPage(),
-      getAgencyPage(),
-    ]);
+    const result = await clientNoCdn.fetch<NavigationSettings>(
+      homeQuery,
+      {},
+      getCacheConfig(["homepage", "navigation"]),
+    );
     const showBlog =
       result?.showBlogInNavigation === undefined
         ? true
@@ -426,8 +398,8 @@ export const getNavigationSettings = async (): Promise<NavigationSettings> => {
     return {
       showBlogInNavigation: showBlog,
       showBoutiqueInNavigation: showBoutique,
-      showAboutInNavigation: shouldShowAboutInNavigation(aboutData),
-      showAgencyInNavigation: shouldShowAgencyInNavigation(agencyData),
+      showAboutInNavigation: Boolean(result?.showAboutInNavigation),
+      showAgencyInNavigation: Boolean(result?.showAgencyInNavigation),
     };
   } catch (error) {
     console.error("Error fetching navigation settings:", error);

@@ -19,14 +19,26 @@ export default function Header() {
   const pathname = usePathname();
   const { currentLanguage } = useTranslation();
   const {
+    showBlogInNavigation,
     showBoutiqueInNavigation,
+    showAboutInNavigation,
+    showAgencyInNavigation,
   } = useNavigationSettings();
 
   const navItems: NavItem[] = [
     { nameKey: "header.nav.home", path: "/" },
     { nameKey: "header.nav.events", path: "/events" },
+    ...(showBlogInNavigation
+      ? [{ nameKey: "header.nav.blog" as const, path: "/blog" }]
+      : []),
     ...(showBoutiqueInNavigation
       ? [{ nameKey: "header.nav.shop" as const, path: "/boutique" }]
+      : []),
+    ...(showAboutInNavigation
+      ? [{ nameKey: "header.nav.about" as const, path: "/about" }]
+      : []),
+    ...(showAgencyInNavigation
+      ? [{ nameKey: "header.nav.agency" as const, path: "/agency" }]
       : []),
   ];
 
