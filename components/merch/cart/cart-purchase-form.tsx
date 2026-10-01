@@ -13,6 +13,7 @@ import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { t } from "@/lib/i18n/translations";
 import { useTheme } from "@/lib/contexts/ThemeContext";
 import { useIsMobile } from "@/lib/utils/use-is-mobile";
+import { scheduleScrollFieldIntoSheet } from "@/lib/utils/mobile-sheet-viewport";
 import {
   readCheckoutContact,
   writeCheckoutContact,
@@ -50,18 +51,7 @@ export default function CartPurchaseForm() {
 
   const scrollActiveFieldIntoView = useCallback(() => {
     if (!isMobile) return;
-    requestAnimationFrame(() => {
-      window.setTimeout(() => {
-        const el = document.activeElement;
-        if (el instanceof HTMLElement && el.tagName !== "BODY") {
-          el.scrollIntoView({
-            block: "center",
-            behavior: "instant",
-            inline: "nearest",
-          });
-        }
-      }, 120);
-    });
+    scheduleScrollFieldIntoSheet();
   }, [isMobile]);
 
   const validateEmail = (email: string) => {
@@ -177,7 +167,10 @@ export default function CartPurchaseForm() {
         </span>
       </CartContainer>
 
-      <div className="relative flex-1 min-h-0 py-4 overflow-y-auto overscroll-y-contain [-webkit-overflow-scrolling:touch]">
+      <div
+        data-sheet-scroll
+        className="relative flex-1 min-h-0 py-4 overflow-y-auto overscroll-y-contain [-webkit-overflow-scrolling:touch]"
+      >
         <CartContainer>
           <form
             id="cart-checkout-form"
@@ -245,7 +238,8 @@ export default function CartPurchaseForm() {
                   setUserPhone(next);
                   writeCheckoutContact({ phone: next });
                 }}
-                className="rounded-md min-h-11 md:h-9 md:min-h-0 text-sm mt-2"
+                fieldSize="responsive"
+                className="mt-2"
                 placeholder={t(
                   currentLanguage,
                   "cartPurchaseForm.placeholders.phone",

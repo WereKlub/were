@@ -49,27 +49,18 @@ const SOCIAL_LINKS = [
 export default function Footer() {
   const { currentLanguage } = useTranslation();
   const {
-    showBlogInNavigation,
     showBoutiqueInNavigation,
-    showAboutInNavigation,
-    showAgencyInNavigation,
   } = useNavigationSettings();
 
-  const footerNav: { href: string; labelKey: string }[] = [
+  const footerNav: { href?: string; labelKey: string; muted?: boolean }[] = [
     { href: "/events", labelKey: "header.nav.events" },
     ...(showBoutiqueInNavigation
       ? [{ href: "/boutique", labelKey: "header.nav.shop" as const }]
       : []),
-    ...(showBlogInNavigation
-      ? [{ href: "/blog", labelKey: "header.nav.blog" as const }]
-      : []),
-    ...(showAboutInNavigation
-      ? [{ href: "/about", labelKey: "header.nav.about" as const }]
-      : []),
-    ...(showAgencyInNavigation
-      ? [{ href: "/agency", labelKey: "header.nav.agency" as const }]
-      : []),
     { href: "/terms", labelKey: "footer.links.terms" },
+    { labelKey: "header.nav.blog", muted: true },
+    { labelKey: "header.nav.about", muted: true },
+    { labelKey: "header.nav.agency", muted: true },
   ];
 
   const mid = Math.ceil(footerNav.length / 2);
@@ -110,26 +101,44 @@ export default function Footer() {
               </h3>
               <div className="grid grid-cols-2 gap-x-8 gap-y-3">
                 <nav className="flex flex-col gap-3">
-                  {footerNavCol1.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
-                    >
-                      {t(currentLanguage, link.labelKey)}
-                    </Link>
-                  ))}
+                  {footerNavCol1.map((link) =>
+                    link.muted || !link.href ? (
+                      <span
+                        key={link.labelKey}
+                        className="text-sm uppercase tracking-wide text-muted-foreground/55 dark:text-white/35"
+                      >
+                        {t(currentLanguage, link.labelKey)}
+                      </span>
+                    ) : (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
+                      >
+                        {t(currentLanguage, link.labelKey)}
+                      </Link>
+                    ),
+                  )}
                 </nav>
                 <nav className="flex flex-col gap-3">
-                  {footerNavCol2.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
-                    >
-                      {t(currentLanguage, link.labelKey)}
-                    </Link>
-                  ))}
+                  {footerNavCol2.map((link) =>
+                    link.muted || !link.href ? (
+                      <span
+                        key={link.labelKey}
+                        className="text-sm uppercase tracking-wide text-muted-foreground/55 dark:text-white/35"
+                      >
+                        {t(currentLanguage, link.labelKey)}
+                      </span>
+                    ) : (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="text-sm text-foreground hover:text-muted-foreground transition-colors uppercase tracking-wide dark:text-white dark:hover:text-white/70"
+                      >
+                        {t(currentLanguage, link.labelKey)}
+                      </Link>
+                    ),
+                  )}
                 </nav>
               </div>
             </div>

@@ -12,6 +12,13 @@ import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { SupabaseClient } from "@supabase/supabase-js";
 import PhoneNumberInput from "@/components/ui/phone-number-input";
 import { useIsMobile } from "@/lib/utils/use-is-mobile";
+import {
+  mobileSheetPositionStyle,
+  scheduleScrollFieldIntoSheet,
+  scrollFieldIntoSheet,
+  useMobileSheetFrame,
+  useSheetScrollLock,
+} from "@/lib/utils/mobile-sheet-viewport";
 import { DrawerModalHeader } from "@/components/ui/drawer-modal-header";
 import {
   readCheckoutContact,
@@ -92,9 +99,7 @@ export default function PurchaseFormModal({
   const [error, setError] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [portalNode, setPortalNode] = useState<HTMLElement | null>(null);
-  const [mobileVisibleHeight, setMobileVisibleHeight] = useState<number | null>(
-    null,
-  );
+  const mobileSheetFrame = useMobileSheetFrame(isOpen && isMobile);
 
   useEffect(() => {
     setIsMounted(true);
@@ -126,54 +131,17 @@ export default function PurchaseFormModal({
     };
   }, [isOpen, onClose]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen || !isMobile || typeof window === "undefined") {
-      setMobileVisibleHeight(null);
-      return;
-    }
-    const vv = window.visualViewport;
-    const apply = () => {
-      setMobileVisibleHeight(
-        vv ? Math.round(vv.height) : Math.round(window.innerHeight),
-      );
-    };
-    apply();
-    if (vv) {
-      vv.addEventListener("resize", apply);
-      vv.addEventListener("scroll", apply);
-      return () => {
-        vv.removeEventListener("resize", apply);
-        vv.removeEventListener("scroll", apply);
-      };
-    }
-    window.addEventListener("resize", apply);
-    return () => window.removeEventListener("resize", apply);
-  }, [isOpen, isMobile]);
+  useSheetScrollLock(isOpen);
 
   const scrollActiveFieldIntoView = useCallback(() => {
     if (!isMobile) return;
-    requestAnimationFrame(() => {
-      window.setTimeout(() => {
-        const el = document.activeElement;
-        if (el instanceof HTMLElement && el.tagName !== "BODY") {
-          el.scrollIntoView({
-            block: "center",
-            behavior: "instant",
-            inline: "nearest",
-          });
-        }
-      }, 120);
-    });
+    scheduleScrollFieldIntoSheet();
   }, [isMobile]);
+
+  useEffect(() => {
+    if (!mobileSheetFrame?.keyboardOpen) return;
+    scrollFieldIntoSheet(document.activeElement);
+  }, [mobileSheetFrame]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -462,14 +430,15 @@ export default function PurchaseFormModal({
               role="dialog"
               aria-modal="true"
               aria-labelledby="purchase-modal-title"
-              className={`fixed z-70 will-change-transform pointer-events-auto overscroll-contain flex flex-col ${
+              data-sheet-panel
+              className={`fixed z-70 pointer-events-auto overscroll-contain flex flex-col ${
                 isMobile
                   ? "inset-x-0 bottom-0 w-full max-h-dvh"
                   : "top-0 bottom-0 right-0 w-full md:w-[720px] md:p-4"
               }`}
               style={
                 isMobile
-                  ? { position: "fixed", left: 0, right: 0, bottom: 0 }
+                  ? mobileSheetPositionStyle(mobileSheetFrame)
                   : { position: "fixed", top: 0, right: 0, bottom: 0 }
               }
               onClick={(e) => e.stopPropagation()}
@@ -477,8 +446,8 @@ export default function PurchaseFormModal({
               <div
                 className="flex flex-col w-full min-h-0 bg-card text-card-foreground backdrop-blur-xl rounded-t-xl md:rounded-md shadow-2xl border border-border p-4 md:h-full md:min-h-0 h-[min(96dvh,100%)] dark:bg-[#1a1a1a]"
                 style={
-                  isMobile && mobileVisibleHeight != null
-                    ? { maxHeight: mobileVisibleHeight }
+                  mobileSheetFrame?.keyboardOpen
+                    ? { height: "100%", maxHeight: "100%" }
                     : undefined
                 }
               >
@@ -492,52 +461,51 @@ export default function PurchaseFormModal({
                   />
                 </div>
 
-                <div className="flex-1 overflow-y-auto min-h-0 overscroll-y-contain [-webkit-overflow-scrolling:touch]">
+                <div
+                  data-sheet-scroll
+                  className="flex-1 overflow-y-auto min-h-0 overscroll-y-contain [-webkit-overflow-scrolling:touch]"
+                >
                   <form
                     id="purchase-checkout-form"
                     onSubmit={handleSubmit}
                     className="space-y-5 md:space-y-6 py-1 md:py-2"
                   >
-                    <div className="bg-muted/30 p-3 rounded-md">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h4 className="font-medium text-sm">{item.name}</h4>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {formatPrice(item.price)}
-                            {t(
-                              currentLanguage,
-                              "eventSlugPage.tickets.currencySuffix",
-                            )}
-                          </p>
-                        </div>
-                        <div className="flex flex-col items-end gap-1">
-                          {item.isBundle && (
-                            <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-md">
+                    <div className="bg-muted/30 px-3 py-2.5 rounded-md">
+                      <h4 className="font-medium text-sm leading-snug">
+                        {item.name}
+                      </h4>
+                      <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-xs text-muted-foreground">
+                        <span>
+                          {formatPrice(item.price)}
+                          {t(
+                            currentLanguage,
+                            "eventSlugPage.tickets.currencySuffix",
+                          )}
+                        </span>
+                        {item.isBundle && (
+                          <>
+                            <span aria-hidden="true">·</span>
+                            <span>
                               {t(currentLanguage, "purchaseModal.bundleBadge", {
                                 count: item.ticketsIncluded || 1,
                               })}
                             </span>
-                          )}
-                          {!item.isBundle &&
-                            item.stock !== null &&
-                            item.stock !== undefined &&
-                            item.stock > 0 && (
-                              <span className="text-xs px-2 py-0.5 rounded-md bg-muted/50 text-muted-foreground">
-                                {t(currentLanguage, "purchaseModal.only")}{" "}
-                                {item.stock}{" "}
-                                {item.stock === 1
-                                  ? t(
-                                      currentLanguage,
-                                      "purchaseModal.available",
-                                    )
-                                  : t(
-                                      currentLanguage,
-                                      "purchaseModal.availablePlural",
-                                    )}
+                          </>
+                        )}
+                        {!item.isBundle &&
+                          item.stock !== null &&
+                          item.stock !== undefined &&
+                          item.stock > 0 && (
+                            <>
+                              <span aria-hidden="true">·</span>
+                              <span className="text-[11px] tabular-nums">
+                                {t(currentLanguage, "purchaseModal.stockLeft", {
+                                  count: item.stock,
+                                })}
                               </span>
-                            )}
-                        </div>
-                      </div>
+                            </>
+                          )}
+                      </p>
                     </div>
 
                     <div className="space-y-2">
@@ -601,7 +569,8 @@ export default function PurchaseFormModal({
                           setUserPhone(next);
                           persistContact({ phone: next });
                         }}
-                        className="rounded-md min-h-11 text-base md:h-9 md:min-h-0 md:text-sm mt-2"
+                        fieldSize="responsive"
+                        className="mt-2"
                         placeholder={t(
                           currentLanguage,
                           "purchaseModal.placeholders.phone",
@@ -624,6 +593,12 @@ export default function PurchaseFormModal({
                         >
                           <Minus className="h-3 w-3" />
                         </Button>
+                        <span
+                          className="mt-2 flex-1 text-center text-base font-medium tabular-nums md:hidden"
+                          aria-live="polite"
+                        >
+                          {quantity}
+                        </span>
                         <Input
                           id="quantity"
                           name="quantity"
@@ -634,7 +609,7 @@ export default function PurchaseFormModal({
                           onBlur={handleQuantityBlur}
                           onFocus={scrollActiveFieldIntoView}
                           enterKeyHint="done"
-                          className="rounded-md min-h-11 text-base text-center flex-1 md:h-9 md:min-h-0 md:text-sm mt-2"
+                          className="mt-2 hidden min-h-11 flex-1 rounded-md text-center text-base md:block md:h-9 md:min-h-0 md:text-sm"
                           required
                         />
                         <Button

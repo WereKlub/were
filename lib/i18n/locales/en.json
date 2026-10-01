@@ -241,6 +241,7 @@
     "only": "Only",
     "available": "available",
     "availablePlural": "available",
+    "stockLeft": "{count} left",
     "includesTickets": "Includes {count} ticket(s)",
     "bundleBadge": "{count} tickets",
     "ticketsGenerated": "Tickets to be generated",
@@ -252,9 +253,9 @@
       "optional": "Optional"
     },
     "placeholders": {
-      "name": "Kouadio N'Guessan",
-      "email": "kouadio@yahoo.fr",
-      "phone": "+2250712345678"
+      "name": "Adjoua Kouassi",
+      "email": "adjoua@gmail.com",
+      "phone": "+2250771234567"
     },
     "totalPrice": "Total",
     "buttons": {
@@ -306,9 +307,9 @@
       "phone": "Phone"
     },
     "placeholders": {
-      "name": "Kouadio N'Guessan",
-      "email": "kouadio@yahoo.fr",
-      "phone": "+2250712345678"
+      "name": "Adjoua Kouassi",
+      "email": "adjoua@gmail.com",
+      "phone": "+2250771234567"
     },
     "shipping": "Shipping",
     "shippingCalculated": "Calculated at checkout",

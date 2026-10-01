@@ -16,6 +16,11 @@ import { useTranslation } from "@/lib/contexts/TranslationContext";
 import { useTheme } from "@/lib/contexts/ThemeContext";
 import { t } from "@/lib/i18n/translations";
 import { useIsMobile } from "@/lib/utils/use-is-mobile";
+import {
+  mobileSheetPositionStyle,
+  useMobileSheetFrame,
+  useSheetScrollLock,
+} from "@/lib/utils/mobile-sheet-viewport";
 import { DrawerModalHeader } from "@/components/ui/drawer-modal-header";
 
 const CartContainer = ({
@@ -195,9 +200,7 @@ export default function CartModal() {
   const [isMounted, setIsMounted] = useState(false);
   const [showPurchaseForm, setShowPurchaseForm] = useState(false);
   const [shouldRenderPortal, setShouldRenderPortal] = useState(false);
-  const [mobileVisibleHeight, setMobileVisibleHeight] = useState<number | null>(
-    null,
-  );
+  const mobileSheetFrame = useMobileSheetFrame(isOpen && isMobile);
   const serializedCart = useRef(cart ? serializeCart(cart) : undefined);
 
   const openCart = useCallback(() => {
@@ -322,38 +325,7 @@ export default function CartModal() {
     };
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (!isOpen || !isMobile || typeof window === "undefined") {
-      setMobileVisibleHeight(null);
-      return;
-    }
-    const vv = window.visualViewport;
-    const apply = () => {
-      setMobileVisibleHeight(
-        vv ? Math.round(vv.height) : Math.round(window.innerHeight),
-      );
-    };
-    apply();
-    if (vv) {
-      vv.addEventListener("resize", apply);
-      vv.addEventListener("scroll", apply);
-      return () => {
-        vv.removeEventListener("resize", apply);
-        vv.removeEventListener("scroll", apply);
-      };
-    }
-    window.addEventListener("resize", apply);
-    return () => window.removeEventListener("resize", apply);
-  }, [isOpen, isMobile]);
+  useSheetScrollLock(isOpen);
 
   const closeCart = () => {
     setIsOpen(false);
@@ -478,15 +450,16 @@ export default function CartModal() {
                   role="dialog"
                   aria-modal="true"
                   aria-labelledby="cart-modal-title"
+                  data-sheet-panel
                   className={cn(
-                    "fixed z-70 will-change-transform overscroll-contain flex flex-col w-full",
+                    "fixed z-70 overscroll-contain flex flex-col w-full",
                     isMobile
                       ? "inset-x-0 bottom-0 max-h-dvh"
                       : "top-0 bottom-0 right-0 md:w-[720px] md:p-4",
                   )}
                   style={
                     isMobile
-                      ? { position: "fixed", left: 0, right: 0, bottom: 0 }
+                      ? mobileSheetPositionStyle(mobileSheetFrame)
                       : { position: "fixed", top: 0, right: 0, bottom: 0 }
                   }
                   onClick={(e) => e.stopPropagation()} // Prevent event bubbling to cart button
@@ -494,8 +467,8 @@ export default function CartModal() {
                   <div
                     className="flex flex-col py-4 px-2 md:px-4 w-full min-h-0 bg-card text-card-foreground backdrop-blur-xl rounded-t-xl md:rounded-md shadow-2xl border border-border md:border-border h-[min(96dvh,100%)] md:h-full md:max-h-none dark:bg-[#1a1a1a]"
                     style={
-                      isMobile && mobileVisibleHeight != null
-                        ? { maxHeight: mobileVisibleHeight }
+                      mobileSheetFrame?.keyboardOpen
+                        ? { height: "100%", maxHeight: "100%" }
                         : undefined
                     }
                   >

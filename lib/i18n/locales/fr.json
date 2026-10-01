@@ -241,6 +241,7 @@
     "only": "Seulement",
     "available": "disponible",
     "availablePlural": "disponibles",
+    "stockLeft": "{count} restants",
     "includesTickets": "Inclut {count} ticket(s)",
     "bundleBadge": "{count} billets",
     "ticketsGenerated": "Tickets à générer",
@@ -252,9 +253,9 @@
       "optional": "Optionnel"
     },
     "placeholders": {
-      "name": "Adjoua Kouamé",
-      "email": "adjoua@yahoo.fr",
-      "phone": "+2250712345678"
+      "name": "Adjoua Kouassi",
+      "email": "adjoua@gmail.com",
+      "phone": "+2250771234567"
     },
     "totalPrice": "Prix total",
     "buttons": {
@@ -306,9 +307,9 @@
       "phone": "Téléphone"
     },
     "placeholders": {
-      "name": "Adjoua Kouamé",
-      "email": "adjoua@yahoo.fr",
-      "phone": "+2250712345678"
+      "name": "Adjoua Kouassi",
+      "email": "adjoua@gmail.com",
+      "phone": "+2250771234567"
     },
     "shipping": "Livraison",
     "shippingCalculated": "Calculée à la caisse",
