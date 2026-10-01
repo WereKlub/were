@@ -176,7 +176,7 @@ const renderFormattedText = (text: string) => {
 
     if (isImportant) {
       return (
-        <p key={index} className="mb-1 font-medium text-orange-300">
+        <p key={index} className="mb-1 font-medium text-red-600 dark:text-red-400">
           {trimmedLine}
         </p>
       );
@@ -278,7 +278,7 @@ export default function EventPageContent({ event }: EventPageContentProps) {
       <PageContentBelowIntro className="border-t-0">
         <AppPageContainer className="pb-24 pt-2 md:pb-20 md:pt-4">
           <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-5 lg:gap-12">
-            <div className="relative h-[min(70vh,32rem)] w-full overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:h-[min(38rem,calc(100svh-8rem))]">
+            <div className="relative h-[min(85vh,44rem)] w-full overflow-hidden rounded-md border border-border/50 bg-muted shadow-lg lg:col-span-2 lg:h-[min(38rem,calc(100svh-8rem))]">
               <Image
                 src={event.flyer?.url || "/banner.webp"}
                 alt={event.title}
@@ -689,17 +689,14 @@ export default function EventPageContent({ event }: EventPageContentProps) {
                       "eventSlugPage.lineupSection.title",
                     )}
                   />
-                  <div className="relative">
-                    <div className="scrollbar-none flex space-x-4 overflow-x-auto pb-4">
-                      {event.lineup.map((artist) => (
-                        <div key={artist._id} className="shrink-0">
-                          <ArtistCard
-                            artist={artist}
-                            currentLanguage={currentLanguage}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                  <div className="flex flex-col gap-4">
+                    {event.lineup.map((artist) => (
+                      <ArtistCard
+                        key={artist._id}
+                        artist={artist}
+                        currentLanguage={currentLanguage}
+                      />
+                    ))}
                   </div>
                 </div>
               ) : null}

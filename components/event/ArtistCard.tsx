@@ -23,74 +23,40 @@ export default function ArtistCard({
   artist,
   currentLanguage,
 }: ArtistCardProps) {
-  const cardBaseClasses =
-    "flex flex-col w-88 max-w-xs bg-card border border-border rounded-md shadow-xl overflow-hidden text-card-foreground";
   const artistDisplayName = artist.name || "Artist";
 
   return (
-    <div className={cardBaseClasses}>
-      {artist.image && (
-        <div className="relative w-full aspect-square">
+    <div className="flex h-64 w-full overflow-hidden rounded-md border border-border bg-card text-card-foreground shadow-xl">
+      {artist.image ? (
+        <div className="relative h-full w-48 shrink-0 sm:w-64">
           <Image
             src={artist.image}
             alt={t(currentLanguage, "artistCard.imageAlt", {
               artistName: artistDisplayName,
             })}
-            layout="fill"
-            objectFit="cover"
-            priority
+            fill
+            className="object-cover"
+            sizes="256px"
           />
-          <div className="absolute bottom-0 left-0 right-0 p-3 bg-linear-to-t from-black/80 via-black/60 to-transparent">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2 min-w-0">
-                <h4 className="font-semibold text-base text-white truncate">
-                  {artist.name}
-                </h4>
-                {artist.isResident && (
-                  <div className="inline-flex items-center px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-md shrink-0">
-                    <span className="relative flex h-2 w-2 mr-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-md bg-green-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-md h-2 w-2 bg-green-500"></span>
-                    </span>
-                    {t(currentLanguage, "artistCard.residentBadge")}
-                  </div>
-                )}
-              </div>
-              {artist.socialLink && (
-                <Link
-                  href={artist.socialLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={t(currentLanguage, "artistCard.socialAriaLabel", {
-                    artistName: artistDisplayName,
-                  })}
-                  className="text-white hover:text-[#E4405F] transition-colors shrink-0 ml-2"
-                >
-                  <IG className="h-5 w-5" />
-                </Link>
-              )}
-            </div>
-          </div>
         </div>
-      )}
-      <div className="p-4 grow flex flex-col">
-        {!artist.image && (
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2 min-w-0">
-              <h4 className="font-semibold text-lg text-foreground truncate">
-                {artist.name}
-              </h4>
-              {artist.isResident && (
-                <div className="inline-flex items-center px-1.5 py-0.5 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-md shrink-0">
-                  <span className="relative flex h-2 w-2 mr-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-md bg-green-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-md h-2 w-2 bg-green-500"></span>
-                  </span>
-                  {t(currentLanguage, "artistCard.residentBadge")}
-                </div>
-              )}
-            </div>
-            {artist.socialLink && (
+      ) : null}
+
+      <div className="flex min-w-0 flex-1 flex-col px-4 py-4">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <h4 className="min-w-0 truncate text-base font-semibold text-foreground">
+            {artist.name}
+          </h4>
+          <div className="flex h-5 shrink-0 items-center gap-2">
+            {artist.isResident ? (
+              <div className="inline-flex h-5 items-center rounded-md bg-green-100 px-1.5 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                <span className="relative mr-1.5 flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-md bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-md bg-green-500"></span>
+                </span>
+                {t(currentLanguage, "artistCard.residentBadge")}
+              </div>
+            ) : null}
+            {artist.socialLink ? (
               <Link
                 href={artist.socialLink}
                 target="_blank"
@@ -98,16 +64,28 @@ export default function ArtistCard({
                 aria-label={t(currentLanguage, "artistCard.socialAriaLabel", {
                   artistName: artistDisplayName,
                 })}
-                className="text-muted-foreground hover:text-[#E4405F] transition-colors shrink-0 ml-2"
+                className="inline-flex h-5 w-5 items-center justify-center text-muted-foreground transition-colors hover:text-[#E4405F]"
               >
-                <IG className="h-6 w-6" />
+                <IG className="h-5 w-5" />
               </Link>
-            )}
+            ) : null}
           </div>
-        )}
-        {artist.bio && (
+        </div>
+
+        {artist.bio ? (
           <div
-            className={`text-muted-foreground text-sm leading-relaxed space-y-1 grow ${artist.image ? "pt-0" : "my-2"} h-20 overflow-y-auto scrollbar-thin scrollbar-thumb-muted-foreground/35 scrollbar-track-muted/50`}
+            className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-y-auto text-sm leading-6 text-muted-foreground"
+            onWheel={(event) => {
+              const el = event.currentTarget;
+              const max = el.scrollHeight - el.clientHeight;
+              if (max <= 1) return;
+              const atTop = el.scrollTop <= 0;
+              const atBottom = el.scrollTop >= max - 1;
+              const delta = event.deltaY;
+              if ((delta < 0 && atTop) || (delta > 0 && atBottom)) {
+                window.scrollBy(0, delta);
+              }
+            }}
           >
             {artist.bio.split("\n").map((line, index) => {
               const trimmedLine = line.trim();
@@ -117,20 +95,14 @@ export default function ArtistCard({
               return <p key={index}>{trimmedLine}</p>;
             })}
           </div>
-        )}
-        {artist.image && !artist.bio && (
-          <p className="text-muted-foreground text-xs italic pt-1 pb-2 grow flex items-end">
-            {t(currentLanguage, "artistCard.noBio")}
-          </p>
-        )}
-        {!artist.image && !artist.bio && !artist.socialLink && (
-          <p className="text-muted-foreground text-xs italic grow flex items-center justify-center">
-            {t(currentLanguage, "artistCard.noDetails")}
-          </p>
-        )}
-        {!artist.image && !artist.bio && artist.socialLink && (
-          <p className="text-muted-foreground text-xs italic mt-2 grow flex items-end">
-            {t(currentLanguage, "artistCard.noBio")}
+        ) : (
+          <p className="text-xs italic text-muted-foreground">
+            {t(
+              currentLanguage,
+              artist.socialLink || artist.image
+                ? "artistCard.noBio"
+                : "artistCard.noDetails",
+            )}
           </p>
         )}
       </div>
