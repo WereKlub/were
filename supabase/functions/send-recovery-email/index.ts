@@ -100,13 +100,16 @@ Deno.serve(async (req: Request) => {
 
     const purchaseData = purchaseDataArray[0];
 
-    if (purchaseData.status !== "payment_failed") {
+    if (
+      purchaseData.status !== "payment_failed" &&
+      purchaseData.status !== "pending_payment"
+    ) {
       console.warn(
-        `send-recovery-email: Purchase ${purchaseIdFromRequest} status is ${purchaseData.status}, not payment_failed`,
+        `send-recovery-email: Purchase ${purchaseIdFromRequest} status is ${purchaseData.status}, not an unfinished checkout`,
       );
       return new Response(
         JSON.stringify({
-          error: "Recovery email is only for failed payments",
+          error: "Recovery email is only for unfinished checkouts",
         }),
         {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -213,6 +216,25 @@ Deno.serve(async (req: Request) => {
     const eventName = purchaseData.event_title || "cet événement";
     const logoSrc = defaultLogoUrl;
 
+    const { data: checkoutRow } = await supabase
+      .from("purchases")
+      .select("lomi_checkout_url")
+      .eq("id", purchaseIdFromRequest)
+      .maybeSingle();
+    const checkoutUrl =
+      typeof checkoutRow?.lomi_checkout_url === "string" &&
+      checkoutRow.lomi_checkout_url.startsWith("https://")
+        ? checkoutRow.lomi_checkout_url
+        : APP_BASE_URL;
+    const safeFirstName = firstName
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+    const safeEventName = eventName
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+
     const emailHtmlBody = `<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -233,13 +255,13 @@ Deno.serve(async (req: Request) => {
           <tr>
             <td style="padding:0 24px 24px;">
               <h1 style="margin:0 0 16px;font-size:20px;font-weight:bold;color:#111;">Votre réservation n’a pas pu être finalisée</h1>
-              <p style="margin:0 0 16px;font-size:15px;line-height:1.5;">Bonjour ${firstName},</p>
-              <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Vous avez récemment essayé de réserver un ticket pour <strong>${eventName}</strong> mais votre paiement n’a pas pu aboutir.</p>
-              <p style="margin:0 0 24px;font-size:15px;line-height:1.5;">Vous pouvez toujours réserver votre place sur <a href="${APP_BASE_URL}" style="color:#2563eb;font-weight:bold;">notre site Web</a>.</p>
+              <p style="margin:0 0 16px;font-size:15px;line-height:1.5;">Bonjour ${safeFirstName},</p>
+              <p style="margin:0 0 20px;font-size:15px;line-height:1.5;">Vous avez récemment essayé de réserver un ticket pour <strong>${safeEventName}</strong> mais votre paiement n’a pas pu aboutir.</p>
+              <p style="margin:0 0 24px;font-size:15px;line-height:1.5;">Vous pouvez reprendre ce paiement et finaliser votre place.</p>
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
                 <tr>
                   <td style="border-radius:4px;background-color:#111;">
-                    <a href="${APP_BASE_URL}" style="display:inline-block;padding:12px 24px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Réserver maintenant</a>
+                    <a href="${checkoutUrl}" style="display:inline-block;padding:12px 24px;font-size:15px;font-weight:bold;color:#ffffff;text-decoration:none;">Finaliser le paiement</a>
                   </td>
                 </tr>
               </table>

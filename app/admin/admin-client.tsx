@@ -258,6 +258,7 @@ export default function AdminClient() {
   const [newName, setNewName] = useState("");
   const [newPhone, setNewPhone] = useState("");
   const [emailActionLoading, setEmailActionLoading] = useState(false);
+  const [emailActionError, setEmailActionError] = useState("");
 
   // Event filtering state
   const [events, setEvents] = useState<EventInfo[]>([]);
@@ -312,27 +313,41 @@ export default function AdminClient() {
     [paidLegacyKeys],
   );
 
+  /** Checkout started, then left unpaid long enough to offer a recovery email. */
+  const isStalePendingCheckout = useCallback((purchase: Purchase) => {
+    if (purchase.status !== "pending_payment") return false;
+    const created = new Date(purchase.created_at).getTime();
+    if (Number.isNaN(created)) return false;
+    return Date.now() - created >= 15 * 60 * 1000;
+  }, []);
+
+  const isRecoverableCheckout = useCallback(
+    (purchase: Purchase) =>
+      purchase.status === "payment_failed" || isStalePendingCheckout(purchase),
+    [isStalePendingCheckout],
+  );
+
   /** Failed checkout with no later paid order for this event / identity (may still be non-actionable if email is a typo). */
   const isAbandonedCartRow = useCallback(
     (purchase: Purchase) =>
-      purchase.status === "payment_failed" &&
+      isRecoverableCheckout(purchase) &&
       !isAbandonmentResolvedByPaidOrder(purchase),
-    [isAbandonmentResolvedByPaidOrder],
+    [isAbandonmentResolvedByPaidOrder, isRecoverableCheckout],
   );
 
   /** Show recovery email UI only when SQL (or legacy) says the address is usable. */
   const isRecoveryEmailActionable = useCallback(
     (purchase: Purchase) => {
+      if (!isRecoverableCheckout(purchase)) return false;
       if (typeof purchase.recovery_email_eligible === "boolean") {
         return purchase.recovery_email_eligible;
       }
       return (
-        purchase.status === "payment_failed" &&
         !isAbandonmentResolvedByPaidOrder(purchase) &&
         isPlausibleRecoveryEmail(purchase.customer_email)
       );
     },
-    [isAbandonmentResolvedByPaidOrder],
+    [isAbandonmentResolvedByPaidOrder, isRecoverableCheckout],
   );
 
   // Helper function to format relative time
@@ -401,6 +416,15 @@ export default function AdminClient() {
     });
     setLoading(true);
     try {
+      // Abandoned checkouts stay pending_payment until this runs. The Failed
+      // filter only lists payment_failed, so expire stale rows before reading.
+      const { error: expireError } = await supabase.rpc(
+        "update_expired_pending_payments",
+      );
+      if (expireError) {
+        console.error("Error expiring pending payments:", expireError);
+      }
+
       if (eventAtRequestStart) {
         const { data, error } = await supabase.rpc(
           "get_admin_purchases_by_event",
@@ -716,7 +740,14 @@ export default function AdminClient() {
           isRecoverySend
             ? "Failed to send recovery email"
             : "Failed to send email",
+          emailError,
         );
+        setEmailActionError(
+          isRecoverySend
+            ? "Recovery email was not sent. Try again."
+            : "Ticket email was not sent. Try again.",
+        );
+        return;
       }
 
       const isFirstTime =
@@ -745,6 +776,7 @@ export default function AdminClient() {
   };
 
   const openEmailDialog = (purchase: Purchase) => {
+    setEmailActionError("");
     setSelectedPurchase(purchase);
     setNewEmail(purchase.customer_email);
     setNewName(purchase.customer_name);
@@ -863,9 +895,13 @@ export default function AdminClient() {
   const statusFilteredPurchases = purchases.filter((purchase) => {
     if (statusFilter === "paid" && purchase.status !== "paid") return false;
     if (statusFilter === "all") return true;
-    if (statusFilter === "pending" && purchase.status !== "pending_payment")
+    if (
+      statusFilter === "pending" &&
+      (purchase.status !== "pending_payment" ||
+        isStalePendingCheckout(purchase))
+    )
       return false;
-    if (statusFilter === "failed" && purchase.status !== "payment_failed")
+    if (statusFilter === "failed" && !isRecoverableCheckout(purchase))
       return false;
     return true;
   });
@@ -875,9 +911,13 @@ export default function AdminClient() {
     const statusFiltered = purchases.filter((purchase) => {
       if (statusFilter === "paid" && purchase.status !== "paid") return false;
       if (statusFilter === "all") return true;
-      if (statusFilter === "pending" && purchase.status !== "pending_payment")
+      if (
+        statusFilter === "pending" &&
+        (purchase.status !== "pending_payment" ||
+          isStalePendingCheckout(purchase))
+      )
         return false;
-      if (statusFilter === "failed" && purchase.status !== "payment_failed")
+      if (statusFilter === "failed" && !isRecoverableCheckout(purchase))
         return false;
       return true;
     });
@@ -898,7 +938,13 @@ export default function AdminClient() {
       .sort((a, b) =>
         a.label.localeCompare(b.label, undefined, { sensitivity: "base" }),
       );
-  }, [purchases, statusFilter, selectedEvent]);
+  }, [
+    purchases,
+    statusFilter,
+    selectedEvent,
+    isStalePendingCheckout,
+    isRecoverableCheckout,
+  ]);
 
   useEffect(() => {
     if (offeringFilter === "all") return;
@@ -965,13 +1011,33 @@ export default function AdminClient() {
       })()
     : null;
 
+  const purchaseStatusCounts = useMemo(() => {
+    const scoped = purchases.filter((purchase) => {
+      if (!isEventTicketPurchase(purchase)) return false;
+      if (selectedEvent && purchase.event_id !== selectedEvent) return false;
+      return true;
+    });
+    return {
+      all: scoped.length,
+      paid: scoped.filter((purchase) => purchase.status === "paid").length,
+      pending: scoped.filter(
+        (purchase) =>
+          purchase.status === "pending_payment" &&
+          !isStalePendingCheckout(purchase),
+      ).length,
+      failed: scoped.filter((purchase) => isRecoverableCheckout(purchase))
+        .length,
+    };
+  }, [purchases, selectedEvent, isStalePendingCheckout, isRecoverableCheckout]);
+
   useEffect(() => {
     const byStatus = (s: string) =>
       purchases.filter((p) => {
         if (s === "paid") return p.status === "paid";
         if (s === "all") return true;
-        if (s === "pending") return p.status === "pending_payment";
-        if (s === "failed") return p.status === "payment_failed";
+        if (s === "pending")
+          return p.status === "pending_payment" && !isStalePendingCheckout(p);
+        if (s === "failed") return isRecoverableCheckout(p);
         return true;
       }).length;
     logAdminPurchasesVerbose("ui row counts", {
@@ -1235,7 +1301,7 @@ export default function AdminClient() {
                         }`}
                       >
                         <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                        Paid Only
+                        Paid ({purchaseStatusCounts.paid})
                       </Button>
                       <Button
                         variant="ghost"
@@ -1247,7 +1313,7 @@ export default function AdminClient() {
                             : "bg-muted/70 text-muted-foreground hover:bg-muted hover:text-foreground"
                         }`}
                       >
-                        All Status
+                        All ({purchaseStatusCounts.all})
                       </Button>
                       <Button
                         variant="ghost"
@@ -1260,7 +1326,7 @@ export default function AdminClient() {
                         }`}
                       >
                         <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                        Pending
+                        Pending ({purchaseStatusCounts.pending})
                       </Button>
                       <Button
                         variant="ghost"
@@ -1273,7 +1339,7 @@ export default function AdminClient() {
                         }`}
                       >
                         <X className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                        Failed
+                        Failed ({purchaseStatusCounts.failed})
                       </Button>
                     </div>
 
@@ -1896,6 +1962,11 @@ export default function AdminClient() {
                     )}
                   </div>
                 </div>
+                {emailActionError ? (
+                  <p className="text-sm text-red-600 dark:text-red-400">
+                    {emailActionError}
+                  </p>
+                ) : null}
                 <div className="flex flex-col-reverse sm:flex-row justify-end gap-2">
                   <Button
                     variant="outline"
